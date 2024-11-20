@@ -15,6 +15,8 @@ import CitySummaryTable from '../components/citySummaryTable';
 import Karte from '../components/karte';
 import FinderLogo from '../assets/FinderIcon.png';
 import Welcome from '@/components/welcome';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function Home() {
   const [query, setQuery] = useState('Ampel');
@@ -27,6 +29,7 @@ function Home() {
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [tabIndex, setTabIndex] = useState(0);
   const matches = useMediaQuery('(max-width:600px)');
+  const [open, setOpen] = useState(false);
 
   const handleApiCall = async () => {
     if (startDate && endDate) {
@@ -34,6 +37,15 @@ function Home() {
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
       const formattedEndDate = dayjs(endDate).format('DD.MM.YYYY');
+      console.log('Startdatum:', formattedStartDate);
+      console.log('Enddatum:', formattedEndDate);
+
+      if (dayjs(endDate).isBefore(dayjs(startDate))) {
+        setLoading(false);
+        setOpen(true);
+        return;
+      }
+
       const apiUrl = `/api/handler?query=${encodeURIComponent(query)}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
 
       try {
@@ -64,6 +76,10 @@ function Home() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   return (
     <div className='py-4'>
@@ -136,6 +152,21 @@ function Home() {
       </Box>
       <Divider variant="middle" sx={{marginTop: '10px', marginBottom: '10px'}}/>
       <Welcome />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Startdatum muss vor Enddatum liegen!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
