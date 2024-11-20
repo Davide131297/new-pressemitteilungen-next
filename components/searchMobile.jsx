@@ -1,5 +1,4 @@
 import { TextField, Button, Box, CircularProgress } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -15,7 +14,6 @@ const SearchMobile = ({
     handleApiCall,
     loading,
     elapsedTime,
-    isMobile,
     data
 }) => {
     return(

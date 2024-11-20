@@ -27,8 +27,6 @@ function Home() {
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [tabIndex, setTabIndex] = useState(0);
   const matches = useMediaQuery('(max-width:600px)');
-  const [openImpressum, setOpenImpressum] = useState(false);
-  const [openDatenschutz, setOpenDatenschutz] = useState(false);
 
   const handleApiCall = async () => {
     if (startDate && endDate) {
@@ -67,22 +65,6 @@ function Home() {
     setTabIndex(newValue);
   };
 
-  const handleOpenImpressum = () => {
-    setOpenImpressum(true);
-  };
-
-  const handleCloseImpressum = () => {
-    setOpenImpressum(false);
-  };
-
-  const handleOpenDatenschutz = () => {
-    setOpenDatenschutz(true);
-  };
-
-  const handleCloseDatenschutz = () => {
-    setOpenDatenschutz(false);
-  };
-
   return (
     <div className='py-4'>
       <Box
@@ -109,7 +91,6 @@ function Home() {
           handleApiCall={handleApiCall}
           loading={loading}
           elapsedTime={elapsedTime}
-          isMobile={matches}
           data={data}
         />
       ) : (
@@ -160,11 +141,10 @@ function Home() {
           <p>
             Mit unserer Suchfunktion können Sie ganz einfach und schnell mehrere Presseseiten nach relevanten Pressemitteilungen durchsuchen. Mit nur einem Klick erhalten Sie die Ergebnisse, die Sie suchen.
           </p>
-          <h5>So funktioniert's</h5>
+          <h5>So funktioniert es</h5>
           <ol>
             <li>Geben Sie einfach einen Suchbegriff in das Suchfeld ein.</li>
-            <li>Klicken Sie auf "Fälle Suchen", um eine Vielzahl von Presseseiten gleichzeitig zu durchsuchen.</li>
-            <li>Die Ergebnisse werden in einer übersichtlichen Liste angezeigt, sodass Sie die gefundenen Artikel direkt lesen können.</li>
+            <li>Klicken Sie auf Fälle Suchen, um eine Vielzahl von Presseseiten gleichzeitig zu durchsuchen.</li>            <li>Die Ergebnisse werden in einer übersichtlichen Liste angezeigt, sodass Sie die gefundenen Artikel direkt lesen können.</li>
             <li>Alternativ gibt es auch eine Karte mit Markierungen für die jeweilige Pressemledung.</li>
           </ol>
           <h5>Warum unsere Webseite nutzen?</h5>
