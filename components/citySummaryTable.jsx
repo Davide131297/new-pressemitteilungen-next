@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const CitySummaryTable = ({ data }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page2, setPage2] = useState(0);
   const [rowsPerPage2, setRowsPerPage2] = useState(10);
+  const matches = useMediaQuery('(max-width:600px)');
 
   const locationCount = data.reduce((acc, row) => {
     acc[row.standort] = (acc[row.standort] || 0) + 1;
@@ -54,7 +56,7 @@ const CitySummaryTable = ({ data }) => {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2} columns={{ xs: 4, sm: 12, md: 12 }}>
           <Grid size={6}>
-            <Paper sx={{ width: '60%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
+            <Paper sx={{ width: matches ? '95%' : '60%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
               <TableContainer sx={{ backgroundColor: 'transparent', height: '400px' }}>
                 <Table stickyHeader aria-label="sticky table" sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
                   <TableHead sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
@@ -137,7 +139,7 @@ const CitySummaryTable = ({ data }) => {
             </Paper>
           </Grid>
           <Grid size={6}>
-            <Paper sx={{ width: '60%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
+            <Paper sx={{ width: matches ? '95%' : '60%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
               <TableContainer sx={{ backgroundColor: 'transparent', height: '400px' }}>
                 <Table stickyHeader aria-label="sticky table" sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
                   <TableHead sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
