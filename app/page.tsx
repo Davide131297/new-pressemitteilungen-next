@@ -19,7 +19,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 function Home() {
-  const [query, setQuery] = useState('Ampel');
+  const [query, setQuery] = useState('Aktenzeichen XY');
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
   const [data, setData] = useState([]);
