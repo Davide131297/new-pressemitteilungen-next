@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Tabs, Tab, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
@@ -18,26 +18,18 @@ import FinderLogo from '../assets/FinderIcon.png';
 import Datenschutz from '../components/datenschutz';
 
 function Home() {
-  const [query, setQuery] = useState('Messer');
+  const [query, setQuery] = useState('Ampel');
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [loading, setLoading] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [tabIndex, setTabIndex] = useState(0);
   const matches = useMediaQuery('(max-width:600px)');
   const [openImpressum, setOpenImpressum] = useState(false);
   const [openDatenschutz, setOpenDatenschutz] = useState(false);
-
-  useEffect(() => {
-    handleApiCall();
-  }, []);
-
-  useEffect(() => {
-    console.log("Data:", data);
-  }, [data]);
 
   const handleApiCall = async () => {
     if (startDate && endDate) {
@@ -72,7 +64,7 @@ function Home() {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (event, newValue: number) => {
     setTabIndex(newValue);
   };
 
