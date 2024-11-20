@@ -117,6 +117,7 @@ const CitySummaryTable = ({ data }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Zeilen pro Seite"
                 sx={{
                   backgroundColor: 'rgb(240, 240, 240)',
                   '@media (max-width: 600px)': {
@@ -219,6 +220,7 @@ const CitySummaryTable = ({ data }) => {
                 page={page2}
                 onPageChange={handleChangePage2}
                 onRowsPerPageChange={handleChangeRowsPerPage2}
+                labelRowsPerPage="Zeilen pro Seite"
                 sx={{
                   backgroundColor: 'rgb(240, 240, 240)',
                   '@media (max-width: 600px)': {

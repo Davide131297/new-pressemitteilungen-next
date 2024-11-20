@@ -100,6 +100,10 @@ const ArticleTable = ({
         booleanCellTrueLabel: 'ja',
         booleanCellFalseLabel: 'nein',
         actionsCellMore: 'mehr',
+        MuiTablePagination: {
+            labelRowsPerPage: 'Zeilen pro Seite:',
+            labelDisplayedRows: ({ from, to, count }) => `${from}–${to} von ${count !== -1 ? count : `mehr als ${to}`}`,
+        },
     };
 
     return (
