@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Image from 'next/image';
 
 function convertGeoToPixel(latitude, longitude, mapWidth, mapHeight) {
   const minLat = 47.2701114;
@@ -88,7 +89,7 @@ function Karte({ data }) {
       }}
       onClick={handleCloseTooltip} // Tooltip schließen bei Klick auf die Karte
     >
-      <img src={KarteDeutschland} alt="Karte" style={{ width: '100%', height: '100%' }} />
+      <Image src={KarteDeutschland} alt="Karte" width={'100%'} height={'100%'} />
 
       {Object.keys(groupedData).map((key, index) => {
         const standorte = groupedData[key];
