@@ -51,11 +51,6 @@ function Karte({ data }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    console.log("selectedStandorte", selectedStandorte);
-    console.log("tabIndex", tabIndex);
-  }, [selectedStandorte, tabIndex]);
-
   const handleMarkerClick = (event, standorte) => {
     setAnchorEl(event.currentTarget);
     setSelectedStandorte(standorte);

@@ -37,8 +37,6 @@ function Home() {
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
       const formattedEndDate = dayjs(endDate).format('DD.MM.YYYY');
-      console.log('Startdatum:', formattedStartDate);
-      console.log('Enddatum:', formattedEndDate);
 
       if (dayjs(endDate).isBefore(dayjs(startDate))) {
         setLoading(false);
