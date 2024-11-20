@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Tabs, Tab, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Tabs, Tab, Box, } from '@mui/material';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -15,7 +15,6 @@ import ArticleTable from '../components/articleTable';
 import CitySummaryTable from '../components/citySummaryTable';
 import Karte from '../components/karte';
 import FinderLogo from '../assets/FinderIcon.png';
-import Datenschutz from '../components/datenschutz';
 
 function Home() {
   const [query, setQuery] = useState('Ampel');
@@ -186,54 +185,6 @@ function Home() {
           </ol>
         </div>
       </Paper>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '50px',
-          backgroundColor: 'rgb(200, 200, 200)',
-          color: 'white',
-          width: '100%',
-          marginTop: '20px',
-        }}
-      >
-        <Typography
-          sx={{ cursor: 'pointer', marginRight: '10px', color: 'black' }}
-          onClick={handleOpenImpressum}
-        >
-          Impressum
-        </Typography>
-        <Typography
-          sx={{ cursor: 'pointer' }}
-          onClick={handleOpenDatenschutz}
-          color='black'
-        >
-          Datenschutz
-        </Typography>
-
-        <Dialog open={openImpressum} onClose={handleCloseImpressum}>
-          <DialogTitle>Impressum</DialogTitle>
-          <DialogContent>
-            <Typography>Hier steht das Impressum.</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseImpressum}>Schließen</Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={openDatenschutz} onClose={handleCloseDatenschutz}>
-          <DialogTitle>Datenschutz</DialogTitle>
-          <DialogContent>
-            <Typography>
-              <Datenschutz />
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDatenschutz}>Schließen</Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
     </div>
   );
 }
