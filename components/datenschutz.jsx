@@ -2,22 +2,78 @@ export default function Datenschutz() {
     return (
         <>
             <h1>Datenschutzerklärung</h1>
-            <h2 id="m716">Präambel</h2>
-            <p>Mit der folgenden Datenschutzerklärung möchten wir Sie darüber aufklären, welche Arten Ihrer personenbezogenen Daten (nachfolgend auch kurz als "Daten" bezeichnet) wir zu welchen Zwecken und in welchem Umfang verarbeiten. Die Datenschutzerklärung gilt für alle von uns durchgeführten Verarbeitungen personenbezogener Daten, sowohl im Rahmen der Erbringung unserer Leistungen als auch insbesondere auf unseren Webseiten, in mobilen Applikationen sowie innerhalb externer Onlinepräsenzen, wie z. B. unserer Social-Media-Profile (nachfolgend zusammenfassend bezeichnet als "Onlineangebot").</p>
+            <h2 id="m716" className="text-lg">Präambel</h2>
+            <p>
+                Mit der folgenden Datenschutzerklärung möchten wir Sie darüber aufklären, welche Arten Ihrer
+                personenbezogenen Daten (nachfolgend auch kurz als "Daten" bezeichnet) wir zu welchen Zwecken und in
+                welchem Umfang verarbeiten. Die Datenschutzerklärung gilt für alle von uns durchgeführten Verarbeitungen
+                personenbezogener Daten, sowohl im Rahmen der Erbringung unserer Leistungen als auch insbesondere auf
+                unseren Webseiten, in mobilen Applikationen sowie innerhalb externer Onlinepräsenzen, wie z. B. unserer
+                Social-Media-Profile (nachfolgend zusammenfassend bezeichnet als "Onlineangebot").
+            </p>
             <p>Die verwendeten Begriffe sind nicht geschlechtsspezifisch.</p>
-
             <p>Stand: 16. September 2024</p>
-            <h2>Inhaltsübersicht</h2>
-            <ul class="index"><li><a class="index-link" href="#m716">Präambel</a></li><li><a class="index-link" href="#m3">Verantwortlicher</a></li><li><a class="index-link" href="#mOverview">Übersicht der Verarbeitungen</a></li><li><a class="index-link" href="#m2427">Maßgebliche Rechtsgrundlagen</a></li><li><a class="index-link" href="#m27">Sicherheitsmaßnahmen</a></li><li><a class="index-link" href="#m12">Allgemeine Informationen zur Datenspeicherung und Löschung</a></li><li><a class="index-link" href="#m225">Bereitstellung des Onlineangebots und Webhosting</a></li><li><a class="index-link" href="#m15">Änderung und Aktualisierung</a></li></ul>
+            <br />
+            <h2 className="text-lg font-bold">Inhaltsübersicht</h2>
+            <ul className="index">
+                <li><a className="index-link text-blue-400" href="#m3">Verantwortlicher</a></li>
+                <li><a className="index-link text-blue-400" href="#mOverview">Übersicht der Verarbeitungen</a></li>
+                <li><a className="index-link text-blue-400" href="#m2427">Maßgebliche Rechtsgrundlagen</a></li>
+                <li><a className="index-link text-blue-400" href="#m27">Sicherheitsmaßnahmen</a></li>
+                <li><a className="index-link text-blue-400" href="#m12">Allgemeine Informationen zur Datenspeicherung und Löschung</a></li>
+                <li><a className="index-link text-blue-400" href="#m225">Bereitstellung des Onlineangebots und Webhosting</a></li>
+                <li><a className="index-link text-blue-400" href="#m15">Änderung und Aktualisierung</a></li>
+            </ul>
+            <br />
             <h2 id="m3">Verantwortlicher</h2>
             <p>Max Mustermann</p>
             <p>Musterstraße 1</p>
             <p>12345 Musterstadt</p>
-            <p>E-Mail-Adresse: <a href="mailto:test@mail.de">test@mail.de</a></p>
-
-            <h2 id="mOverview">Übersicht der Verarbeitungen</h2><p>Die nachfolgende Übersicht fasst die Arten der verarbeiteten Daten und die Zwecke ihrer Verarbeitung zusammen und verweist auf die betroffenen Personen.</p><h3>Arten der verarbeiteten Daten</h3>
-            <ul><li>Nutzungsdaten.</li><li>Meta-, Kommunikations- und Verfahrensdaten.</li><li>Protokolldaten.</li></ul><h3>Kategorien betroffener Personen</h3><ul><li>Nutzer.</li></ul><h3>Zwecke der Verarbeitung</h3><ul><li>Erbringung vertraglicher Leistungen und Erfüllung vertraglicher Pflichten.</li><li>Sicherheitsmaßnahmen.</li><li>Bereitstellung unseres Onlineangebotes und Nutzerfreundlichkeit.</li><li>Informationstechnische Infrastruktur.</li></ul><h2 id="m2427">Maßgebliche Rechtsgrundlagen</h2><p><strong>Maßgebliche Rechtsgrundlagen nach der DSGVO: </strong>Im Folgenden erhalten Sie eine Übersicht der Rechtsgrundlagen der DSGVO, auf deren Basis wir personenbezogene Daten verarbeiten. Bitte nehmen Sie zur Kenntnis, dass neben den Regelungen der DSGVO nationale Datenschutzvorgaben in Ihrem bzw. unserem Wohn- oder Sitzland gelten können. Sollten ferner im Einzelfall speziellere Rechtsgrundlagen maßgeblich sein, teilen wir Ihnen diese in der Datenschutzerklärung mit.</p>
-            <ul><li><strong>Berechtigte Interessen (Art. 6 Abs. 1 S. 1 lit. f) DSGVO)</strong> - die Verarbeitung ist zur Wahrung der berechtigten Interessen des Verantwortlichen oder eines Dritten notwendig, vorausgesetzt, dass die Interessen, Grundrechte und Grundfreiheiten der betroffenen Person, die den Schutz personenbezogener Daten verlangen, nicht überwiegen.</li></ul><p><strong>Nationale Datenschutzregelungen in Deutschland: </strong>Zusätzlich zu den Datenschutzregelungen der DSGVO gelten nationale Regelungen zum Datenschutz in Deutschland. Hierzu gehört insbesondere das Gesetz zum Schutz vor Missbrauch personenbezogener Daten bei der Datenverarbeitung (Bundesdatenschutzgesetz – BDSG). Das BDSG enthält insbesondere Spezialregelungen zum Recht auf Auskunft, zum Recht auf Löschung, zum Widerspruchsrecht, zur Verarbeitung besonderer Kategorien personenbezogener Daten, zur Verarbeitung für andere Zwecke und zur Übermittlung sowie automatisierten Entscheidungsfindung im Einzelfall einschließlich Profiling. Ferner können Landesdatenschutzgesetze der einzelnen Bundesländer zur Anwendung gelangen.</p>
+            <p>
+                E-Mail-Adresse: <a href="mailto:test@mail.de">test@mail.de</a>
+            </p>
+            <h2 id="mOverview">Übersicht der Verarbeitungen</h2>
+            <p>
+                Die nachfolgende Übersicht fasst die Arten der verarbeiteten Daten und die Zwecke ihrer Verarbeitung
+                zusammen und verweist auf die betroffenen Personen.
+            </p>
+            <h3>Arten der verarbeiteten Daten</h3>
+            <ul>
+                <li>Nutzungsdaten.</li>
+                <li>Meta-, Kommunikations- und Verfahrensdaten.</li>
+                <li>Protokolldaten.</li>
+            </ul>
+            <h3>Kategorien betroffener Personen</h3>
+            <ul>
+                <li>Nutzer.</li>
+            </ul>
+            <h3>Zwecke der Verarbeitung</h3>
+            <ul>
+                <li>Erbringung vertraglicher Leistungen und Erfüllung vertraglicher Pflichten.</li>
+                <li>Sicherheitsmaßnahmen.</li>
+                <li>Bereitstellung unseres Onlineangebotes und Nutzerfreundlichkeit.</li>
+                <li>Informationstechnische Infrastruktur.</li>
+            </ul>
+            <h2 id="m2427">Maßgebliche Rechtsgrundlagen</h2>
+            <p>
+                <strong>Maßgebliche Rechtsgrundlagen nach der DSGVO: </strong>
+                Im Folgenden erhalten Sie eine Übersicht der Rechtsgrundlagen der DSGVO, auf deren Basis wir
+                personenbezogene Daten verarbeiten. Bitte nehmen Sie zur Kenntnis, dass neben den Regelungen der DSGVO
+                nationale Datenschutzvorgaben in Ihrem bzw. unserem Wohn- oder Sitzland gelten können. Sollten ferner im
+                Einzelfall speziellere Rechtsgrundlagen maßgeblich sein, teilen wir Ihnen diese in der Datenschutzerklärung
+                mit.
+            </p>
+            <ul>
+                <li>
+                    <strong>Berechtigte Interessen (Art. 6 Abs. 1 S. 1 lit. f) DSGVO)</strong> - die Verarbeitung ist zur
+                    Wahrung der berechtigten Interessen des Verantwortlichen oder eines Dritten notwendig, vorausgesetzt,
+                    dass die Interessen, Grundrechte und Grundfreiheiten der betroffenen Person, die den Schutz
+                    personenbezogener Daten verlangen, nicht überwiegen.
+                </li>
+            </ul>
+            <p>
+                <strong>Nationale Datenschutzregelungen in Deutschland: </strong>
+            Zusätzlich zu den Datenschutzregelungen der DSGVO gelten nationale Regelungen zum Datenschutz in Deutschland. Hierzu gehört insbesondere das Gesetz zum Schutz vor Missbrauch personenbezogener Daten bei der Datenverarbeitung (Bundesdatenschutzgesetz – BDSG). Das BDSG enthält insbesondere Spezialregelungen zum Recht auf Auskunft, zum Recht auf Löschung, zum Widerspruchsrecht, zur Verarbeitung besonderer Kategorien personenbezogener Daten, zur Verarbeitung für andere Zwecke und zur Übermittlung sowie automatisierten Entscheidungsfindung im Einzelfall einschließlich Profiling. Ferner können Landesdatenschutzgesetze der einzelnen Bundesländer zur Anwendung gelangen.</p>
             <p><strong>Hinweis auf Geltung DSGVO und Schweizer DSG: </strong>Diese Datenschutzhinweise dienen sowohl der Informationserteilung nach dem Schweizer DSG als auch nach der Datenschutzgrundverordnung (DSGVO). Aus diesem Grund bitten wir Sie zu beachten, dass aufgrund der breiteren räumlichen Anwendung und Verständlichkeit die Begriffe der DSGVO verwendet werden. Insbesondere statt der im Schweizer DSG verwendeten Begriffe „Bearbeitung" von „Personendaten", "überwiegendes Interesse" und "besonders schützenswerte Personendaten" werden die in der DSGVO verwendeten Begriffe „Verarbeitung" von „personenbezogenen Daten" sowie "berechtigtes Interesse" und "besondere Kategorien von Daten" verwendet. Die gesetzliche Bedeutung der Begriffe wird jedoch im Rahmen der Geltung des Schweizer DSG weiterhin nach dem Schweizer DSG bestimmt.</p>
             <h2 id="m27">Sicherheitsmaßnahmen</h2><p>Wir treffen nach Maßgabe der gesetzlichen Vorgaben unter Berücksichtigung des Stands der Technik, der Implementierungskosten und der Art, des Umfangs, der Umstände und der Zwecke der Verarbeitung sowie der unterschiedlichen Eintrittswahrscheinlichkeiten und des Ausmaßes der Bedrohung der Rechte und Freiheiten natürlicher Personen geeignete technische und organisatorische Maßnahmen, um ein dem Risiko angemessenes Schutzniveau zu gewährleisten.</p>
             <p>Zu den Maßnahmen gehören insbesondere die Sicherung der Vertraulichkeit, Integrität und Verfügbarkeit von Daten durch Kontrolle des physischen und elektronischen Zugangs zu den Daten als auch des sie betreffenden Zugriffs, der Eingabe, der Weitergabe, der Sicherung der Verfügbarkeit und ihrer Trennung. Des Weiteren haben wir Verfahren eingerichtet, die eine Wahrnehmung von Betroffenenrechten, die Löschung von Daten und Reaktionen auf die Gefährdung der Daten gewährleisten. Ferner berücksichtigen wir den Schutz personenbezogener Daten bereits bei der Entwicklung bzw. Auswahl von Hardware, Software sowie Verfahren entsprechend dem Prinzip des Datenschutzes, durch Technikgestaltung und durch datenschutzfreundliche Voreinstellungen.</p>
