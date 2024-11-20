@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
-import axios from 'axios';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
@@ -46,12 +45,20 @@ function Home() {
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
       const formattedEndDate = dayjs(endDate).format('DD.MM.YYYY');
-      const apiUrl = `http://192.168.0.20:3002/api/articles?query=${query}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+      const apiUrl = `/api/handler?query=${encodeURIComponent(query)}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
 
       try {
-        const response = await axios.get(apiUrl);
-        setData(response.data);
-        setPage(0); // Reset to first page on new data fetch
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+        });
+  
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+  
+        const data = await response.json();
+        setData(data); // Daten in den Zustand setzen
+        setPage(0);    // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
         console.error('Fehler beim Abrufen der Artikel:', error);
       } finally {
