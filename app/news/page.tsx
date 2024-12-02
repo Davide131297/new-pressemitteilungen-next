@@ -56,7 +56,7 @@ export default function News() {
       <Logo />
       <main className="container mx-auto px-4 py-8">
         {loading ? (
-          <div className="text-center">
+          <div className="text-center h-[90vh] flex items-center justify-center">
             <p className="text-gray-500">Lade Nachrichten...</p>
           </div>
         ) : (

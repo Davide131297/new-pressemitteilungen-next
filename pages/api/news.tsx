@@ -26,7 +26,23 @@ export default async function handler(
 ) {
   const client = await getDbClient();
   const db = client.db('Pressemitteilungen');
-  const collection = db.collection('News.API');
-  const news = await collection.find({}).toArray();
-  res.status(200).json(news);
+
+  try {
+    const newsApiCollection = db.collection('News.API');
+    const newsCollection = db.collection('News');
+    const newsDataCollection = db.collection('NewsData');
+
+    const [newsApi, news, newsData] = await Promise.all([
+      newsApiCollection.find({}).toArray(),
+      newsCollection.find({}).toArray(),
+      newsDataCollection.find({}).toArray(),
+    ]);
+
+    const combinedNews = [...newsApi, ...news, ...newsData];
+
+    res.status(200).json(combinedNews);
+  } catch (error) {
+    console.error('Fehler beim Abrufen der Nachrichten:', error);
+    res.status(500).json({ error: 'Fehler beim Abrufen der Nachrichten' });
+  }
 }
