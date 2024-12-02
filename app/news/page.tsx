@@ -17,6 +17,8 @@ interface NewsItem {
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
   useEffect(() => {
     async function loadNews() {
@@ -37,6 +39,17 @@ export default function News() {
     loadNews();
   }, []);
 
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const selectedNews = news.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <MenuBox />
@@ -47,50 +60,84 @@ export default function News() {
             <p className="text-gray-500">Lade Nachrichten...</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {news.map((item, index) => (
-              <article
-                key={index}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+          <div>
+            <div className="flex justify-between mt-8 mb-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
               >
-                <Image
-                  src={item.urlToImage || 'https://placehold.co/600x400/png'}
-                  alt={item.title}
-                  width={600}
-                  height={400}
-                  className="w-full h-40 object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {item.title}
-                  </h2>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {item.description || 'Keine Beschreibung verfügbar'}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                    <span>
-                      {new Date(item.publishedAt).toLocaleDateString()}
-                    </span>
-                    <span className="text-xs">{item.author}</span>
+                Zurück
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={startIndex + itemsPerPage >= news.length}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Weiter
+              </button>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {selectedNews.map((item, index) => (
+                <article
+                  key={index}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <Image
+                    src={item.urlToImage || 'https://placehold.co/600x400/png'}
+                    alt={item.title}
+                    width={600}
+                    height={400}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {item.title}
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-2">
+                      {item.description || 'Keine Beschreibung verfügbar'}
+                    </p>
+                    <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                      <span>
+                        {new Date(item.publishedAt).toLocaleDateString()}
+                      </span>
+                      <span className="text-xs">{item.author}</span>
+                    </div>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block mt-4 text-sky-500 text-sm font-semibold hover:underline"
+                    >
+                      Artikel lesen
+                    </a>
                   </div>
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mt-4 text-sky-500 text-sm font-semibold hover:underline"
-                  >
-                    Artikel lesen
-                  </a>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Zurück
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={startIndex + itemsPerPage >= news.length}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Weiter
+              </button>
+            </div>
           </div>
         )}
       </main>
 
       {/* Footer */}
       <footer className="bg-blue-500 text-white text-center py-4 mt-8">
-        <p className="text-sm">© 2024 News Portal. Alle Rechte vorbehalten.</p>
+        <p className="text-sm">© 2024 PresseFinder. Alle Rechte vorbehalten.</p>
       </footer>
     </div>
   );
