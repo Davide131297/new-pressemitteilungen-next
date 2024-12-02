@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useRouter, usePathname } from 'next/navigation';
+import { useMediaQuery } from '@mui/material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -25,6 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
+  const isMobile = useMediaQuery('(max-width:600px)');
   console.log('currentPath', currentPath);
 
   const handleNavigation = (path: string) => {
@@ -36,7 +38,7 @@ export default function MenuBox() {
       sx={{
         mt: '20px',
         mb: '20px',
-        width: '50%',
+        width: isMobile ? '80%' : '50%',
         mx: 'auto',
         borderRadius: '30px',
         backgroundColor: '#f8f9fa',
