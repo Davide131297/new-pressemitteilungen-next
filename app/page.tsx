@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
-import { Tabs, Tab, Box, } from '@mui/material';
+import React, { useState, SyntheticEvent } from 'react';
+import { Tabs, Tab, Box } from '@mui/material';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
-import Image from 'next/image';
 
 import SearchPC from '../components/searchPC';
 import SearchMobile from '../components/searchMobile';
 import ArticleTable from '../components/articleTable';
 import CitySummaryTable from '../components/citySummaryTable';
 import Karte from '../components/karte';
-import FinderLogo from '../assets/FinderIcon.png';
 import Welcome from '@/components/welcome';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import MenuBox from '@/components/menu';
+import Logo from '@/components/logo';
 
 function Home() {
   const [query, setQuery] = useState('Aktenzeichen XY');
@@ -44,20 +44,22 @@ function Home() {
         return;
       }
 
-      const apiUrl = `/api/handler?query=${encodeURIComponent(query)}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
+      const apiUrl = `/api/handler?query=${encodeURIComponent(
+        query
+      )}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
 
       try {
         const response = await fetch(apiUrl, {
           method: 'GET',
         });
-  
+
         if (!response.ok) {
           throw new Error(`API returned status ${response.status}`);
         }
-  
+
         const data = await response.json();
         setData(data); // Daten in den Zustand setzen
-        setPage(0);    // Optional: Tabelle auf erste Seite zurücksetzen
+        setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
         console.error('Fehler beim Abrufen der Artikel:', error);
       } finally {
@@ -71,29 +73,18 @@ function Home() {
     }
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
   };
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
-    <div className='py-4'>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent',
-          color: 'black',
-          width: '100%',
-        }}
-      >
-        <Image src={FinderLogo} alt="Finder Logo" className="w-15 mr-5" />        
-        <h1>PresseFinder</h1>
-      </Box>
+    <div className="pb-4">
+      <MenuBox />
+      <Logo />
       {matches ? (
         <SearchMobile
           query={query}
@@ -122,7 +113,13 @@ function Home() {
         />
       )}
       <Box sx={{ marginTop: '30px' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <Tabs value={tabIndex} onChange={handleTabChange}>
             <Tab label="Tabelle" />
             <Tab label="Karte" />
@@ -130,11 +127,11 @@ function Home() {
         </Box>
         {tabIndex === 0 && (
           <Box sx={{ marginTop: '10px' }}>
-            <ArticleTable 
-              data={data} 
-              page={page} 
-              setPage={setPage} 
-              rowsPerPage={rowsPerPage} 
+            <ArticleTable
+              data={data}
+              page={page}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
               setRowsPerPage={setRowsPerPage}
             />
           </Box>
@@ -148,7 +145,10 @@ function Home() {
           <CitySummaryTable data={data} />
         </Box>
       </Box>
-      <Divider variant="middle" sx={{marginTop: '10px', marginBottom: '10px'}}/>
+      <Divider
+        variant="middle"
+        sx={{ marginTop: '10px', marginBottom: '10px' }}
+      />
       <Welcome />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

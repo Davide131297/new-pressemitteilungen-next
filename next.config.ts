@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ['placehold.co'], //Placeholder Bilder werden von dieser Domain geladen
+  },
 };
 
 export default nextConfig;
