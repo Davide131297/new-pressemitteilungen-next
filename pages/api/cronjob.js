@@ -36,11 +36,11 @@ async function saveToDatabase(data) {
 }
 
 cron.schedule(
-  '35 01 * * *',
+  '54 15 * * *',
   async () => {
     try {
-      const startDate = new Date('2024-11-30');
-      const endDate = new Date('2024-11-30');
+      const startDate = new Date();
+      const endDate = new Date();
       const apiUrl = `https://newsapi.org/v2/everything?domains=tagesspiegel.de,zeit.de,handelsblatt.com,spiegel.de&apiKey=${apiKey}&from=${startDate}&to=${endDate}&sortBy=publishedAt`;
 
       console.log('API-URL:', apiUrl);

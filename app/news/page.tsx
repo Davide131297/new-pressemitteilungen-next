@@ -4,14 +4,26 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Logo from '@/components/logo';
 import MenuBox from '@/components/menu';
+import TagesspiegelLogo from '@/assets/Tagesspiegel-Logo.svg';
+import SternLogo from '@/assets/Stern-Logo.svg';
+import MerkurOnline from '@/assets/Merkur.de-Logo.png';
+import DieWelt from '@/assets/Die_Welt.png';
+import HNA from '@/assets/HNA.svg';
 
 interface NewsItem {
-  author: string;
   title: string;
   description: string;
   url: string;
   urlToImage: string;
+  image_url: string;
   publishedAt: string;
+  item: string;
+  published_at: string;
+  pubDate: string;
+  source_icon: string;
+  image: string;
+  source: string;
+  link: string;
 }
 
 export default function News() {
@@ -84,7 +96,12 @@ export default function News() {
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <Image
-                    src={item.urlToImage || 'https://placehold.co/600x400/png'}
+                    src={
+                      item.urlToImage ||
+                      item.image ||
+                      item.image_url ||
+                      'https://placehold.co/600x400/png'
+                    }
                     alt={item.title}
                     width={600}
                     height={400}
@@ -99,12 +116,68 @@ export default function News() {
                     </p>
                     <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
                       <span>
-                        {new Date(item.publishedAt).toLocaleDateString()}
+                        {item.publishedAt
+                          ? new Date(item.publishedAt).toLocaleDateString()
+                          : item.published_at
+                          ? new Date(item.published_at).toLocaleDateString()
+                          : item.pubDate
+                          ? new Date(item.pubDate).toLocaleDateString()
+                          : item.image_url}
                       </span>
-                      <span className="text-xs">{item.author}</span>
+                      <span className="text-xs">
+                        {item.source_icon ? (
+                          <Image
+                            src={item.source_icon}
+                            alt="source icon"
+                            className="inline-block w-4 h-4"
+                            width={16}
+                            height={16}
+                          />
+                        ) : item.source === 'pnn' ? (
+                          <Image
+                            src={TagesspiegelLogo}
+                            alt="Tagesspiegel Logo"
+                            className="inline-block"
+                            width={64}
+                            height={64}
+                          />
+                        ) : item.source === 'stern' ? (
+                          <Image
+                            src={SternLogo}
+                            alt="Tagesspiegel Logo"
+                            className="inline-block"
+                            width={40}
+                            height={40}
+                          />
+                        ) : item.source === 'merkur-online' ? (
+                          <Image
+                            src={MerkurOnline}
+                            alt="Tagesspiegel Logo"
+                            className="inline-block"
+                            width={48}
+                            height={48}
+                          />
+                        ) : item.source === 'DIE WELT' ? (
+                          <Image
+                            src={DieWelt}
+                            alt="Tagesspiegel Logo"
+                            className="inline-block"
+                            width={48}
+                            height={48}
+                          />
+                        ) : item.source === 'hna' ? (
+                          <Image
+                            src={HNA}
+                            alt="Tagesspiegel Logo"
+                            className="inline-block"
+                            width={30}
+                            height={30}
+                          />
+                        ) : null}
+                      </span>
                     </div>
                     <a
-                      href={item.url}
+                      href={item.url || item.link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block mt-4 text-sky-500 text-sm font-semibold hover:underline"
