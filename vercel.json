@@ -2,6 +2,9 @@
   "functions": {
     "pages/api/newsapi.js": {
       "maxDuration": 60
+    },
+    "pages/api/newsdata.js": {
+      "maxDuration": 60
     }
   }
 }
