@@ -152,7 +152,8 @@ export default function News() {
                           />
                         ) : item.source === 'pnn' ||
                           item.source === 'Der Tagesspiegel' ||
-                          item.source.id === 'der-tagesspiegel' ? (
+                          (typeof item.source === 'object' &&
+                            item.source.id === 'der-tagesspiegel') ? (
                           <Image
                             src={TagesspiegelLogo}
                             alt="Tagesspiegel Logo"
@@ -306,7 +307,8 @@ export default function News() {
                             height={40}
                           />
                         ) : item.source === 'ZEIT' ||
-                          item.source.id === 'die-zeit' ? (
+                          (typeof item.source === 'object' &&
+                            item.source.id === 'die-zeit') ? (
                           <Image
                             src={DieZeit}
                             alt="Die Zeit Logo"
