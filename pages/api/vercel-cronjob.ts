@@ -108,6 +108,7 @@ export default async function handler(
       .status(200)
       .json({ message: 'Daten erfolgreich abgerufen und gespeichert' });
   } catch (error) {
+    console.error('Fehler beim Abrufen und Speichern der Daten:', error);
     res
       .status(500)
       .json({ error: 'Fehler beim Abrufen und Speichern der Daten' });
