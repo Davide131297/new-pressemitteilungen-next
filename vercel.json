@@ -1,7 +1,7 @@
 {
   "functions": {
     "pages/api/vercel-cronjob.js": {
-      "maxDuration": 30
+      "maxDuration": 15
     }
   }
 }
