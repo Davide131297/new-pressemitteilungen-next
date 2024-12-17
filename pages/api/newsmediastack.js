@@ -26,9 +26,9 @@ async function saveToDatabase(collectionName, data) {
 
     if (collectionName === 'newsmediastack') {
       dbCollection = database.collection('News.Mediastack');
-      if (data.articles && data.articles.length > 0) {
+      if (data.data && data.data.length > 0) {
         const result = await dbCollection.insertMany(data.data);
-        console.log(`${result.insertedCount} Dokumente wurden eingefügt`);
+        console.log(`${result.pagination.count} Dokumente wurden eingefügt`);
       } else {
         console.log('Keine Artikel zum Einfügen');
       }
