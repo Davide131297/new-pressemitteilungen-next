@@ -9,6 +9,21 @@ import SternLogo from '@/assets/Stern-Logo.svg';
 import MerkurOnline from '@/assets/Merkur.de-Logo.png';
 import DieWelt from '@/assets/Die_Welt.png';
 import HNA from '@/assets/HNA.svg';
+import Tagesschau from '@/assets/Tagesschau.png';
+import Kreiszeitung from '@/assets/Kreiszeitung.jpeg';
+import FAZ from '@/assets/Frankfurter_Allgemeine_Zeitung.png';
+import SWR from '@/assets/SWR.png';
+import NTV from '@/assets/N-tv.png';
+import NDR from '@/assets/NDR.png';
+import RadioDuisburg from '@/assets/Radio_Duisburg.png';
+import NZZ from '@/assets/Neue_Zürcher_Zeitung.png';
+import Focus from '@/assets/Focus.jpeg';
+import Hessenschau from '@/assets/Hessenschau.png';
+import MDR from '@/assets/MDR.png';
+import ZDF from '@/assets/ZDF.png';
+import Süddeutsche from '@/assets/Süddeutsche_Zeitung.png';
+import TOnline from '@/assets/T-online.de.png';
+import DieZeit from '@/assets/Die_Zeit.png';
 
 interface NewsItem {
   title: string;
@@ -102,7 +117,7 @@ export default function News() {
                       item.urlToImage ||
                       item.image ||
                       item.image_url ||
-                      'https://placehold.co/600x400/png'
+                      'https://via.placeholder.com/600x400?text=Kein+Bild'
                     }
                     alt={item.title}
                     width={600}
@@ -135,7 +150,8 @@ export default function News() {
                             width={16}
                             height={16}
                           />
-                        ) : item.source === 'pnn' ? (
+                        ) : item.source === 'pnn' ||
+                          item.source === 'Der Tagesspiegel' ? (
                           <Image
                             src={TagesspiegelLogo}
                             alt="Tagesspiegel Logo"
@@ -143,10 +159,11 @@ export default function News() {
                             width={64}
                             height={64}
                           />
-                        ) : item.source === 'stern' ? (
+                        ) : item.source === 'stern' ||
+                          item.source === 'STERN' ? (
                           <Image
                             src={SternLogo}
-                            alt="Tagesspiegel Logo"
+                            alt="Stern Logo"
                             className="inline-block"
                             width={40}
                             height={40}
@@ -154,7 +171,7 @@ export default function News() {
                         ) : item.source === 'merkur-online' ? (
                           <Image
                             src={MerkurOnline}
-                            alt="Tagesspiegel Logo"
+                            alt="MerkurOnline Logo"
                             className="inline-block"
                             width={48}
                             height={48}
@@ -162,7 +179,7 @@ export default function News() {
                         ) : item.source === 'DIE WELT' ? (
                           <Image
                             src={DieWelt}
-                            alt="Tagesspiegel Logo"
+                            alt="Die Welt Logo"
                             className="inline-block"
                             width={48}
                             height={48}
@@ -170,10 +187,130 @@ export default function News() {
                         ) : item.source === 'hna' ? (
                           <Image
                             src={HNA}
-                            alt="Tagesspiegel Logo"
+                            alt="HNA Logo"
                             className="inline-block"
                             width={30}
                             height={30}
+                          />
+                        ) : item.source === 'Tagesschau' ? (
+                          <Image
+                            src={Tagesschau}
+                            alt="Tagesschau Logo"
+                            className="inline-block"
+                            width={50}
+                            height={50}
+                          />
+                        ) : item.source === 'kreiszeitung' ? (
+                          <Image
+                            src={Kreiszeitung}
+                            alt="Kreiszeitung Logo"
+                            className="inline-block"
+                            width={25}
+                            height={25}
+                          />
+                        ) : item.source === 'faz' ? (
+                          <Image
+                            src={FAZ}
+                            alt="FAZ Logo"
+                            className="inline-block"
+                            width={70}
+                            height={70}
+                          />
+                        ) : item.source === 'swr' ? (
+                          <Image
+                            src={SWR}
+                            alt="SWR Logo"
+                            className="inline-block"
+                            width={35}
+                            height={35}
+                          />
+                        ) : item.source === 'n-tv' ? (
+                          <Image
+                            src={NTV}
+                            alt="N-tv Logo"
+                            className="inline-block"
+                            width={20}
+                            height={20}
+                          />
+                        ) : item.source === 'ndr' ? (
+                          <Image
+                            src={NDR}
+                            alt="NDR Logo"
+                            className="inline-block"
+                            width={20}
+                            height={20}
+                          />
+                        ) : item.source === 'radioduisburg' ? (
+                          <Image
+                            src={RadioDuisburg}
+                            alt="Radio Duisburg Logo"
+                            className="inline-block"
+                            width={30}
+                            height={30}
+                          />
+                        ) : item.source === 'Neue Zuercher Zeitung' ? (
+                          <Image
+                            src={NZZ}
+                            alt="NZZ Logo"
+                            className="inline-block"
+                            width={80}
+                            height={80}
+                          />
+                        ) : item.source === 'focus' ? (
+                          <Image
+                            src={Focus}
+                            alt="Focus Logo"
+                            className="inline-block"
+                            width={50}
+                            height={50}
+                          />
+                        ) : item.source === 'hr-online' ? (
+                          <Image
+                            src={Hessenschau}
+                            alt="Hessenschau Logo"
+                            className="inline-block"
+                            width={50}
+                            height={50}
+                          />
+                        ) : item.source === 'mdr' ? (
+                          <Image
+                            src={MDR}
+                            alt="MDR Logo"
+                            className="inline-block"
+                            width={50}
+                            height={50}
+                          />
+                        ) : item.source === 'heute' ? (
+                          <Image
+                            src={ZDF}
+                            alt="ZDF Logo"
+                            className="inline-block"
+                            width={25}
+                            height={25}
+                          />
+                        ) : item.source === 'sueddeutsche' ? (
+                          <Image
+                            src={Süddeutsche}
+                            alt="Süddeutsche Logo"
+                            className="inline-block"
+                            width={80}
+                            height={80}
+                          />
+                        ) : item.source === 'T-online' ? (
+                          <Image
+                            src={TOnline}
+                            alt="T-online Logo"
+                            className="inline-block"
+                            width={40}
+                            height={40}
+                          />
+                        ) : item.source === 'ZEIT' ? (
+                          <Image
+                            src={DieZeit}
+                            alt="Die Zeit Logo"
+                            className="inline-block"
+                            width={50}
+                            height={50}
                           />
                         ) : null}
                       </span>
