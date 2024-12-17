@@ -3,6 +3,54 @@ import { MongoClient, Db, Collection } from 'mongodb';
 
 let dbClient: MongoClient | null = null;
 
+interface Articles {
+  _id: string;
+  source: {
+    id: string;
+    name: string;
+  };
+  author: string;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage?: string | null;
+  publishedAt: string;
+  content: string;
+}
+
+interface Results {
+  _id: string;
+  article_id: string;
+  title: string;
+  link: string;
+  keywords: string[];
+  creator: string[];
+  video_url?: string | null;
+  description: string;
+  content: string;
+  pubDate: string;
+  pubDateTZ: string;
+  image_url: string;
+  source_id: string;
+  source_priority: number;
+  source_name: string;
+  source_url: string;
+  source_icon?: string | null;
+  language: string;
+  country: string[];
+  category: string[];
+  ai_tag: string;
+  sentiment: string;
+  sentiment_stats: string;
+  ai_relevance: string;
+  ai_org: string;
+}
+
+interface NewsData {
+  articles?: Articles[];
+  results?: Results[];
+}
+
 async function getDbClient(): Promise<MongoClient> {
   if (!dbClient) {
     const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority`;
@@ -20,7 +68,7 @@ async function getDbClient(): Promise<MongoClient> {
 
 async function saveToDatabase(
   collectionName: string,
-  data: any
+  data: NewsData
 ): Promise<void> {
   try {
     const client = await getDbClient();
