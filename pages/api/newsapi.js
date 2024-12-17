@@ -29,7 +29,7 @@ async function saveToDatabase(collectionName, data) {
       if (data.articles && data.articles.length > 0) {
         const seenTitles = new Set();
         const filteredData = data.articles.filter((item) => {
-          const isValidSource = item.title.beginsWith('Kalenderblatt'); // Nicht relevant
+          const isValidSource = item.title.startsWith('Kalenderblatt'); // Nicht relevant
           const isUniqueTitle = !seenTitles.has(item.title);
           if (isValidSource && isUniqueTitle) {
             seenTitles.add(item.title);
