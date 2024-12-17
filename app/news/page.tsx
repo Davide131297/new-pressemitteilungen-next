@@ -53,10 +53,12 @@ export default function News() {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
