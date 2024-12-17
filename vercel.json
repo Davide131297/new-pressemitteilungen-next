@@ -5,6 +5,9 @@
     },
     "pages/api/newsdata.js": {
       "maxDuration": 60
+    },
+    "pages/api/database.js": {
+      "maxDuration": 60
     }
   }
 }
