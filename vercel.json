@@ -1,6 +1,6 @@
 {
   "functions": {
-    "pages/api/vercel-cronjob.js": {
+    "pages/api/newsapi.js": {
       "maxDuration": 60
     }
   }
