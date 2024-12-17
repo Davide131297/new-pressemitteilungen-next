@@ -29,16 +29,14 @@ export default async function handler(
 
   try {
     const newsApiCollection = db.collection('News.API');
-    const newsCollection = db.collection('News');
-    const newsDataCollection = db.collection('NewsData');
+    const newsDataCollection = db.collection('News.DATA');
 
-    const [newsApi, news, newsData] = await Promise.all([
+    const [newsApi, news] = await Promise.all([
       newsApiCollection.find({}).toArray(),
-      newsCollection.find({}).toArray(),
       newsDataCollection.find({}).toArray(),
     ]);
 
-    const combinedNews = [...newsApi, ...news, ...newsData];
+    const combinedNews = [...newsApi, ...news];
 
     res.status(200).json(combinedNews);
   } catch (error) {
