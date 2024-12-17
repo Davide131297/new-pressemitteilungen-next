@@ -5,11 +5,9 @@ let dbClient = null;
 async function getDbClient() {
   if (!dbClient) {
     const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority`;
+    console.log('Datenbank-URI:', uri);
     try {
-      dbClient = new MongoClient(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      dbClient = new MongoClient(uri);
       await dbClient.connect();
       console.log('Datenbank-Verbindung hergestellt');
     } catch (error) {
@@ -56,6 +54,8 @@ export default async function handler(req, res) {
   const startDate = new Date();
   const endDate = new Date();
   const apiKey = process.env.NEWS_API_KEY;
+
+  console.log('ApiKey:', apiKey);
 
   const formattedStartDate = `${startDate.getFullYear()}-${String(
     startDate.getDate()
