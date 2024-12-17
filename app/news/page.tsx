@@ -37,7 +37,7 @@ interface NewsItem {
   pubDate: string;
   source_icon: string;
   image: string;
-  source: string;
+  source: string | { id: string };
   link: string;
 }
 
@@ -151,7 +151,8 @@ export default function News() {
                             height={16}
                           />
                         ) : item.source === 'pnn' ||
-                          item.source === 'Der Tagesspiegel' ? (
+                          item.source === 'Der Tagesspiegel' ||
+                          item.source.id === 'der-tagesspiegel' ? (
                           <Image
                             src={TagesspiegelLogo}
                             alt="Tagesspiegel Logo"
@@ -304,7 +305,8 @@ export default function News() {
                             width={40}
                             height={40}
                           />
-                        ) : item.source === 'ZEIT' ? (
+                        ) : item.source === 'ZEIT' ||
+                          item.source.id === 'die-zeit' ? (
                           <Image
                             src={DieZeit}
                             alt="Die Zeit Logo"

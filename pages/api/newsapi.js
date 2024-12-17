@@ -27,8 +27,23 @@ async function saveToDatabase(collectionName, data) {
     if (collectionName === 'newsapi') {
       dbCollection = database.collection('News.API');
       if (data.articles && data.articles.length > 0) {
-        const result = await dbCollection.insertMany(data.articles);
-        console.log(`${result.insertedCount} Dokumente wurden eingefügt`);
+        const seenTitles = new Set();
+        const filteredData = data.articles.filter((item) => {
+          const isValidSource = item.title.beginsWith('Kalenderblatt'); // Nicht relevant
+          const isUniqueTitle = !seenTitles.has(item.title);
+          if (isValidSource && isUniqueTitle) {
+            seenTitles.add(item.title);
+            return true;
+          }
+          return false;
+        });
+
+        if (filteredData.length > 0) {
+          const result = await dbCollection.insertMany(filteredData);
+          console.log(`${result.insertedCount} Dokumente wurden eingefügt`);
+        } else {
+          console.log('Keine Artikel zum Einfügen');
+        }
       } else {
         console.log('Keine Artikel zum Einfügen');
       }
