@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const startDate = new Date();
   const endDate = new Date();
   const apiKey = process.env.NEWS_API_KEY;
@@ -16,5 +18,7 @@ export default function handler(req, res) {
       console.error('Fehler beim Ausführen des Cron-Jobs:', error);
       res.status(500).json({ error: 'Fehler beim Ausführen des Cron-Jobs' });
     }
+  } else {
+    res.status(500).json({ error: 'API-Schlüssel nicht definiert' });
   }
 }
