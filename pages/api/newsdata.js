@@ -5,11 +5,9 @@ let dbClient = null;
 async function getDbClient() {
   if (!dbClient) {
     const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority`;
+    console.log('Datenbank-URI:', uri);
     try {
-      dbClient = new MongoClient(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      dbClient = new MongoClient(uri);
       await dbClient.connect();
       console.log('Datenbank-Verbindung hergestellt');
     } catch (error) {
@@ -43,7 +41,7 @@ async function saveToDatabase(collectionName, data) {
 }
 
 async function fetchNewsData() {
-  const apiUrl = `https://newsdata.io/api/1/latest?apikey=pub_6098201d1e4ef7697cc5510571b9bf77223cc&language=de&country=de&category=politics`;
+  const apiUrl = `https://newsdata.io/api/1/latest?apikey=${process.env.NEWS_DATA_KEY}&language=de&country=de&category=politics`;
   console.log('API-URL:', apiUrl);
   const response = await fetch(apiUrl);
   const data = await response.json();
