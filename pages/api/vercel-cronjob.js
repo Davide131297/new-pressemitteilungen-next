@@ -1,57 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-let dbClient: MongoClient | null = null;
+let dbClient = null;
 
-interface Articles {
-  _id: string;
-  source: {
-    id: string;
-    name: string;
-  };
-  author: string;
-  title: string;
-  description: string;
-  url: string;
-  urlToImage?: string | null;
-  publishedAt: string;
-  content: string;
-}
-
-interface Results {
-  _id: string;
-  article_id: string;
-  title: string;
-  link: string;
-  keywords: string[];
-  creator: string[];
-  video_url?: string | null;
-  description: string;
-  content: string;
-  pubDate: string;
-  pubDateTZ: string;
-  image_url: string;
-  source_id: string;
-  source_priority: number;
-  source_name: string;
-  source_url: string;
-  source_icon?: string | null;
-  language: string;
-  country: string[];
-  category: string[];
-  ai_tag: string;
-  sentiment: string;
-  sentiment_stats: string;
-  ai_relevance: string;
-  ai_org: string;
-}
-
-interface NewsData {
-  articles?: Articles[];
-  results?: Results[];
-}
-
-async function getDbClient(): Promise<MongoClient> {
+async function getDbClient() {
   if (!dbClient) {
     const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority`;
     try {
@@ -66,14 +17,11 @@ async function getDbClient(): Promise<MongoClient> {
   return dbClient;
 }
 
-async function saveToDatabase(
-  collectionName: string,
-  data: NewsData
-): Promise<void> {
+async function saveToDatabase(collectionName, data) {
   try {
     const client = await getDbClient();
-    const database: Db = client.db('Pressemitteilungen');
-    let dbCollection: Collection;
+    const database = client.db('Pressemitteilungen');
+    let dbCollection;
 
     if (collectionName === 'newsapi') {
       dbCollection = database.collection('News.API');
@@ -99,11 +47,7 @@ async function saveToDatabase(
   }
 }
 
-async function fetchNewsApi(
-  apiKey: string,
-  startDate: string,
-  endDate: string
-): Promise<void> {
+async function fetchNewsApi(apiKey, startDate, endDate) {
   const apiUrl = `https://newsapi.org/v2/everything?domains=tagesspiegel.de,zeit.de,handelsblatt.com,spiegel.de&apiKey=${apiKey}&from=${startDate}&to=${endDate}&sortBy=publishedAt`;
   console.log('API-URL:', apiUrl);
   const response = await fetch(apiUrl);
@@ -111,7 +55,7 @@ async function fetchNewsApi(
   await saveToDatabase('newsapi', data);
 }
 
-async function fetchNewsData(): Promise<void> {
+async function fetchNewsData() {
   const apiUrl = `https://newsdata.io/api/1/latest?apikey=pub_6098201d1e4ef7697cc5510571b9bf77223cc&language=de&country=de&category=politics`;
   console.log('API-URL:', apiUrl);
   const response = await fetch(apiUrl);
@@ -119,21 +63,14 @@ async function fetchNewsData(): Promise<void> {
   await saveToDatabase('newsdata', data);
 }
 
-async function fetchData(
-  apiKey: string,
-  startDate: string,
-  endDate: string
-): Promise<void> {
+async function fetchData(apiKey, startDate, endDate) {
   await Promise.all([
     fetchNewsApi(apiKey, startDate, endDate),
     fetchNewsData(),
   ]);
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<void> {
+export default async function handler(req, res) {
   const startDate = new Date();
   const endDate = new Date();
   const apiKey = process.env.NEWS_API_KEY;
