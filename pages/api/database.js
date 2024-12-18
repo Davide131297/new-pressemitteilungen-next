@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { verifyToken } from '../../lib/auth'; // Stellen Sie sicher, dass der Pfad korrekt ist
+import { deleteToken } from '../../lib/auth'; // Stellen Sie sicher, dass der Pfad korrekt ist
 
 let dbClient = null;
 
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token || !verifyToken(token)) {
+  if (!token || !deleteToken(token)) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
