@@ -1,12 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Logo from '@/components/logo';
 import MenuBox from '@/components/menu';
-import Pagination from '@mui/material/Pagination';
-
 import TagesspiegelLogo from '@/assets/Tagesspiegel-Logo.svg';
 import SternLogo from '@/assets/Stern-Logo.svg';
 import MerkurOnline from '@/assets/Merkur.de-Logo.png';
@@ -47,11 +44,8 @@ interface NewsItem {
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
-  const currentPage = parseInt(searchParams?.get('page') || '1', 10);
 
   useEffect(() => {
     async function loadNews() {
@@ -72,11 +66,13 @@ export default function News() {
     loadNews();
   }, []);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    router.push(`?page=${page}`);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -93,14 +89,22 @@ export default function News() {
             <p className="text-gray-500">Lade Nachrichten...</p>
           </div>
         ) : (
-          <>
-            <div className="flex justify-center mb-8">
-              <Pagination
-                count={Math.ceil(news.length / itemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-              />
+          <div>
+            <div className="flex justify-between mt-8 mb-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Zurück
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={startIndex + itemsPerPage >= news.length}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Weiter
+              </button>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {selectedNews.map((item, index) => (
@@ -327,15 +331,23 @@ export default function News() {
                 </article>
               ))}
             </div>
-            <div className="flex justify-center mt-8">
-              <Pagination
-                count={Math.ceil(news.length / itemsPerPage)}
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-              />
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Zurück
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={startIndex + itemsPerPage >= news.length}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Weiter
+              </button>
             </div>
-          </>
+          </div>
         )}
       </main>
 
