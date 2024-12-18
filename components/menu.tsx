@@ -27,7 +27,6 @@ export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
   const isMobile = useMediaQuery('(max-width:600px)');
-  console.log('currentPath', currentPath);
 
   const handleNavigation = (path: string) => {
     router.push(path);
