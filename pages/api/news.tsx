@@ -72,9 +72,13 @@ export default async function handler(
       normalizeDate
     );
 
-    combinedNews.sort((a, b) => b.date.getTime() - a.date.getTime());
+    const uniqueNews = Array.from(
+      new Map(combinedNews.map((item) => [item.title, item])).values()
+    );
 
-    res.status(200).json(combinedNews);
+    uniqueNews.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    res.status(200).json(uniqueNews);
   } catch (error) {
     console.error('Fehler beim Abrufen der Nachrichten:', error);
     res.status(500).json({ error: 'Fehler beim Abrufen der Nachrichten' });
