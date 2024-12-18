@@ -18,6 +18,9 @@
     "@mui/x-date-pickers": "^7.22.2",
     "@types/node-fetch": "^2.6.12",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.7",
+    "chartjs-plugin-annotation": "^3.1.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "cheerio": "^1.0.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -28,6 +31,7 @@
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "^7.0.1"
   },

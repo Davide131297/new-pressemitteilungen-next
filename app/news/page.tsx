@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Logo from '@/components/logo';
 import MenuBox from '@/components/menu';
+import { NewsItem } from '@/components/myInterfaces';
+
 import TagesspiegelLogo from '@/assets/Tagesspiegel-Logo.svg';
 import SternLogo from '@/assets/Stern-Logo.svg';
 import MerkurOnline from '@/assets/Merkur.de-Logo.png';
@@ -24,22 +26,6 @@ import ZDF from '@/assets/ZDF.png';
 import Süddeutsche from '@/assets/Süddeutsche_Zeitung.png';
 import TOnline from '@/assets/T-online.de.png';
 import DieZeit from '@/assets/Die_Zeit.png';
-
-interface NewsItem {
-  title: string;
-  description: string;
-  url: string;
-  urlToImage: string;
-  image_url: string;
-  publishedAt: string;
-  item: string;
-  published_at: string;
-  pubDate: string;
-  source_icon: string;
-  image: string;
-  source: string | { id: string };
-  link: string;
-}
 
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
