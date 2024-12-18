@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from '@/components/header';
+import Footer from '@/components/footer';
 import {
   Institute,
   Parliament,
@@ -190,101 +191,127 @@ export default function Page() {
   }, [latestSurveyResults]);
 
   return (
-    <div className="px-4 md:px-8">
-      <Header />
-      <div>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <>
-            <div className="flex justify-center gap-2 mt-8">
-              <FormControl fullWidth>
-                <InputLabel id="parliament-select-label" size="small">
-                  Parliament
-                </InputLabel>
-                <Select
-                  labelId="parliament-select-label"
-                  value={selectedParliament}
-                  onChange={handleParliamentChange}
-                  label="Parliament"
-                  size="small"
-                >
-                  {parliaments.map((parliament) => (
-                    <MenuItem key={parliament.id} value={parliament.Shortcut}>
-                      {parliament.Name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel id="institute-select-label" size="small">
-                  Institute
-                </InputLabel>
-                <Select
-                  labelId="institute-select-label"
-                  value={selectedInstitute}
-                  onChange={handleInstituteChange}
-                  label="Institute"
-                  size="small"
-                >
-                  {institutes.map((institute) => (
-                    <MenuItem key={institute.id} value={institute.Name}>
-                      {institute.Name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            {latestSurveyResults && chartData ? (
-              <div className="mt-8">
-                <h2>{`Umfrage vom ${formatDate(latestSurveyResults.date)}`}</h2>
-                <Bar
-                  data={chartData}
-                  options={{
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        position: 'top',
-                      },
-                      title: {
-                        display: false,
-                      },
-                      datalabels: {
-                        display: true,
-                        align: 'end',
-                        anchor: 'end',
-                        formatter: (value) => `${value}%`,
-                      },
-                      annotation:
-                        latestSurveyResults.parliamentId !== '17'
-                          ? {
-                              annotations: {
-                                line1: {
-                                  type: 'line',
-                                  yMin: 5,
-                                  yMax: 5,
-                                  borderColor: 'red',
-                                  borderWidth: 2,
-                                  label: {
-                                    content: 'Threshold',
-                                    display: false,
-                                    position: 'center',
+    <>
+      <div className="px-4 md:px-8">
+        <Header />
+        <div>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              <div className="flex justify-center gap-2 mt-8">
+                <FormControl fullWidth>
+                  <InputLabel id="parliament-select-label" size="small">
+                    Parliament
+                  </InputLabel>
+                  <Select
+                    labelId="parliament-select-label"
+                    value={selectedParliament}
+                    onChange={handleParliamentChange}
+                    label="Parliament"
+                    size="small"
+                  >
+                    {parliaments.map((parliament) => (
+                      <MenuItem key={parliament.id} value={parliament.Shortcut}>
+                        {parliament.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="institute-select-label" size="small">
+                    Institute
+                  </InputLabel>
+                  <Select
+                    labelId="institute-select-label"
+                    value={selectedInstitute}
+                    onChange={handleInstituteChange}
+                    label="Institute"
+                    size="small"
+                  >
+                    {institutes.map((institute) => (
+                      <MenuItem key={institute.id} value={institute.Name}>
+                        {institute.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              {latestSurveyResults && chartData ? (
+                <div className="mt-8">
+                  <h2>{`Umfrage vom ${formatDate(
+                    latestSurveyResults.date
+                  )}`}</h2>
+                  <Bar
+                    data={chartData}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                        title: {
+                          display: false,
+                        },
+                        datalabels: {
+                          display: true,
+                          align: 'end',
+                          anchor: 'end',
+                          formatter: (value) => `${value}%`,
+                        },
+                        annotation:
+                          latestSurveyResults.parliamentId !== '17'
+                            ? {
+                                annotations: {
+                                  line1: {
+                                    type: 'line',
+                                    yMin: 5,
+                                    yMax: 5,
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    label: {
+                                      content: 'Threshold',
+                                      display: false,
+                                      position: 'center',
+                                    },
                                   },
                                 },
-                              },
-                            }
-                          : {},
-                    },
-                  }}
-                  plugins={[ChartDataLabels]}
-                />
-              </div>
-            ) : (
-              <div className="mt-8">No results found for the selection.</div>
-            )}
-          </>
-        )}
+                              }
+                            : {},
+                      },
+                    }}
+                    plugins={[ChartDataLabels]}
+                  />
+                  <div className="mt-4">
+                    Daten von{' '}
+                    <a
+                      href="https://dawum.de"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'blue' }}
+                    >
+                      dawum.de
+                    </a>{' '}
+                    (
+                    <a
+                      href="https://opendatacommons.org/licenses/odbl/1-0/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'blue' }}
+                    >
+                      Open Database License (ODbL)
+                    </a>
+                    )
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-8">No results found for the selection.</div>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
