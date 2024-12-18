@@ -45,4 +45,5 @@ export interface NewsItem {
   image: string;
   source: string | { id: string };
   link: string;
+  date?: Date;
 }
