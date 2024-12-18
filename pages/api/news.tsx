@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient, Document, WithId } from 'mongodb';
 import dotenv from 'dotenv';
 import { parseISO } from 'date-fns';
-import { loadAllNewsToken } from './../../lib/auth';
 
 dotenv.config();
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority;`;
@@ -55,10 +54,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token || !loadAllNewsToken(token)) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
   const client = await getDbClient();
   const db = client.db('Pressemitteilungen');
 
