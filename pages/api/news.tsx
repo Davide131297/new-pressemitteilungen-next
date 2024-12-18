@@ -60,7 +60,10 @@ export default async function handler(
       new Map(combinedNews.map((item) => [item.title, item])).values()
     );
 
-    uniqueNews.sort((a, b) => b.date.getTime() - a.date.getTime());
+    uniqueNews.sort((a, b) => {
+      if (!a.date || !b.date) return 0;
+      return b.date.getTime() - a.date.getTime();
+    });
 
     res.status(200).json(uniqueNews);
   } catch (error) {
