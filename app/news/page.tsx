@@ -77,6 +77,7 @@ export default function News() {
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
+  console.log('news: ', news);
   const selectedNews = news.slice(startIndex, startIndex + itemsPerPage);
 
   return (
