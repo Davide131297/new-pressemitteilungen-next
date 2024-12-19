@@ -255,6 +255,10 @@ export default function Page() {
       AfD: '#0000FF',
       Linke: '#FF00FF',
       BSW: '#610B38',
+      'Freie Wähler': '#FF7F50',
+      CSU: '#000000',
+      CDU: '#000000',
+      Sonstige: '#808080',
     };
 
     return {
@@ -371,44 +375,55 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
-                      <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
-                        latestSurveyResults.date
-                      )} mit 630 Sitzen`}</h2>
-                      <div className="h-[400px]">
-                        {' '}
-                        {/* Feste Höhe für das Chart */}
-                        <Doughnut
-                          data={
-                            doughnutChartData || { labels: [], datasets: [] }
-                          }
-                          options={{
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                              datalabels: {
-                                display: true,
-                                color: 'white',
-                                font: {
-                                  weight: 'bold',
-                                },
-                                padding: 5,
-                              },
-                              legend: {
-                                position: 'top',
-                              },
-                              tooltip: {
-                                callbacks: {
-                                  label: (tooltipItem) => {
-                                    const value = tooltipItem.raw;
-                                    return `${value}`;
+                      {latestSurveyResults.parliamentId === '0' ? (
+                        <>
+                          <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
+                            latestSurveyResults.date
+                          )} mit 630 Sitzen`}</h2>
+                          <div className="h-[400px]">
+                            {' '}
+                            {/* Feste Höhe für das Chart */}
+                            <Doughnut
+                              data={
+                                doughnutChartData || {
+                                  labels: [],
+                                  datasets: [],
+                                }
+                              }
+                              options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                  datalabels: {
+                                    display: true,
+                                    color: 'white',
+                                    font: {
+                                      weight: 'bold',
+                                    },
+                                    padding: 5,
+                                  },
+                                  legend: {
+                                    position: 'top',
+                                  },
+                                  tooltip: {
+                                    callbacks: {
+                                      label: (tooltipItem) => {
+                                        const value = tooltipItem.raw;
+                                        return `${value}`;
+                                      },
+                                    },
                                   },
                                 },
-                              },
-                            },
-                          }}
-                          plugins={[ChartDataLabels]}
-                        />
-                      </div>
+                              }}
+                              plugins={[ChartDataLabels]}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-center">
+                          Sitzverteilung aktuell nur für den Bundestag verfügbar
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="mt-4 text-center">
