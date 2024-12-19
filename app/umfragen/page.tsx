@@ -318,90 +318,106 @@ export default function Page() {
                 </FormControl>
               </div>
               {latestSurveyResults && chartData ? (
-                <div className="mt-8 md:size-1/2 mx-auto">
-                  <h2>{`Umfrage vom ${formatDate(
-                    latestSurveyResults.date
-                  )}`}</h2>
-                  <Bar
-                    data={chartData}
-                    options={{
-                      responsive: true,
-                      plugins: {
-                        legend: {
-                          position: 'top',
-                        },
-                        title: {
-                          display: false,
-                        },
-                        datalabels: {
-                          display: true,
-                          align: 'end',
-                          anchor: 'end',
-                          formatter: (value) => `${value}%`,
-                        },
-                        annotation:
-                          latestSurveyResults.parliamentId !== '17'
-                            ? {
-                                annotations: {
-                                  line1: {
-                                    type: 'line',
-                                    yMin: 5,
-                                    yMax: 5,
-                                    borderColor: 'red',
-                                    borderWidth: 2,
-                                    label: {
-                                      content: 'Threshold',
-                                      display: false,
-                                      position: 'center',
-                                    },
+                <div className="mt-8 mx-auto container">
+                  <div className="md:flex md:flex-wrap md:justify-between md:space-x-4">
+                    <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
+                      <h2 className="text-lg font-semibold mb-2">{`Umfrage vom ${formatDate(
+                        latestSurveyResults.date
+                      )}`}</h2>
+                      <div className="h-[400px]">
+                        {' '}
+                        {/* Feste Höhe für das Chart */}
+                        <Bar
+                          data={chartData}
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                              legend: {
+                                position: 'top',
+                              },
+                              title: {
+                                display: false,
+                              },
+                              datalabels: {
+                                display: true,
+                                align: 'end',
+                                anchor: 'end',
+                                formatter: (value) => `${value}%`,
+                              },
+                              annotation:
+                                latestSurveyResults.parliamentId !== '17'
+                                  ? {
+                                      annotations: {
+                                        line1: {
+                                          type: 'line',
+                                          yMin: 5,
+                                          yMax: 5,
+                                          borderColor: 'red',
+                                          borderWidth: 2,
+                                          label: {
+                                            content: 'Threshold',
+                                            display: false,
+                                            position: 'center',
+                                          },
+                                        },
+                                      },
+                                    }
+                                  : {},
+                            },
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
+                      <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
+                        latestSurveyResults.date
+                      )} mit 630 Sitzen`}</h2>
+                      <div className="h-[400px]">
+                        {' '}
+                        {/* Feste Höhe für das Chart */}
+                        <Doughnut
+                          data={
+                            doughnutChartData || { labels: [], datasets: [] }
+                          }
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                display: true,
+                                color: 'white',
+                                font: {
+                                  weight: 'bold',
+                                },
+                                padding: 5,
+                              },
+                              legend: {
+                                position: 'top',
+                              },
+                              tooltip: {
+                                callbacks: {
+                                  label: (tooltipItem) => {
+                                    const value = tooltipItem.raw;
+                                    return `${value}`;
                                   },
                                 },
-                              }
-                            : {},
-                      },
-                    }}
-                    plugins={[ChartDataLabels]}
-                  />
-                  <div className="mt-8 w-3/5 md:w-1/2 mx-auto">
-                    <h2>{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
-                      latestSurveyResults.date
-                    )} mit 630 Sitzen`}</h2>
-                    <Doughnut
-                      data={doughnutChartData || { labels: [], datasets: [] }}
-                      options={{
-                        responsive: true,
-                        plugins: {
-                          datalabels: {
-                            display: true,
-                            color: 'white',
-                            font: {
-                              weight: 'bold',
-                            },
-                            padding: 5,
-                          },
-                          legend: {
-                            position: 'top',
-                          },
-                          tooltip: {
-                            callbacks: {
-                              label: (tooltipItem) => {
-                                const value = tooltipItem.raw;
-                                return `${value}`;
                               },
                             },
-                          },
-                        },
-                      }}
-                      plugins={[ChartDataLabels]}
-                    />
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-4 text-center">
                     Daten von{' '}
                     <a
                       href="https://dawum.de"
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: 'blue' }}
+                      className="text-blue-600"
                     >
                       dawum.de
                     </a>{' '}
@@ -410,7 +426,7 @@ export default function Page() {
                       href="https://opendatacommons.org/licenses/odbl/1-0/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: 'blue' }}
+                      className="text-blue-600"
                     >
                       Open Database License (ODbL)
                     </a>
