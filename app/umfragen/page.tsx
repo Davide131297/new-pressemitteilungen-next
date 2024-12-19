@@ -16,7 +16,7 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from '@mui/material';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -25,6 +25,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ArcElement,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -36,7 +37,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
+  ArcElement
 );
 
 type ApiResponse = {
@@ -101,7 +103,6 @@ export default function Page() {
           }))
         );
 
-        // Setze das Institut der aktuellsten Umfrage als ausgewähltes Institut
         const latestSurvey = Object.values(data.Surveys).sort(
           (a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()
         )[0];
@@ -200,6 +201,75 @@ export default function Page() {
     };
   }, [latestSurveyResults]);
 
+  const seatDistribution = useMemo(() => {
+    if (!latestSurveyResults) return null;
+
+    console.log('letzte umfrage', latestSurveyResults.results);
+
+    const totalSeats = 630;
+    const partiesAboveThreshold = latestSurveyResults.results.filter(
+      (party) => party.result >= 5 && party.partyShortcut !== 'Sonstige'
+    );
+
+    const totalValidVotes = partiesAboveThreshold.reduce(
+      (sum, party) => sum + party.result,
+      0
+    );
+
+    const distribution = partiesAboveThreshold.map((party) => {
+      const exactSeats = (party.result / totalValidVotes) * totalSeats;
+      return {
+        partyShortcut: party.partyShortcut,
+        seats: Math.floor(exactSeats),
+        remainder: exactSeats % 1,
+      };
+    });
+
+    const seatsAllocated = distribution.reduce(
+      (sum, party) => sum + party.seats,
+      0
+    );
+    const remainingSeats = totalSeats - seatsAllocated;
+
+    // Verteile die restlichen Sitze nach der größten Dezimalstelle
+    distribution.sort((a, b) => b.remainder - a.remainder);
+    for (let i = 0; i < remainingSeats; i++) {
+      distribution[i % distribution.length].seats += 1;
+    }
+
+    console.log('Sitzverteilung', distribution);
+    return distribution.map(({ partyShortcut, seats }) => ({
+      partyShortcut,
+      seats,
+    }));
+  }, [latestSurveyResults]);
+
+  const doughnutChartData = useMemo(() => {
+    if (!seatDistribution) return null;
+
+    const colorMapping: { [key: string]: string } = {
+      'CDU/CSU': '#000000',
+      SPD: '#FF0000',
+      Grüne: '#00FF00',
+      FDP: '#FFFF00',
+      AfD: '#0000FF',
+      Linke: '#FF00FF',
+      BSW: '#610B38',
+    };
+
+    return {
+      labels: seatDistribution.map((party) => party.partyShortcut),
+      datasets: [
+        {
+          data: seatDistribution.map((party) => party.seats),
+          backgroundColor: seatDistribution.map(
+            (party) => colorMapping[party.partyShortcut] || '#CCCCCC'
+          ),
+        },
+      ],
+    };
+  }, [seatDistribution]);
+
   return (
     <>
       <div className="px-4 md:px-8">
@@ -248,7 +318,7 @@ export default function Page() {
                 </FormControl>
               </div>
               {latestSurveyResults && chartData ? (
-                <div className="mt-8 md:size-1/2 md:mx-auto">
+                <div className="mt-8 md:size-1/2 mx-auto">
                   <h2>{`Umfrage vom ${formatDate(
                     latestSurveyResults.date
                   )}`}</h2>
@@ -292,6 +362,39 @@ export default function Page() {
                     }}
                     plugins={[ChartDataLabels]}
                   />
+                  <div className="mt-8 w-3/5 md:w-1/2 mx-auto">
+                    <h2>{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
+                      latestSurveyResults.date
+                    )} mit 630 Sitzen`}</h2>
+                    <Doughnut
+                      data={doughnutChartData || { labels: [], datasets: [] }}
+                      options={{
+                        responsive: true,
+                        plugins: {
+                          datalabels: {
+                            display: true,
+                            color: 'white',
+                            font: {
+                              weight: 'bold',
+                            },
+                            padding: 5,
+                          },
+                          legend: {
+                            position: 'top',
+                          },
+                          tooltip: {
+                            callbacks: {
+                              label: (tooltipItem) => {
+                                const value = tooltipItem.raw;
+                                return `${value}`;
+                              },
+                            },
+                          },
+                        },
+                      }}
+                      plugins={[ChartDataLabels]}
+                    />
+                  </div>
                   <div className="mt-4">
                     Daten von{' '}
                     <a
