@@ -62,7 +62,7 @@ export default function Page() {
   const [parties, setParties] = useState<Party[]>([]);
 
   const [selectedParliament, setSelectedParliament] = useState('Bundestag');
-  const [selectedInstitute, setSelectedInstitute] = useState('Forsa');
+  const [selectedInstitute, setSelectedInstitute] = useState('');
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -74,7 +74,7 @@ export default function Page() {
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const data: ApiResponse = await response.json();
-        console.log(data);
+        console.log('Einkommende Daten: ', data);
 
         setParliaments(
           Object.entries(data.Parliaments).map(([id, parliament]) => ({
@@ -100,6 +100,13 @@ export default function Page() {
             ...party,
           }))
         );
+
+        // Setze das Institut der aktuellsten Umfrage als ausgewähltes Institut
+        const latestSurvey = Object.values(data.Surveys).sort(
+          (a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()
+        )[0];
+        const latestInstitute = data.Institutes[latestSurvey.Institute_ID].Name;
+        setSelectedInstitute(latestInstitute);
       } catch (err) {
         console.error(err);
       } finally {
@@ -180,7 +187,7 @@ export default function Page() {
       labels: sortedResults.map((result) => result.partyShortcut),
       datasets: [
         {
-          label: 'Umfrage Ergebnisse',
+          label: 'Ergebnis in %',
           data: sortedResults.map((result) => result.result),
           backgroundColor: sortedResults.map(
             (result) => colorMapping[result.partyShortcut] || '#CCCCCC'
