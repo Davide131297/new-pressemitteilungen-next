@@ -170,6 +170,9 @@ export default function Page() {
       AfD: '#0000FF',
       Linke: '#FF00FF',
       BSW: '#610B38',
+      'Freie Wähler': '#FF7F50',
+      CSU: '#000000',
+      CDU: '#000000',
       Sonstige: '#808080',
     };
 
@@ -245,7 +248,7 @@ export default function Page() {
                 </FormControl>
               </div>
               {latestSurveyResults && chartData ? (
-                <div className="mt-8">
+                <div className="mt-8 md:size-1/2 md:mx-auto">
                   <h2>{`Umfrage vom ${formatDate(
                     latestSurveyResults.date
                   )}`}</h2>
