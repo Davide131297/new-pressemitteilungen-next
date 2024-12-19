@@ -29,6 +29,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { set } from 'date-fns';
 
 ChartJS.register(
   CategoryScale,
@@ -62,6 +63,7 @@ export default function Page() {
   const [institutes, setInstitutes] = useState<Institute[]>([]);
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [parties, setParties] = useState<Party[]>([]);
+  const [totalSeats, setTotalSeats] = useState(0);
 
   const [selectedParliament, setSelectedParliament] = useState('Bundestag');
   const [selectedInstitute, setSelectedInstitute] = useState('');
@@ -204,9 +206,66 @@ export default function Page() {
   const seatDistribution = useMemo(() => {
     if (!latestSurveyResults) return null;
 
-    console.log('letzte umfrage', latestSurveyResults.results);
+    console.log('letzte umfrage', latestSurveyResults);
 
-    const totalSeats = 630;
+    let totalSeats: number = 0; // Standardinitialisierung
+    if (latestSurveyResults.parliamentId === '0') {
+      // Bundestag
+      totalSeats = 630;
+    } else if (latestSurveyResults.parliamentId === '1') {
+      // BW
+      totalSeats = 145;
+    } else if (latestSurveyResults.parliamentId === '2') {
+      // Bayern
+      totalSeats = 203;
+    } else if (latestSurveyResults.parliamentId === '3') {
+      // Berlin
+      totalSeats = 159;
+    } else if (latestSurveyResults.parliamentId === '4') {
+      // Brandenburg
+      totalSeats = 88;
+    } else if (latestSurveyResults.parliamentId === '5') {
+      // Bremen
+      totalSeats = 87;
+    } else if (latestSurveyResults.parliamentId === '6') {
+      // Hamburg
+      totalSeats = 123;
+    } else if (latestSurveyResults.parliamentId === '7') {
+      // Hessen
+      totalSeats = 133;
+    } else if (latestSurveyResults.parliamentId === '8') {
+      // Mecklenburg-Vorpommern
+      totalSeats = 79;
+    } else if (latestSurveyResults.parliamentId === '9') {
+      // Niedersachsen
+      totalSeats = 146;
+    } else if (latestSurveyResults.parliamentId === '10') {
+      //NRW
+      totalSeats = 195;
+    } else if (latestSurveyResults.parliamentId === '11') {
+      // Rheinland-Pfalz
+      totalSeats = 101;
+    } else if (latestSurveyResults.parliamentId === '12') {
+      // Saarland
+      totalSeats = 51;
+    } else if (latestSurveyResults.parliamentId === '13') {
+      // Sachsen
+      totalSeats = 120;
+    } else if (latestSurveyResults.parliamentId === '14') {
+      // Sachsen-Anhalt
+      totalSeats = 97;
+    } else if (latestSurveyResults.parliamentId === '15') {
+      // Schleswig-Holstein
+      totalSeats = 69;
+    } else if (latestSurveyResults.parliamentId === '16') {
+      // Thüringen
+      totalSeats = 88;
+    } else if (latestSurveyResults.parliamentId === '17') {
+      // EU
+      totalSeats = 96;
+    }
+    setTotalSeats(totalSeats);
+
     const partiesAboveThreshold = latestSurveyResults.results.filter(
       (party) => party.result >= 5 && party.partyShortcut !== 'Sonstige'
     );
@@ -375,55 +434,47 @@ export default function Page() {
                       </div>
                     </div>
                     <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
-                      {latestSurveyResults.parliamentId === '0' ? (
-                        <>
-                          <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
-                            latestSurveyResults.date
-                          )} mit 630 Sitzen`}</h2>
-                          <div className="h-[400px]">
-                            {' '}
-                            {/* Feste Höhe für das Chart */}
-                            <Doughnut
-                              data={
-                                doughnutChartData || {
-                                  labels: [],
-                                  datasets: [],
-                                }
-                              }
-                              options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                  datalabels: {
-                                    display: true,
-                                    color: 'white',
-                                    font: {
-                                      weight: 'bold',
-                                    },
-                                    padding: 5,
-                                  },
-                                  legend: {
-                                    position: 'top',
-                                  },
-                                  tooltip: {
-                                    callbacks: {
-                                      label: (tooltipItem) => {
-                                        const value = tooltipItem.raw;
-                                        return `${value}`;
-                                      },
-                                    },
+                      <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
+                        latestSurveyResults.date
+                      )} mit ${totalSeats} Sitzen`}</h2>
+                      <div className="h-[400px]">
+                        {' '}
+                        {/* Feste Höhe für das Chart */}
+                        <Doughnut
+                          data={
+                            doughnutChartData || {
+                              labels: [],
+                              datasets: [],
+                            }
+                          }
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                              datalabels: {
+                                display: true,
+                                color: 'white',
+                                font: {
+                                  weight: 'bold',
+                                },
+                                padding: 5,
+                              },
+                              legend: {
+                                position: 'top',
+                              },
+                              tooltip: {
+                                callbacks: {
+                                  label: (tooltipItem) => {
+                                    const value = tooltipItem.raw;
+                                    return `${value}`;
                                   },
                                 },
-                              }}
-                              plugins={[ChartDataLabels]}
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-center">
-                          Sitzverteilung aktuell nur für den Bundestag verfügbar
-                        </div>
-                      )}
+                              },
+                            },
+                          }}
+                          plugins={[ChartDataLabels]}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="mt-4 text-center">
