@@ -46,6 +46,7 @@ export default function MenuBox() {
       }}
     >
       <Grid container spacing={2}>
+        {/*}
         <Grid item xs={4}>
           <Item
             className={clsx({ active: currentPath === '/' })}
@@ -54,7 +55,8 @@ export default function MenuBox() {
             Home
           </Item>
         </Grid>
-        <Grid item xs={4}>
+        */}
+        <Grid item xs={6}>
           <Item
             className={clsx({ active: currentPath === '/news' })}
             onClick={() => handleNavigation('/news')}
@@ -62,7 +64,7 @@ export default function MenuBox() {
             News
           </Item>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Item
             className={clsx({ active: currentPath === '/umfragen' })}
             onClick={() => handleNavigation('/umfragen')}
