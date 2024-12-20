@@ -29,7 +29,6 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { set } from 'date-fns';
 
 ChartJS.register(
   CategoryScale,

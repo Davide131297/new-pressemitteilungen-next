@@ -18,7 +18,7 @@ import ZDF from '@/assets/ZDF.png';
 import Süddeutsche from '@/assets/Süddeutsche_Zeitung.png';
 import TOnline from '@/assets/T-online.de.png';
 import DieZeit from '@/assets/Die_Zeit.png';
-import RadioKöln from '@/assets/radio_Koeln.png';
+import RadioKöln from '@/assets/radio_koeln.png';
 
 export const sourceImages = {
   pnn: {
