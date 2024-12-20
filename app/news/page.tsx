@@ -5,32 +5,23 @@ import Image from 'next/image';
 import Logo from '@/components/logo';
 import MenuBox from '@/components/menu';
 import { NewsItem } from '@/components/myInterfaces';
-
-import TagesspiegelLogo from '@/assets/Tagesspiegel-Logo.svg';
-import SternLogo from '@/assets/Stern-Logo.svg';
-import MerkurOnline from '@/assets/Merkur.de-Logo.png';
-import DieWelt from '@/assets/Die_Welt.png';
-import HNA from '@/assets/HNA.svg';
-import Tagesschau from '@/assets/Tagesschau.png';
-import Kreiszeitung from '@/assets/Kreiszeitung.jpeg';
-import FAZ from '@/assets/Frankfurter_Allgemeine_Zeitung.png';
-import SWR from '@/assets/SWR.png';
-import NTV from '@/assets/N-tv.png';
-import NDR from '@/assets/NDR.png';
-import RadioDuisburg from '@/assets/Radio_Duisburg.png';
-import NZZ from '@/assets/Neue_Zürcher_Zeitung.png';
-import Focus from '@/assets/Focus.jpeg';
-import Hessenschau from '@/assets/Hessenschau.png';
-import MDR from '@/assets/MDR.png';
-import ZDF from '@/assets/ZDF.png';
-import Süddeutsche from '@/assets/Süddeutsche_Zeitung.png';
-import TOnline from '@/assets/T-online.de.png';
-import DieZeit from '@/assets/Die_Zeit.png';
+import { sourceImages } from '@/components/sourceImages';
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
   const itemsPerPage = 16;
 
   useEffect(() => {
@@ -62,8 +53,51 @@ export default function News() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
+  const handleSourceChange = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedSources(
+      typeof value === 'string' ? value.split(',') : (value as string[])
+    );
+  };
+
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedNews = news.slice(startIndex, startIndex + itemsPerPage);
+  const filteredNews = news.filter((item) => {
+    const source =
+      typeof item.source === 'object' ? item.source.id : item.source;
+    return selectedSources.length === 0 || selectedSources.includes(source);
+  });
+  const selectedNews = filteredNews.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  function getSourceImage(source: keyof typeof sourceImages) {
+    return sourceImages[source] || null;
+  }
+
+  const sources = new Set<string>();
+  news.forEach((item) => {
+    if (item.source) {
+      const source =
+        typeof item.source === 'object' ? item.source.id : item.source;
+      sources.add(source);
+    }
+  });
+
+  const sourceArray = Array.from(sources);
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -86,11 +120,37 @@ export default function News() {
               </button>
               <button
                 onClick={handleNextPage}
-                disabled={startIndex + itemsPerPage >= news.length}
+                disabled={startIndex + itemsPerPage >= filteredNews.length}
                 className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
               >
                 Weiter
               </button>
+            </div>
+            <div className="mb-4">
+              <FormControl fullWidth>
+                <InputLabel id="source-select-label">
+                  Quellen auswählen
+                </InputLabel>
+                <Select
+                  labelId="source-select-label"
+                  id="source-select"
+                  multiple
+                  value={selectedSources}
+                  onChange={handleSourceChange}
+                  input={<OutlinedInput label="Quellen auswählen" />}
+                  renderValue={(selected) => selected.join(', ')}
+                  MenuProps={MenuProps}
+                >
+                  {sourceArray.map((source) => (
+                    <MenuItem key={source} value={source}>
+                      <Checkbox
+                        checked={selectedSources.indexOf(source as string) > -1}
+                      />
+                      <ListItemText primary={source as string} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {selectedNews.map((item, index) => (
@@ -128,181 +188,20 @@ export default function News() {
                           : item.image_url}
                       </span>
                       <span className="text-xs">
-                        {item.source_icon ? (
-                          <Image
-                            src={item.source_icon}
-                            alt="source icon"
-                            className="inline-block w-4 h-4"
-                            width={16}
-                            height={16}
-                          />
-                        ) : item.source === 'pnn' ||
-                          item.source === 'Der Tagesspiegel' ||
-                          (typeof item.source === 'object' &&
-                            item.source.id === 'der-tagesspiegel') ? (
-                          <Image
-                            src={TagesspiegelLogo}
-                            alt="Tagesspiegel Logo"
-                            className="inline-block"
-                            width={64}
-                            height={64}
-                          />
-                        ) : item.source === 'stern' ||
-                          item.source === 'STERN' ? (
-                          <Image
-                            src={SternLogo}
-                            alt="Stern Logo"
-                            className="inline-block"
-                            width={40}
-                            height={40}
-                          />
-                        ) : item.source === 'merkur-online' ? (
-                          <Image
-                            src={MerkurOnline}
-                            alt="MerkurOnline Logo"
-                            className="inline-block"
-                            width={48}
-                            height={48}
-                          />
-                        ) : item.source === 'DIE WELT' ? (
-                          <Image
-                            src={DieWelt}
-                            alt="Die Welt Logo"
-                            className="inline-block"
-                            width={48}
-                            height={48}
-                          />
-                        ) : item.source === 'hna' ? (
-                          <Image
-                            src={HNA}
-                            alt="HNA Logo"
-                            className="inline-block"
-                            width={30}
-                            height={30}
-                          />
-                        ) : item.source === 'Tagesschau' ? (
-                          <Image
-                            src={Tagesschau}
-                            alt="Tagesschau Logo"
-                            className="inline-block"
-                            width={50}
-                            height={50}
-                          />
-                        ) : item.source === 'kreiszeitung' ? (
-                          <Image
-                            src={Kreiszeitung}
-                            alt="Kreiszeitung Logo"
-                            className="inline-block"
-                            width={25}
-                            height={25}
-                          />
-                        ) : item.source === 'faz' ? (
-                          <Image
-                            src={FAZ}
-                            alt="FAZ Logo"
-                            className="inline-block"
-                            width={70}
-                            height={70}
-                          />
-                        ) : item.source === 'swr' ? (
-                          <Image
-                            src={SWR}
-                            alt="SWR Logo"
-                            className="inline-block"
-                            width={35}
-                            height={35}
-                          />
-                        ) : item.source === 'n-tv' ? (
-                          <Image
-                            src={NTV}
-                            alt="N-tv Logo"
-                            className="inline-block"
-                            width={20}
-                            height={20}
-                          />
-                        ) : item.source === 'ndr' ? (
-                          <Image
-                            src={NDR}
-                            alt="NDR Logo"
-                            className="inline-block"
-                            width={20}
-                            height={20}
-                          />
-                        ) : item.source === 'radioduisburg' ? (
-                          <Image
-                            src={RadioDuisburg}
-                            alt="Radio Duisburg Logo"
-                            className="inline-block"
-                            width={30}
-                            height={30}
-                          />
-                        ) : item.source === 'Neue Zuercher Zeitung' ? (
-                          <Image
-                            src={NZZ}
-                            alt="NZZ Logo"
-                            className="inline-block"
-                            width={80}
-                            height={80}
-                          />
-                        ) : item.source === 'focus' ? (
-                          <Image
-                            src={Focus}
-                            alt="Focus Logo"
-                            className="inline-block"
-                            width={50}
-                            height={50}
-                          />
-                        ) : item.source === 'hr-online' ? (
-                          <Image
-                            src={Hessenschau}
-                            alt="Hessenschau Logo"
-                            className="inline-block"
-                            width={50}
-                            height={50}
-                          />
-                        ) : item.source === 'mdr' ? (
-                          <Image
-                            src={MDR}
-                            alt="MDR Logo"
-                            className="inline-block"
-                            width={50}
-                            height={50}
-                          />
-                        ) : item.source === 'heute' ? (
-                          <Image
-                            src={ZDF}
-                            alt="ZDF Logo"
-                            className="inline-block"
-                            width={25}
-                            height={25}
-                          />
-                        ) : item.source === 'sueddeutsche' ? (
-                          <Image
-                            src={Süddeutsche}
-                            alt="Süddeutsche Logo"
-                            className="inline-block"
-                            width={80}
-                            height={80}
-                          />
-                        ) : item.source === 'T-online' ? (
-                          <Image
-                            src={TOnline}
-                            alt="T-online Logo"
-                            className="inline-block"
-                            width={40}
-                            height={40}
-                          />
-                        ) : item.source === 'ZEIT' ||
-                          (typeof item.source === 'object' &&
-                            item.source.id === 'die-zeit') ? (
-                          <Image
-                            src={DieZeit}
-                            alt="Die Zeit Logo"
-                            className="inline-block"
-                            width={50}
-                            height={50}
-                          />
-                        ) : null}
+                        {(() => {
+                          const sourceData = getSourceImage(
+                            item.source as keyof typeof sourceImages
+                          );
+                          return sourceData ? (
+                            <Image
+                              src={sourceData.src}
+                              alt={sourceData.alt}
+                              className="inline-block"
+                              width={sourceData.width}
+                              height={sourceData.height}
+                            />
+                          ) : null;
+                        })()}
                       </span>
                     </div>
                     <a
@@ -327,7 +226,7 @@ export default function News() {
               </button>
               <button
                 onClick={handleNextPage}
-                disabled={startIndex + itemsPerPage >= news.length}
+                disabled={startIndex + itemsPerPage >= filteredNews.length}
                 className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
               >
                 Weiter
