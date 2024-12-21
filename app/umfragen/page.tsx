@@ -29,6 +29,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import CoalitionChart from '@/components/coalitionChart';
 
 ChartJS.register(
   CategoryScale,
@@ -77,7 +78,6 @@ export default function Page() {
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const data: ApiResponse = await response.json();
-        console.log('Einkommende Daten: ', data);
 
         setParliaments(
           Object.entries(data.Parliaments).map(([id, parliament]) => ({
@@ -147,7 +147,6 @@ export default function Page() {
   const latestSurveyResults = useMemo(() => {
     if (filteredSurveys.length === 0) return null;
     const latestSurvey = filteredSurveys[0];
-    console.log('Letzte Umfrage', latestSurvey);
     return {
       date: latestSurvey.Date,
       results: Object.entries(latestSurvey.Results).map(([partyId, result]) => {
@@ -205,64 +204,29 @@ export default function Page() {
   const seatDistribution = useMemo(() => {
     if (!latestSurveyResults) return null;
 
-    console.log('letzte umfrage', latestSurveyResults);
+    const seatsByParliamentId: { [key: string]: number } = {
+      '0': 630, // Bundestag
+      '1': 145, // BW
+      '2': 203, // Bayern
+      '3': 159, // Berlin
+      '4': 88, // Brandenburg
+      '5': 87, // Bremen
+      '6': 123, // Hamburg
+      '7': 133, // Hessen
+      '8': 79, // Mecklenburg-Vorpommern
+      '9': 146, // Niedersachsen
+      '10': 195, // NRW
+      '11': 101, // Rheinland-Pfalz
+      '12': 51, // Saarland
+      '13': 120, // Sachsen
+      '14': 97, // Sachsen-Anhalt
+      '15': 69, // Schleswig-Holstein
+      '16': 88, // Thüringen
+      '17': 96, // EU
+    };
 
-    let totalSeats: number = 0; // Standardinitialisierung
-    if (latestSurveyResults.parliamentId === '0') {
-      // Bundestag
-      totalSeats = 630;
-    } else if (latestSurveyResults.parliamentId === '1') {
-      // BW
-      totalSeats = 145;
-    } else if (latestSurveyResults.parliamentId === '2') {
-      // Bayern
-      totalSeats = 203;
-    } else if (latestSurveyResults.parliamentId === '3') {
-      // Berlin
-      totalSeats = 159;
-    } else if (latestSurveyResults.parliamentId === '4') {
-      // Brandenburg
-      totalSeats = 88;
-    } else if (latestSurveyResults.parliamentId === '5') {
-      // Bremen
-      totalSeats = 87;
-    } else if (latestSurveyResults.parliamentId === '6') {
-      // Hamburg
-      totalSeats = 123;
-    } else if (latestSurveyResults.parliamentId === '7') {
-      // Hessen
-      totalSeats = 133;
-    } else if (latestSurveyResults.parliamentId === '8') {
-      // Mecklenburg-Vorpommern
-      totalSeats = 79;
-    } else if (latestSurveyResults.parliamentId === '9') {
-      // Niedersachsen
-      totalSeats = 146;
-    } else if (latestSurveyResults.parliamentId === '10') {
-      //NRW
-      totalSeats = 195;
-    } else if (latestSurveyResults.parliamentId === '11') {
-      // Rheinland-Pfalz
-      totalSeats = 101;
-    } else if (latestSurveyResults.parliamentId === '12') {
-      // Saarland
-      totalSeats = 51;
-    } else if (latestSurveyResults.parliamentId === '13') {
-      // Sachsen
-      totalSeats = 120;
-    } else if (latestSurveyResults.parliamentId === '14') {
-      // Sachsen-Anhalt
-      totalSeats = 97;
-    } else if (latestSurveyResults.parliamentId === '15') {
-      // Schleswig-Holstein
-      totalSeats = 69;
-    } else if (latestSurveyResults.parliamentId === '16') {
-      // Thüringen
-      totalSeats = 88;
-    } else if (latestSurveyResults.parliamentId === '17') {
-      // EU
-      totalSeats = 96;
-    }
+    const totalSeats =
+      seatsByParliamentId[latestSurveyResults.parliamentId] || 0;
     setTotalSeats(totalSeats);
 
     const partiesAboveThreshold = latestSurveyResults.results.filter(
@@ -279,23 +243,8 @@ export default function Page() {
       return {
         partyShortcut: party.partyShortcut,
         seats: Math.floor(exactSeats),
-        remainder: exactSeats % 1,
       };
     });
-
-    const seatsAllocated = distribution.reduce(
-      (sum, party) => sum + party.seats,
-      0
-    );
-    const remainingSeats = totalSeats - seatsAllocated;
-
-    // Verteile die restlichen Sitze nach der größten Dezimalstelle
-    distribution.sort((a, b) => b.remainder - a.remainder);
-    for (let i = 0; i < remainingSeats; i++) {
-      distribution[i % distribution.length].seats += 1;
-    }
-
-    console.log('Sitzverteilung', distribution);
     return distribution.map(({ partyShortcut, seats }) => ({
       partyShortcut,
       seats,
@@ -475,6 +424,12 @@ export default function Page() {
                         />
                       </div>
                     </div>
+                  </div>
+                  <div>
+                    <CoalitionChart
+                      seatDistribution={seatDistribution}
+                      totalSeats={totalSeats}
+                    />
                   </div>
                   <div className="mt-4 text-center">
                     Daten von{' '}
