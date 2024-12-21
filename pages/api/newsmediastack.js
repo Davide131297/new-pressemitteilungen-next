@@ -41,6 +41,7 @@ async function saveToDatabase(collectionName, data) {
             item.source !== 'golem' && // Nicht relevant
             item.source !== 'ots' && // Nicht relevant
             item.source !== 'main-netz' && // Nicht relevant
+            item.source !== 'Krone.at' && // Nicht relevant
             item.source !== 'business-panorama'; // Nicht relevant
           const isUniqueTitle = !seenTitles.has(item.title);
           if (isValidSource && isUniqueTitle) {
