@@ -499,7 +499,7 @@ export default function Page() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-8">No results found for the selection.</div>
+                <div className="mt-8">Keine Umfrage gefunden.</div>
               )}
             </>
           )}
