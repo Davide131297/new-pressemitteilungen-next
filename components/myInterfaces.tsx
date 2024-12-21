@@ -43,7 +43,7 @@ export interface NewsItem {
   pubDate: string;
   source_icon: string;
   image: string;
-  source: string | { id: string };
+  source: string | { id: string; name: string };
   link: string;
   date?: Date;
 }

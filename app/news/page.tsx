@@ -6,24 +6,12 @@ import Logo from '@/components/logo';
 import MenuBox from '@/components/menu';
 import { NewsItem } from '@/components/myInterfaces';
 import { sourceImages } from '@/components/sourceImages';
-import {
-  Checkbox,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  Pagination,
-  Stack,
-} from '@mui/material';
+import { Pagination, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSources, setSelectedSources] = useState<string[]>([]);
   const itemsPerPage = 16;
 
   const router = useRouter();
@@ -51,57 +39,17 @@ export default function News() {
     loadNews();
   }, []);
 
-  const handleSourceChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedSources(
-      typeof value === 'string' ? value.split(',') : (value as string[])
-    );
-  };
-
   const handlePageChange = (page: number) => {
     router.push(`?page=${page}`);
   };
 
-  const filteredNews = news.filter((item) => {
-    const source =
-      typeof item.source === 'object' ? item.source.id : item.source;
-    return selectedSources.length === 0 || selectedSources.includes(source);
-  });
-
-  const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+  const totalPages = Math.ceil(news.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedNews = filteredNews.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const selectedNews = news.slice(startIndex, startIndex + itemsPerPage);
 
   function getSourceImage(source: keyof typeof sourceImages) {
     return sourceImages[source] || null;
   }
-
-  const sources = new Set<string>();
-  news.forEach((item) => {
-    if (item.source) {
-      const source =
-        typeof item.source === 'object' ? item.source.id : item.source;
-      sources.add(source);
-    }
-  });
-
-  const sourceArray = Array.from(sources);
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,32 +70,6 @@ export default function News() {
                 color="primary"
               />
             </Stack>
-            <div className="mb-4">
-              <FormControl fullWidth>
-                <InputLabel id="source-select-label">
-                  Quellen auswählen
-                </InputLabel>
-                <Select
-                  labelId="source-select-label"
-                  id="source-select"
-                  multiple
-                  value={selectedSources}
-                  onChange={handleSourceChange}
-                  input={<OutlinedInput label="Quellen auswählen" />}
-                  renderValue={(selected) => selected.join(', ')}
-                  MenuProps={MenuProps}
-                >
-                  {sourceArray.map((source) => (
-                    <MenuItem key={source} value={source}>
-                      <Checkbox
-                        checked={selectedSources.indexOf(source as string) > -1}
-                      />
-                      <ListItemText primary={source as string} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {selectedNews.map((item, index) => (
                 <article
