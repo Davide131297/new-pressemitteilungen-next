@@ -42,7 +42,8 @@ async function saveToDatabase(collectionName, data) {
             item.source !== 'ots' && // Nicht relevant
             item.source !== 'main-netz' && // Nicht relevant
             item.source !== 'Krone.at' && // Nicht relevant
-            item.source !== 'business-panorama'; // Nicht relevant
+            item.source !== 'business-panorama' && // Nicht relevant
+            !item.url.includes('.ch'); // Schweizer Internetseiten
           const isUniqueTitle = !seenTitles.has(item.title);
           if (isValidSource && isUniqueTitle) {
             seenTitles.add(item.title);
