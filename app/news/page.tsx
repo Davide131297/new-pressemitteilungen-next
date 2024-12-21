@@ -15,14 +15,22 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Pagination,
+  Stack,
 } from '@mui/material';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
   const itemsPerPage = 16;
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = searchParams
+    ? parseInt(searchParams.get('page') || '1', 10)
+    : 1;
 
   useEffect(() => {
     async function loadNews() {
@@ -43,16 +51,6 @@ export default function News() {
     loadNews();
   }, []);
 
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
-
   const handleSourceChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
@@ -62,12 +60,18 @@ export default function News() {
     );
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const handlePageChange = (page: number) => {
+    router.push(`?page=${page}`);
+  };
+
   const filteredNews = news.filter((item) => {
     const source =
       typeof item.source === 'object' ? item.source.id : item.source;
     return selectedSources.length === 0 || selectedSources.includes(source);
   });
+
+  const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
   const selectedNews = filteredNews.slice(
     startIndex,
     startIndex + itemsPerPage
@@ -110,22 +114,14 @@ export default function News() {
           </div>
         ) : (
           <div>
-            <div className="flex justify-between mt-8 mb-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Zurück
-              </button>
-              <button
-                onClick={handleNextPage}
-                disabled={startIndex + itemsPerPage >= filteredNews.length}
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Weiter
-              </button>
-            </div>
+            <Stack spacing={2} alignItems="center" className="mb-4">
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, page) => handlePageChange(page)}
+                color="primary"
+              />
+            </Stack>
             <div className="mb-4">
               <FormControl fullWidth>
                 <InputLabel id="source-select-label">
@@ -216,22 +212,14 @@ export default function News() {
                 </article>
               ))}
             </div>
-            <div className="flex justify-between mt-8">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Zurück
-              </button>
-              <button
-                onClick={handleNextPage}
-                disabled={startIndex + itemsPerPage >= filteredNews.length}
-                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-              >
-                Weiter
-              </button>
-            </div>
+            <Stack spacing={2} alignItems="center" className="mt-8">
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(_, page) => handlePageChange(page)}
+                color="primary"
+              />
+            </Stack>
           </div>
         )}
       </main>

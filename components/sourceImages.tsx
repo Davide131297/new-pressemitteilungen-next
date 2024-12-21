@@ -19,6 +19,7 @@ import Süddeutsche from '@/assets/Süddeutsche_Zeitung.png';
 import TOnline from '@/assets/T-online.de.png';
 import DieZeit from '@/assets/Die_Zeit.png';
 import RadioKöln from '@/assets/radio_koeln.png';
+import AachenerZeitung from '@/assets/Aachener_Zeitung.svg';
 
 export const sourceImages = {
   pnn: {
@@ -93,5 +94,11 @@ export const sourceImages = {
     alt: 'Radio Köln Logo',
     width: 25,
     height: 25,
+  },
+  'az-web': {
+    src: AachenerZeitung,
+    alt: 'Aachener Zeitung Logo',
+    width: 70,
+    height: 70,
   },
 };
