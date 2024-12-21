@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Logo from '@/components/logo';
-import MenuBox from '@/components/menu';
+import Header from '@/components/header';
 import { NewsItem } from '@/components/myInterfaces';
 import { sourceImages } from '@/components/sourceImages';
 import { Pagination, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Footer from '@/components/footer';
 
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -53,8 +53,7 @@ export default function News() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <MenuBox />
-      <Logo />
+      <Header />
       <main className="container mx-auto px-4 py-8">
         {loading ? (
           <div className="text-center h-[90vh] flex items-center justify-center">
@@ -147,9 +146,7 @@ export default function News() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-500 text-white text-center py-4 mt-8">
-        <p className="text-sm">© 2024 PresseFinder. Alle Rechte vorbehalten.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

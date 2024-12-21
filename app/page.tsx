@@ -15,8 +15,8 @@ import Karte from '../components/karte';
 import Welcome from '@/components/welcome';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import MenuBox from '@/components/menu';
-import Logo from '@/components/logo';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
 
 function Home() {
   const [query, setQuery] = useState('Aktenzeichen XY');
@@ -83,8 +83,22 @@ function Home() {
 
   return (
     <div className="pb-4">
-      <MenuBox />
-      <Logo />
+      <Header />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '80%' }}
+        >
+          Startdatum muss vor Enddatum liegen!
+        </Alert>
+      </Snackbar>
       {matches ? (
         <SearchMobile
           query={query}
@@ -150,21 +164,7 @@ function Home() {
         sx={{ marginTop: '10px', marginBottom: '10px' }}
       />
       <Welcome />
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="error"
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          Startdatum muss vor Enddatum liegen!
-        </Alert>
-      </Snackbar>
+      <Footer />
     </div>
   );
 }
