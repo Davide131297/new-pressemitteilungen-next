@@ -1,7 +1,13 @@
 import React, { useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  TooltipItem,
+} from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -129,9 +135,9 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
       },
       tooltip: {
         callbacks: {
-          label: (context: { raw: number; label: string }) => {
-            const value = context.raw;
-            const label = context.label || '';
+          label: (tooltipItem: TooltipItem<'doughnut'>) => {
+            const value = tooltipItem.raw as number; // `raw` ist als `unknown` definiert, daher casten
+            const label = tooltipItem.label || ''; // Sicherstellen, dass `label` nicht undefined ist
             return `${label}: ${value} Sitze`;
           },
         },
@@ -141,7 +147,7 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
         formatter: (value: number) => `${value}`,
         color: 'white',
         font: {
-          weight: 'bold',
+          weight: 'bold' as const,
         },
       },
     },
