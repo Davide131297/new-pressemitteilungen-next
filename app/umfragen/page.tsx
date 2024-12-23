@@ -426,10 +426,12 @@ export default function Page() {
                     </div>
                   </div>
                   <div>
-                    <CoalitionChart
-                      seatDistribution={seatDistribution}
-                      totalSeats={totalSeats}
-                    />
+                    {seatDistribution && (
+                      <CoalitionChart
+                        seatDistribution={seatDistribution}
+                        totalSeats={totalSeats}
+                      />
+                    )}
                   </div>
                   <div className="mt-4 text-center">
                     Daten von{' '}
