@@ -16,6 +16,11 @@ export default async function handler(
         .send('Missing query, startDate, or endDate parameter');
     }
 
+    // Timeout nach 5 Minuten (300000 Millisekunden)
+    const timeout = setTimeout(() => {
+      res.status(503).send('Request timed out');
+    }, 300000);
+
     try {
       // Abrufen von Artikeln von beiden Quellen
       const [presseportalArticles, berlinArticles] = await Promise.all([
@@ -30,6 +35,8 @@ export default async function handler(
           endDate as string
         ),
       ]);
+
+      clearTimeout(timeout);
 
       const combinedArticles = [...presseportalArticles, ...berlinArticles];
 
@@ -46,6 +53,7 @@ export default async function handler(
 
       res.status(200).json(uniqueArticles);
     } catch (error) {
+      clearTimeout(timeout);
       console.error('Error fetching articles:', error);
       res.status(500).send('Error fetching articles');
     }
