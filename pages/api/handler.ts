@@ -16,10 +16,10 @@ export default async function handler(
         .send('Missing query, startDate, or endDate parameter');
     }
 
-    // Timeout nach 5 Minuten (300000 Millisekunden)
+    // Timeout nach 60 Sekunden
     const timeout = setTimeout(() => {
       res.status(503).send('Request timed out');
-    }, 300000);
+    }, 60000);
 
     try {
       // Abrufen von Artikeln von beiden Quellen
