@@ -4,11 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev && npm run start-cron",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "start-cron": "ts-node pages/api/cronjob.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

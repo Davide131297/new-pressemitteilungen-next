@@ -11,6 +11,9 @@
     },
     "pages/api/news.tsx": {
       "maxDuration": 60
+    },
+    "pages/api/handler.ts": {
+      "maxDuration": 60
     }
   }
 }
