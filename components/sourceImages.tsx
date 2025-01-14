@@ -4,7 +4,6 @@ import MerkurOnline from '@/assets/Merkur.de-Logo.png';
 import DieWelt from '@/assets/Die_Welt.png';
 import HNA from '@/assets/HNA.svg';
 import Tagesschau from '@/assets/Tagesschau.png';
-import Kreiszeitung from '@/assets/Kreiszeitung.jpeg';
 import FAZ from '@/assets/Frankfurter_Allgemeine_Zeitung.png';
 import SWR from '@/assets/SWR.png';
 import NTV from '@/assets/N-tv.png';
@@ -50,12 +49,6 @@ export const sourceImages = {
     width: 50,
     height: 50,
   },
-  kreiszeitung: {
-    src: Kreiszeitung,
-    alt: 'Kreiszeitung Logo',
-    width: 25,
-    height: 25,
-  },
   faz: { src: FAZ, alt: 'FAZ Logo', width: 70, height: 70 },
   swr: { src: SWR, alt: 'SWR Logo', width: 35, height: 35 },
   'n-tv': { src: NTV, alt: 'N-tv Logo', width: 20, height: 20 },
@@ -100,5 +93,17 @@ export const sourceImages = {
     alt: 'Aachener Zeitung Logo',
     width: 70,
     height: 70,
+  },
+  'kicker.de': {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Kicker-Logo_2018.svg/2880px-Kicker-Logo_2018.svg.png',
+    alt: 'Kicker Logo',
+    width: 50,
+    height: 50,
+  },
+  'Der spiegel': {
+    src: 'https://upload.wikimedia.org/wikipedia/commons/0/06/Logo-Der-Spiegel-de.png',
+    alt: 'Der Spiegel Logo',
+    width: 50,
+    height: 50,
   },
 };

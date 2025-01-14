@@ -42,6 +42,11 @@ async function saveToDatabase(collectionName, data) {
             item.source !== 'ots' && // Nicht relevant
             item.source !== 'main-netz' && // Nicht relevant
             item.source !== 'Krone.at' && // Nicht relevant
+            item.source !== 'rf-news' && // Nicht relevant
+            item.source !== 'epochtimes' && // Nicht relevant
+            item.source !== 'wort' && // Nicht relevant
+            item.source !== '"op-online"' && // Nicht relevant
+            item.source !== 'kreiszeitung' && // Nicht relevant
             item.source !== 'business-panorama' && // Nicht relevant
             !item.url.includes('.ch'); // Schweizer Internetseiten
           const isUniqueTitle = !seenTitles.has(item.title);
