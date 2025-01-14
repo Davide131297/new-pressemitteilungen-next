@@ -1,4 +1,4 @@
-import { getDbClient } from '../../lib/mongodb';
+import { getDbClient } from '../../lib/database';
 
 async function saveToDatabase(collectionName, data) {
   try {
