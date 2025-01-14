@@ -17,6 +17,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
+import { getCoordinates } from '@/components/getCoordinates';
 
 function Home() {
   const [query, setQuery] = useState('Aktenzeichen XY');
@@ -58,7 +59,24 @@ function Home() {
         }
 
         const data = await response.json();
-        setData(data); // Daten in den Zustand setzen
+        const city = await getCoordinates(query);
+
+        if (city.latitude && city.longitude) {
+          const userConfirmed = confirm(
+            `Möchten Sie nur Pressemeldungen für ${query} sehen?`
+          );
+          if (userConfirmed) {
+            // Logik, um nur Pressemeldungen für die Stadt anzuzeigen
+            const filteredData = data.filter(
+              (item: { standort: string }) =>
+                item.standort.toLowerCase() === query.toLowerCase()
+            );
+            setData(filteredData);
+          } else {
+            // Logik, um alle Pressemeldungen anzuzeigen
+            setData(data); // Daten in den Zustand setzen
+          }
+        }
         setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
         console.error('Fehler beim Abrufen der Artikel:', error);
