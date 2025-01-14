@@ -8,6 +8,7 @@ import { sourceImages } from '@/components/sourceImages';
 import { Pagination, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Footer from '@/components/footer';
+import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 
 function NewsContent() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -51,6 +52,38 @@ function NewsContent() {
     return sourceImages[source] || null;
   }
 
+  const alertArticle = async (item: NewsItem) => {
+    const userConfirmed = confirm(
+      'Möchten sie diesen Artikel/Herausgeber melden?'
+    );
+    if (userConfirmed) {
+      try {
+        const response = await fetch('/api/savetodb', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ collectionName: 'Alerts', data: item }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Artikel/Herausgeber wurde gemeldet:', result);
+          alert('Artikel/Herausgeber wurde gemeldet.');
+        } else {
+          console.error(
+            'Fehler beim Melden des Artikels/Herausgebers:',
+            response.statusText
+          );
+          alert('Fehler beim Melden des Artikels/Herausgebers.');
+        }
+      } catch (error) {
+        console.error('Fehler beim Melden des Artikels/Herausgebers:', error);
+        alert('Fehler beim Melden des Artikels/Herausgebers.');
+      }
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -71,20 +104,29 @@ function NewsContent() {
             {selectedNews.map((item, index) => (
               <article
                 key={index}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative"
               >
-                <Image
-                  src={
-                    item.urlToImage ||
-                    item.image ||
-                    item.image_url ||
-                    'https://via.placeholder.com/600x400?text=Kein+Bild'
-                  }
-                  alt={item.title}
-                  width={600}
-                  height={400}
-                  className="w-full h-40 object-cover"
-                />
+                <div className="relative">
+                  <Image
+                    src={
+                      item.urlToImage ||
+                      item.image ||
+                      item.image_url ||
+                      'https://via.placeholder.com/600x400?text=Kein+Bild'
+                    }
+                    alt={item.title}
+                    width={600}
+                    height={400}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full cursor-pointer w-6 h-6 flex items-center justify-center"
+                    onClick={() => alertArticle(item)}
+                    title="Melden"
+                  >
+                    <PriorityHighOutlinedIcon sx={{ fontSize: '1rem' }} />
+                  </div>
+                </div>
                 <div className="p-4">
                   <h2 className="text-lg font-semibold text-gray-800">
                     {item.title}
