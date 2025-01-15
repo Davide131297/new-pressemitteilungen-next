@@ -104,37 +104,41 @@ function NewsContent() {
             {selectedNews.map((item, index) => (
               <article
                 key={index}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative"
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative flex flex-col justify-between"
               >
-                <div className="relative">
-                  <Image
-                    src={
-                      item.urlToImage ||
-                      item.image ||
-                      item.image_url ||
-                      'https://via.placeholder.com/600x400?text=Kein+Bild'
-                    }
-                    alt={item.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-40 object-cover"
-                  />
-                  <div
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full cursor-pointer w-6 h-6 flex items-center justify-center"
-                    onClick={() => alertArticle(item)}
-                    title="Melden"
-                  >
-                    <PriorityHighOutlinedIcon sx={{ fontSize: '1rem' }} />
+                <div>
+                  <div className="relative">
+                    <Image
+                      src={
+                        item.urlToImage ||
+                        item.image ||
+                        item.image_url ||
+                        'https://via.placeholder.com/600x400?text=Kein+Bild'
+                      }
+                      alt={item.title}
+                      width={600}
+                      height={400}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full cursor-pointer w-6 h-6 flex items-center justify-center"
+                      onClick={() => alertArticle(item)}
+                      title="Melden"
+                    >
+                      <PriorityHighOutlinedIcon sx={{ fontSize: '1rem' }} />
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {item.title}
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-2">
+                      {item.description || 'Keine Beschreibung verfügbar'}
+                    </p>
                   </div>
                 </div>
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {item.title}
-                  </h2>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {item.description || 'Keine Beschreibung verfügbar'}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                <div className="p-4 mt-auto">
+                  <div className="flex items-center justify-between text-sm text-gray-500">
                     <span>
                       {item.publishedAt
                         ? new Date(item.publishedAt).toLocaleDateString()
