@@ -60,6 +60,7 @@ function Home() {
 
         const data = await response.json();
         const city = await getCoordinates(query);
+        console.log(city);
 
         if (city.latitude && city.longitude) {
           const userConfirmed = confirm(
@@ -74,8 +75,13 @@ function Home() {
             setData(filteredData);
           } else {
             // Logik, um alle Pressemeldungen anzuzeigen
+            console.log('Abgebrochen: Alle Pressemeldungen anzeigen', data);
             setData(data); // Daten in den Zustand setzen
           }
+        } else {
+          // Wenn keine Koordinaten gefunden wurden, alle Pressemeldungen anzeigen
+          console.log('Keine Koordinaten gefunden:', city);
+          setData(data);
         }
         setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
