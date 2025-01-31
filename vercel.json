@@ -1,18 +1,21 @@
 {
   "functions": {
-    "pages/api/newsapi.js": {
+    "app/api/newsapi/route.js": {
       "maxDuration": 60
     },
-    "pages/api/newsdata.js": {
+    "app/api/newsdata/route.js": {
       "maxDuration": 60
     },
-    "pages/api/database.js": {
+    "app/api/database/route.ts": {
       "maxDuration": 60
     },
-    "pages/api/news.tsx": {
+    "app/api/news/route.ts": {
       "maxDuration": 60
     },
-    "pages/api/handler.ts": {
+    "app/api/handler/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/savetodb/route.ts": {
       "maxDuration": 60
     }
   }
