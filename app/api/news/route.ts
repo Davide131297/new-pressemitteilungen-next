@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { Document, WithId } from 'mongodb';
 import dotenv from 'dotenv';
 import { parseISO } from 'date-fns';
@@ -19,10 +19,7 @@ function normalizeDate(newsItem: WithId<Document>): NewsItem {
   return normalizedItem;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export async function GET() {
   const client = await getDbClient();
   const db = client.db('Pressemitteilungen');
 
@@ -50,9 +47,12 @@ export default async function handler(
       return b.date.getTime() - a.date.getTime();
     });
 
-    res.status(200).json(uniqueNews);
+    return NextResponse.json(uniqueNews, { status: 200 });
   } catch (error) {
     console.error('Fehler beim Abrufen der Nachrichten:', error);
-    res.status(500).json({ error: 'Fehler beim Abrufen der Nachrichten' });
+    return NextResponse.json(
+      { error: 'Fehler beim Abrufen der Nachrichten' },
+      { status: 500 }
+    );
   }
 }

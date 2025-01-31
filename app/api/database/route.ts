@@ -1,7 +1,8 @@
 import { MongoClient } from 'mongodb';
-import { deleteToken } from '../../lib/auth'; // Stellen Sie sicher, dass der Pfad korrekt ist
+import { deleteToken } from '../../../lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 
-let dbClient = null;
+let dbClient: MongoClient | null = null;
 
 async function getDbClient() {
   if (!dbClient) {
@@ -19,23 +20,32 @@ async function getDbClient() {
   return dbClient;
 }
 
-export default async function handler(req, res) {
+export async function DELETE(req: NextRequest) {
   if (req.method !== 'DELETE') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return NextResponse.json(
+      { message: 'Method not allowed' },
+      { status: 405 }
+    );
   }
 
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.headers.get('authorization')?.split(' ')[1];
   if (!token || !deleteToken(token)) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const client = await getDbClient();
     const db = client.db('Pressemitteilungen');
     await db.dropDatabase();
-    res.status(200).json({ message: 'Datenbank erfolgreich gelöscht' });
+    return NextResponse.json(
+      { message: 'Datenbank erfolgreich gelöscht' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Fehler beim Löschen der Datenbank:', error);
-    res.status(500).json({ message: 'Fehler beim Löschen der Datenbank' });
+    return NextResponse.json(
+      { message: 'Fehler beim Löschen der Datenbank' },
+      { status: 500 }
+    );
   }
 }

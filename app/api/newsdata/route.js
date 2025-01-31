@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
 let dbClient = null;
 
@@ -52,16 +53,18 @@ async function fetchData() {
   await Promise.all([fetchNewsData()]);
 }
 
-export default async function handler(req, res) {
+export async function GET() {
   try {
     await fetchData();
-    res
-      .status(200)
-      .json({ message: 'Daten erfolgreich abgerufen und gespeichert' });
+    return NextResponse.json(
+      { message: 'Daten erfolgreich abgerufen und gespeichert' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Fehler beim Abrufen und Speichern der Daten:', error);
-    res
-      .status(500)
-      .json({ error: 'Fehler beim Abrufen und Speichern der Daten' });
+    return NextResponse.json(
+      { error: 'Fehler beim Abrufen und Speichern der Daten' },
+      { status: 500 }
+    );
   }
 }

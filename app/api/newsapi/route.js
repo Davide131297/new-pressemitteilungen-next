@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
 let dbClient = null;
 
@@ -65,7 +66,7 @@ async function fetchData(apiKey, startDate, endDate) {
   await Promise.all([fetchNewsApi(apiKey, startDate, endDate)]);
 }
 
-export default async function handler(req, res) {
+export async function GET() {
   const startDate = new Date();
   const endDate = new Date();
   const apiKey = process.env.NEWS_API_KEY;
@@ -80,19 +81,23 @@ export default async function handler(req, res) {
   ).padStart(2, '0')}-${String(endDate.getMonth() + 1).padStart(2, '0')}`;
 
   if (!apiKey) {
-    res.status(500).json({ error: 'NEWS_API_KEY ist nicht definiert' });
-    return;
+    return NextResponse.json(
+      { error: 'NEWS_API_KEY ist nicht definiert' },
+      { status: 500 }
+    );
   }
 
   try {
     await fetchData(apiKey, formattedStartDate, formattedEndDate);
-    res
-      .status(200)
-      .json({ message: 'Daten erfolgreich abgerufen und gespeichert' });
+    return NextResponse.json(
+      { message: 'Daten erfolgreich abgerufen und gespeichert' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Fehler beim Abrufen und Speichern der Daten:', error);
-    res
-      .status(500)
-      .json({ error: 'Fehler beim Abrufen und Speichern der Daten' });
+    return NextResponse.json(
+      { error: 'Fehler beim Abrufen und Speichern der Daten' },
+      { status: 500 }
+    );
   }
 }

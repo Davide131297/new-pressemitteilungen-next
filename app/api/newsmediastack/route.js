@@ -1,4 +1,5 @@
-import { getDbClient } from '../../lib/database';
+import { getDbClient } from '../../../lib/database';
+import { NextResponse } from 'next/server';
 
 async function saveToDatabase(collectionName, data) {
   try {
@@ -62,30 +63,34 @@ async function fetchNewsMediaStack(apiKey, keywords) {
   await saveToDatabase('newsmediastack', data);
 }
 
-async function fetchData(apiKey, startDate, endDate) {
-  await Promise.all([fetchNewsMediaStack(apiKey, startDate, endDate)]);
+async function fetchData(apiKey, keywords) {
+  await Promise.all([fetchNewsMediaStack(apiKey, keywords)]);
 }
 
-export default async function handler(req, res) {
+export async function GET() {
   const apiKey = process.env.NEWS_MEDIASTACK_KEY;
   const keywords = 'spd,cdu,csu,grünen,linke,fdp,bsw,afd';
 
   console.log('ApiKey:', apiKey);
 
   if (!apiKey) {
-    res.status(500).json({ error: 'NEWS_MEDIASTACK_KEY ist nicht definiert' });
-    return;
+    return NextResponse.json(
+      { error: 'NEWS_MEDIASTACK_KEY ist nicht definiert' },
+      { status: 500 }
+    );
   }
 
   try {
     await fetchData(apiKey, keywords);
-    res
-      .status(200)
-      .json({ message: 'Daten erfolgreich abgerufen und gespeichert' });
+    return NextResponse.json(
+      { message: 'Daten erfolgreich abgerufen und gespeichert' },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Fehler beim Abrufen und Speichern der Daten:', error);
-    res
-      .status(500)
-      .json({ error: 'Fehler beim Abrufen und Speichern der Daten' });
+    return NextResponse.json(
+      { error: 'Fehler beim Abrufen und Speichern der Daten' },
+      { status: 500 }
+    );
   }
 }
