@@ -113,7 +113,7 @@ function NewsContent() {
                         item.urlToImage ||
                         item.image ||
                         item.image_url ||
-                        'https://via.placeholder.com/600x400?text=Kein+Bild'
+                        'https://fakeimg.pl/600x400?text=Kein+Bild'
                       }
                       alt={item.title}
                       width={600}
