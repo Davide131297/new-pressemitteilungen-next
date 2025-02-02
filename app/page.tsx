@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, SyntheticEvent } from 'react';
+import React, { useState, SyntheticEvent, useRef } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
@@ -31,6 +31,7 @@ function Home() {
   const [tabIndex, setTabIndex] = useState(0);
   const matches = useMediaQuery('(max-width:600px)');
   const [open, setOpen] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleApiCall = async () => {
     if (startDate && endDate) {
@@ -49,9 +50,12 @@ function Home() {
         query
       )}&startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
 
+      abortControllerRef.current = new AbortController();
+
       try {
         const response = await fetch(apiUrl, {
           method: 'GET',
+          signal: abortControllerRef.current.signal,
         });
 
         if (!response.ok) {
@@ -85,7 +89,11 @@ function Home() {
         }
         setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
-        console.error('Fehler beim Abrufen der Artikel:', error);
+        if ((error as Error).name === 'AbortError') {
+          console.log('Fetch aborted');
+        } else {
+          console.error('Fehler beim Abrufen der Artikel:', error);
+        }
       } finally {
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000; // Dauer in Sekunden
@@ -104,6 +112,12 @@ function Home() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function handleStopSearch() {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  }
 
   return (
     <div className="pb-4">
@@ -148,6 +162,7 @@ function Home() {
           loading={loading}
           elapsedTime={elapsedTime}
           data={data}
+          handleStopSearch={handleStopSearch}
         />
       )}
       <Box sx={{ marginTop: '30px' }}>
