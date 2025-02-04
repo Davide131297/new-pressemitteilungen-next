@@ -9,11 +9,7 @@ dotenv.config();
 
 function normalizeDate(newsItem: WithId<Document>): NewsItem {
   const normalizedItem = newsItem as unknown as NewsItem;
-  if (normalizedItem.publishedAt) {
-    normalizedItem.date = parseISO(normalizedItem.publishedAt);
-  } else if (normalizedItem.pubDate) {
-    normalizedItem.date = parseISO(normalizedItem.pubDate.replace(' ', 'T'));
-  } else if (normalizedItem.published_at) {
+  if (normalizedItem.published_at) {
     normalizedItem.date = parseISO(normalizedItem.published_at);
   }
   return normalizedItem;
@@ -24,22 +20,14 @@ export async function GET() {
   const db = client.db('Pressemitteilungen');
 
   try {
-    const newsApiCollection = db.collection('News.API');
-    const newsDataCollection = db.collection('News.DATA');
     const newsMediaStackCollection = db.collection('News.Mediastack');
 
-    const [newsApi, news, mediaStack] = await Promise.all([
-      newsApiCollection.find({}).toArray(),
-      newsDataCollection.find({}).toArray(),
-      newsMediaStackCollection.find({}).toArray(),
-    ]);
+    const data = await newsMediaStackCollection.find({}).toArray();
 
-    const combinedNews = [...newsApi, ...news, ...mediaStack].map(
-      normalizeDate
-    );
+    const newsItem = data.map(normalizeDate);
 
     const uniqueNews = Array.from(
-      new Map(combinedNews.map((item) => [item.title, item])).values()
+      new Map(newsItem.map((item) => [item.title, item])).values()
     );
 
     uniqueNews.sort((a, b) => {
