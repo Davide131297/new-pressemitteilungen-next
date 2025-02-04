@@ -100,7 +100,7 @@ function NewsContent() {
               color="primary"
             />
           </Stack>
-          <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
             {selectedNews.map((item, index) => (
               <article
                 key={index}
@@ -121,11 +121,11 @@ function NewsContent() {
                       className="w-full h-40 object-cover"
                     />
                     <div
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full cursor-pointer w-6 h-6 flex items-center justify-center"
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full cursor-pointer w-4 h-4 flex items-center justify-center"
                       onClick={() => alertArticle(item)}
                       title="Melden"
                     >
-                      <PriorityHighOutlinedIcon sx={{ fontSize: '1rem' }} />
+                      <PriorityHighOutlinedIcon sx={{ fontSize: '12px' }} />
                     </div>
                   </div>
                   <div className="p-4">
