@@ -120,7 +120,7 @@ function Home() {
   }
 
   return (
-    <div className="pb-4">
+    <div>
       <Header />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
