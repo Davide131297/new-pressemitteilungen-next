@@ -49,10 +49,7 @@ export default function ArticleCart({ selectedNews }: ArticleCartProps) {
     <>
       {selectedNews.map((item, index) => (
         <Link key={index} href={item.url || item.link}>
-          <article
-            key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative flex flex-col justify-between"
-          >
+          <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow relative flex flex-col justify-between h-full">
             <div>
               <div className="relative">
                 <Image
