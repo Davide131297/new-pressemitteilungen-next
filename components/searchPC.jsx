@@ -36,7 +36,7 @@ const SearchPC = ({
       }}
     >
       <TextField
-        label="Eingabe"
+        label="Suchbegriff"
         variant="outlined"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

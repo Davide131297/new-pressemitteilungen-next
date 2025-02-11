@@ -20,7 +20,7 @@ import Header from '@/components/header';
 import { getCoordinates } from '@/components/getCoordinates';
 
 function Home() {
-  const [query, setQuery] = useState('Aktenzeichen XY');
+  const [query, setQuery] = useState('');
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
   const [data, setData] = useState([]);
