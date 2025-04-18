@@ -12,6 +12,7 @@ export default function Logo() {
         backgroundColor: 'transparent',
         color: 'black',
         width: '100%',
+        marginTop: '20px',
       }}
     >
       <Image src={FinderLogo} alt="Finder Logo" className="w-15 mr-5" />

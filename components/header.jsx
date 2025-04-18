@@ -4,7 +4,7 @@ import Logo from './logo';
 export default function Header() {
   return (
     <>
-      <MenuBox />
+      {/* <MenuBox /> */}
       <Logo />
     </>
   );
