@@ -83,7 +83,8 @@ async function fetchData(apiKey, keywords) {
 
 export async function GET() {
   const apiKey = process.env.NEWS_MEDIASTACK_KEY;
-  const keywords = 'spd,cdu,csu,grünen,linke,fdp,bsw,afd';
+  //const keywords = 'spd,cdu,csu,grünen,linke,fdp,bsw,afd'; // Nur vor Wahlen relevant
+  const keywords = '';
 
   console.log('ApiKey:', apiKey);
 
