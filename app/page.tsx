@@ -15,7 +15,6 @@ import Karte from '../components/karte';
 import Welcome from '@/components/welcome';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { getCoordinates } from '@/components/getCoordinates';
 
@@ -203,7 +202,6 @@ function Home() {
         sx={{ marginTop: '10px', marginBottom: '10px' }}
       />
       <Welcome />
-      <Footer />
     </div>
   );
 }
