@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/news',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 };
