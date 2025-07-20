@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import Header from '@/components/header';
 import { NewsItem } from '@/components/myInterfaces';
 import { Pagination, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Footer from '@/components/footer';
 import ArticleCart from '@/components/articleCard';
 
 function NewsContent() {
@@ -82,13 +80,11 @@ function NewsContent() {
 export default function News() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       <main className="container mx-auto px-4 py-8">
         <Suspense fallback={<div className="text-center">Lade Inhalte...</div>}>
           <NewsContent />
         </Suspense>
       </main>
-      <Footer />
     </div>
   );
 }

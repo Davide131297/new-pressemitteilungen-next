@@ -1,78 +1,61 @@
+'use client';
+
 import React from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useRouter, usePathname } from 'next/navigation';
-import { useMediaQuery } from '@mui/material';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  borderRadius: '30px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
-  '&.active': {
-    backgroundColor: '#dce1e6', // Dunklere Farbe für aktives Menü
-    color: '#000', // Schwarzer Text
-  },
-}));
 
 export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
-  const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleNavigation = (path: string) => {
+    console.log(`Navigating to: ${path}`);
     router.push(path);
   };
 
   return (
-    <Box
-      sx={{
-        mt: '20px',
-        mb: '20px',
-        width: isMobile ? '80%' : '50%',
-        mx: 'auto',
-        borderRadius: '30px',
-        backgroundColor: '#f8f9fa',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-        padding: '10px',
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Item
-            className={clsx({ active: currentPath === '/' })}
+    <div className="mt-5 mb-5 w-4/5 md:w-1/2 mx-auto rounded-3xl bg-gray-100 shadow-md p-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <button
+            className={clsx(
+              'w-full py-2 px-4 rounded-3xl text-center',
+              currentPath === '/'
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-gray-700'
+            )}
             onClick={() => handleNavigation('/')}
           >
             Home
-          </Item>
-        </Grid>
-        {/*
-        <Grid item xs={6}>
-          <Item
-            className={clsx({ active: currentPath === '/news' })}
+          </button>
+        </div>
+        <div>
+          <button
+            className={clsx(
+              'w-full py-2 px-4 rounded-3xl text-center',
+              currentPath === '/news'
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-gray-700'
+            )}
             onClick={() => handleNavigation('/news')}
           >
             News
-          </Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item
-            className={clsx({ active: currentPath === '/umfragen' })}
+          </button>
+        </div>
+        <div>
+          <button
+            className={clsx(
+              'w-full py-2 px-4 rounded-3xl text-center',
+              currentPath === '/umfragen'
+                ? 'bg-blue-500 text-white'
+                : 'bg-white text-gray-700'
+            )}
             onClick={() => handleNavigation('/umfragen')}
           >
             Umfragen
-          </Item>
-        </Grid>
-        */}
-      </Grid>
-    </Box>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

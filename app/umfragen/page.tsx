@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
 import {
   Institute,
   Parliament,
@@ -29,7 +27,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import CoalitionChart from '@/components/coalitionChart';
+//import CoalitionChart from '@/components/coalitionChart';
 
 ChartJS.register(
   CategoryScale,
@@ -284,7 +282,6 @@ export default function Page() {
   return (
     <>
       <div className="px-4 md:px-8">
-        <Header />
         <div>
           {loading ? (
             <div>Loading...</div>
@@ -425,15 +422,17 @@ export default function Page() {
                       </div>
                     </div>
                   </div>
-                  <div>
+                  {/* Noch fehlerhaft, wird nicht angezeigt */}
+                  {/* <div>
                     {seatDistribution && (
                       <CoalitionChart
                         seatDistribution={seatDistribution}
                         totalSeats={totalSeats}
                       />
                     )}
-                  </div>
-                  <div className="mt-4 text-center">
+                  </div> */}
+                  <div className="m-4 text-center bg-gray-400 text-white p-2 rounded">
+                    <strong>Hinweis:</strong> Die Umfrageergebnisse basieren auf{' '}
                     Daten von{' '}
                     <a
                       href="https://dawum.de"
@@ -462,7 +461,6 @@ export default function Page() {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 }

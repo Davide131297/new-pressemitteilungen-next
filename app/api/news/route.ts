@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Document, WithId } from 'mongodb';
-import dotenv from 'dotenv';
 import { parseISO } from 'date-fns';
 import { NewsItem } from '@/components/myInterfaces';
 import { getDbClient } from '@/lib/database';
-
-dotenv.config();
 
 function normalizeDate(newsItem: WithId<Document>): NewsItem {
   const normalizedItem = newsItem as unknown as NewsItem;

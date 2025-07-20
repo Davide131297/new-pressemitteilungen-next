@@ -14,21 +14,21 @@ const Welcome = () => {
           Informationen aus verschiedenen Quellen zu durchsuchen und anzuzeigen.
         </p>
 
-        {/* Veraltetes Feature das eventuell wiederbelebt wird */}
-        {/* <ul className="list-disc list-inside space-y-2">
+        <ul className="list-disc list-inside space-y-2">
           <li>
             <strong>News-Seite:</strong> Auf der <strong>News-Seite</strong>{' '}
             findest du eine Übersicht der aktuellsten und wichtigsten
             Neuigkeiten aus verschiedenen Quellen. Bleibe immer auf dem
             Laufenden mit relevanten Nachrichten.
           </li>
+
           <li>
             <strong>Umfrage-Seite:</strong> Interessierst du dich für aktuelle
             politische Entwicklungen? Unsere <strong>Umfrage-Seite</strong>{' '}
             zeigt dir die neuesten Wahlumfragen und Trends. Perfekt, um
             politische Stimmungen und Veränderungen nachzuvollziehen.
           </li>
-        </ul> */}
+        </ul>
         <h5 className="text-xl font-semibold">So funktioniert es</h5>
         <ul>
           <li>
@@ -37,8 +37,7 @@ const Welcome = () => {
           </li>
         </ul>
 
-        {/* Veraltetes Feature das eventuell wiederbelebt wird */}
-        {/* <ol className="list-decimal list-inside space-y-2">
+        <ol className="list-decimal list-inside space-y-2">
           <li>
             Gib einen Suchbegriff in das Suchfeld ein, um Pressemitteilungen zu
             durchsuchen.
@@ -55,7 +54,7 @@ const Welcome = () => {
             Nutze Filteroptionen, um die Ergebnisse nach Zeitraum, Quelle oder
             Relevanz einzugrenzen.
           </li>
-        </ol> */}
+        </ol>
         <h5 className="text-xl font-semibold">Warum PresseFinder nutzen?</h5>
         <ul className="list-disc list-inside space-y-2">
           <li>
@@ -83,15 +82,14 @@ const Welcome = () => {
             Mitteilungen der Stadt Berlin.
           </li>
 
-          {/* Veraltetes Feature das eventuell wiederbelebt wird */}
-          {/* <li>
+          <li>
             <strong>dawum.de:</strong> Eine Schnittstelle, die die neuesten
             Umfragen aus verschiedenen Quellen bereitstellt.
           </li>
           <li>
             <strong>mediastack.com</strong>: Eine API für aktuelle Nachrichten
             aus verschiedenen Quellen.
-          </li> */}
+          </li>
         </ul>
         <h5 className="text-xl font-semibold">Weitere Informationen</h5>
         <ol className="list-decimal list-inside space-y-2">
@@ -103,11 +101,10 @@ const Welcome = () => {
             Die Algorithmen sind darauf ausgelegt, Duplikate zu vermeiden und
             dir klare Ergebnisse zu liefern.
           </li>
-          {/* Veraltetes Feature das eventuell wiederbelebt wird */}
-          {/* <li>
+          <li>
             Neuigkeiten und Umfragen werden regelmäßig aktualisiert, damit du
             stets auf dem neuesten Stand bist.
-          </li> */}
+          </li>
         </ol>
         {/*
         <h5 className="text-xl font-semibold">Kontaktiere uns</h5>

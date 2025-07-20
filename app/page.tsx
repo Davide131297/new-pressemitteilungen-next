@@ -15,7 +15,6 @@ import Karte from '../components/karte';
 import Welcome from '@/components/welcome';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Header from '@/components/header';
 import { getCoordinates } from '@/components/getCoordinates';
 
 function Home() {
@@ -31,9 +30,10 @@ function Home() {
   const matches = useMediaQuery('(max-width:600px)');
   const [open, setOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleApiCall = async () => {
-    if (startDate && endDate) {
+    if (query && startDate && endDate) {
       setLoading(true);
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
@@ -42,6 +42,7 @@ function Home() {
       if (dayjs(endDate).isBefore(dayjs(startDate))) {
         setLoading(false);
         setOpen(true);
+        setAlertMessage('Startdatum muss vor Enddatum liegen!');
         return;
       }
 
@@ -100,7 +101,14 @@ function Home() {
         setLoading(false);
       }
     } else {
-      console.error('Start- und Enddatum müssen ausgewählt werden.');
+      console.error(
+        'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
+      );
+      setOpen(true);
+      setAlertMessage(
+        'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
+      );
+      return;
     }
   };
 
@@ -110,6 +118,7 @@ function Home() {
 
   const handleClose = () => {
     setOpen(false);
+    setAlertMessage('');
   };
 
   function handleStopSearch() {
@@ -120,7 +129,6 @@ function Home() {
 
   return (
     <div>
-      <Header />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
@@ -133,7 +141,7 @@ function Home() {
           variant="filled"
           sx={{ width: '80%' }}
         >
-          Startdatum muss vor Enddatum liegen!
+          {alertMessage}
         </Alert>
       </Snackbar>
       {matches ? (

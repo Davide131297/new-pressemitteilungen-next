@@ -12,20 +12,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/umfragen',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/news',
-        destination: '/',
-        permanent: true,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/umfragen',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //     {
+  //       source: '/news',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

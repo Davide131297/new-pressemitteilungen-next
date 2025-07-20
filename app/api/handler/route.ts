@@ -8,10 +8,9 @@ export async function GET(req: NextRequest) {
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
 
-  // Überprüfung auf fehlende Parameter
   if (!query || !startDate || !endDate) {
     return NextResponse.json(
-      { message: 'Missing query, startDate, or endDate parameter' },
+      { message: 'Missing required query parameters' },
       { status: 400 }
     );
   }

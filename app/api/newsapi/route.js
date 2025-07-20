@@ -1,23 +1,5 @@
-import { MongoClient } from 'mongodb';
 import { NextResponse } from 'next/server';
-
-let dbClient = null;
-
-async function getDbClient() {
-  if (!dbClient) {
-    const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.4k82o.mongodb.net/?retryWrites=true&w=majority`;
-    console.log('Datenbank-URI:', uri);
-    try {
-      dbClient = new MongoClient(uri);
-      await dbClient.connect();
-      console.log('Datenbank-Verbindung hergestellt');
-    } catch (error) {
-      console.error('Fehler beim Herstellen der Datenbank-Verbindung:', error);
-      throw new Error('Datenbank-Verbindung fehlgeschlagen');
-    }
-  }
-  return dbClient;
-}
+import { getDbClient } from '@/lib/database';
 
 async function saveToDatabase(collectionName, data) {
   try {
