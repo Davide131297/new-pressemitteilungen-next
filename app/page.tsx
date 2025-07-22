@@ -172,39 +172,41 @@ function Home() {
           handleStopSearch={handleStopSearch}
         />
       )}
-      <Box sx={{ marginTop: '30px' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Tabs value={tabIndex} onChange={handleTabChange}>
-            <Tab label="Tabelle" />
-            <Tab label="Karte" />
-          </Tabs>
-        </Box>
-        {tabIndex === 0 && (
-          <Box sx={{ marginTop: '10px' }}>
-            <ArticleTable
-              data={data}
-              page={page}
-              setPage={setPage}
-              rowsPerPage={rowsPerPage}
-              setRowsPerPage={setRowsPerPage}
-            />
+      {data.length !== 0 && (
+        <Box sx={{ marginTop: '30px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Tabs value={tabIndex} onChange={handleTabChange}>
+              <Tab label="Tabelle" />
+              <Tab label="Karte" />
+            </Tabs>
           </Box>
-        )}
-        {tabIndex === 1 && (
+          {tabIndex === 0 && (
+            <Box sx={{ marginTop: '10px' }}>
+              <ArticleTable
+                data={data}
+                page={page}
+                setPage={setPage}
+                rowsPerPage={rowsPerPage}
+                setRowsPerPage={setRowsPerPage}
+              />
+            </Box>
+          )}
+          {tabIndex === 1 && (
+            <Box sx={{ marginTop: '10px' }}>
+              <Karte data={data} />
+            </Box>
+          )}
           <Box sx={{ marginTop: '10px' }}>
-            <Karte data={data} />
+            <CitySummaryTable data={data} />
           </Box>
-        )}
-        <Box sx={{ marginTop: '10px' }}>
-          <CitySummaryTable data={data} />
         </Box>
-      </Box>
+      )}
       <Divider
         variant="middle"
         sx={{ marginTop: '10px', marginBottom: '10px' }}
