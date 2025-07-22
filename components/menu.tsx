@@ -15,8 +15,8 @@ export default function MenuBox() {
 
   return (
     <div className="mt-5 mb-5 w-4/5 md:w-1/2 mx-auto rounded-3xl bg-gray-100 shadow-md p-2">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
+      <div className="flex gap-4">
+        <div className="flex-1">
           <button
             className={clsx(
               'w-full py-2 px-4 rounded-3xl text-center',
@@ -29,7 +29,7 @@ export default function MenuBox() {
             Home
           </button>
         </div>
-        <div>
+        <div className="flex-1">
           <button
             className={clsx(
               'w-full py-2 px-4 rounded-3xl text-center',
@@ -42,7 +42,7 @@ export default function MenuBox() {
             News
           </button>
         </div>
-        <div>
+        <div className="flex-1">
           <button
             className={clsx(
               'w-full py-2 px-4 rounded-3xl text-center',
