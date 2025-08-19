@@ -3,13 +3,19 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useRouter, usePathname } from 'next/navigation';
+import sendLogs from '@/lib/sendLogs';
 
 export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = async (path: string) => {
     console.log(`Navigating to: ${path}`);
+    try {
+      await sendLogs('info', `Navigating to ${path}`, { path });
+    } catch (err) {
+      console.error('Fehler beim Senden an /api/loki:', err);
+    }
     router.push(path);
   };
 

@@ -16,6 +16,7 @@ import Welcome from '@/components/welcome';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { getCoordinates } from '@/components/getCoordinates';
+import sendLogs from '@/lib/sendLogs';
 
 function Home() {
   const [query, setQuery] = useState('');
@@ -61,6 +62,12 @@ function Home() {
         if (!response.ok) {
           throw new Error(`API returned status ${response.status}`);
         }
+
+        sendLogs('info', `Pressesuche durchgeführt`, {
+          query,
+          startDate: JSON.stringify(startDate),
+          endDate: JSON.stringify(endDate),
+        });
 
         const data = await response.json();
         const city = await getCoordinates(query);

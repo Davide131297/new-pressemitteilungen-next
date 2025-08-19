@@ -18,6 +18,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: 'Pressemitteilungen',
   description: 'Suche und finde Pressemitteilungen',
+  icons: {
+    icon: '/assets/FinderIcon.png',
+  },
 };
 
 export default function RootLayout({
@@ -27,10 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/logo.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/logo.png" />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
