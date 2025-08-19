@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Image from 'next/image';
+import sendLogs from '@/lib/sendLogs';
 
 function convertGeoToPixel(latitude, longitude, mapWidth, mapHeight) {
   const minLat = 47.2701114;
@@ -31,16 +32,21 @@ function groupDataByLocation(data) {
   }, {});
 }
 
-function Karte({ data }) {
+export default function Karte({ data }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStandorte, setSelectedStandorte] = useState([]);
-  const [mapDimensions, setMapDimensions] = useState({ width: 350, height: 'calc(100vh - 300px)' });
+  const [mapDimensions, setMapDimensions] = useState({
+    width: 350,
+    height: 'calc(100vh - 300px)',
+  });
   const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.innerWidth < 768;
-      const newHeight = isMobile ? window.innerHeight * 0.9 - 200 : window.innerHeight - 300;
+      const newHeight = isMobile
+        ? window.innerHeight * 0.9 - 200
+        : window.innerHeight - 300;
       const newWidth = (newHeight / 472.5) * 350;
       setMapDimensions({ width: newWidth, height: newHeight });
     };
@@ -52,6 +58,13 @@ function Karte({ data }) {
   }, []);
 
   const handleMarkerClick = (event, standorte) => {
+    sendLogs(
+      'info',
+      `Marker clicked: ${standorte[0].standort}`,
+      'map-clicked',
+      `${standorte[0].standort}`,
+      `${standorte[0].bundesland}`
+    );
     setAnchorEl(event.currentTarget);
     setSelectedStandorte(standorte);
     setTabIndex(0);
@@ -82,21 +95,29 @@ function Karte({ data }) {
         height: `${mapDimensions.height}px`,
         margin: '0 auto',
       }}
-      onClick={handleCloseTooltip} // Tooltip schließen bei Klick auf die Karte
+      onClick={handleCloseTooltip}
     >
-      <Image src={KarteDeutschland} alt="Karte" width={'100%'} height={'100%'} />
-
+      <Image
+        src={KarteDeutschland}
+        alt="Karte"
+        width={'100%'}
+        height={'100%'}
+      />
       {Object.keys(groupedData).map((key, index) => {
         const standorte = groupedData[key];
         const latitude = parseFloat(standorte[0].latitude);
         const longitude = parseFloat(standorte[0].longitude);
-
         if (isNaN(latitude) || isNaN(longitude)) {
           return null;
         }
+        const { x, y } = convertGeoToPixel(
+          latitude,
+          longitude,
+          mapDimensions.width,
+          mapDimensions.height
+        );
 
-        const { x, y } = convertGeoToPixel(latitude, longitude, mapDimensions.width, mapDimensions.height);
-
+        const meldung = standorte.length === 1 ? 'Meldung' : 'Meldungen';
         return (
           <div
             key={index}
@@ -110,16 +131,16 @@ function Karte({ data }) {
               borderRadius: '50%',
               transform: 'translate(-50%, -50%)',
               cursor: 'pointer',
+              zIndex: 2,
             }}
             onClick={(e) => {
               e.stopPropagation();
               handleMarkerClick(e, standorte);
             }}
-            title={standorte.map(s => s.standort).join(', ')}
+            title={`${standorte[0].standort} - ${standorte.length} ${meldung}`}
           />
         );
       })}
-
       {selectedStandorte.length > 0 && (
         <Popover
           id={id}
@@ -135,9 +156,19 @@ function Karte({ data }) {
             horizontal: 'center',
           }}
         >
-          <div style={{ padding: '16px', maxWidth: '50vh' }} onClick={(e) => e.stopPropagation()}>
+          <div
+            style={{ padding: '16px', maxWidth: '50vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
-              <Tabs value={tabIndex} onChange={handleTabChange} aria-label="Standorte Tabs" orientation="horizontal" variant="scrollable" scrollButtons="auto">
+              <Tabs
+                value={tabIndex}
+                onChange={handleTabChange}
+                aria-label="Standorte Tabs"
+                orientation="horizontal"
+                variant="scrollable"
+                scrollButtons="auto"
+              >
                 {selectedStandorte.map((standort, index) => (
                   <Tab key={index} label={`Fall ${index + 1}`} />
                 ))}
@@ -175,5 +206,3 @@ function Karte({ data }) {
     </Box>
   );
 }
-
-export default Karte;

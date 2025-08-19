@@ -39,6 +39,8 @@ function Home() {
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
       const formattedEndDate = dayjs(endDate).format('DD.MM.YYYY');
+      let duration = 0;
+      let data = null;
 
       if (dayjs(endDate).isBefore(dayjs(startDate))) {
         setLoading(false);
@@ -68,7 +70,7 @@ function Home() {
           `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate} mit ${device}`
         );
 
-        const data = await response.json();
+        data = await response.json();
         const city = await getCoordinates(query);
         console.log(city);
 
@@ -102,9 +104,14 @@ function Home() {
         }
       } finally {
         const endTime = Date.now();
-        const duration = (endTime - startTime) / 1000; // Dauer in Sekunden
+        const days = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+        duration = (endTime - startTime) / 1000; // Dauer in Sekunden
         setElapsedTime(duration);
         setLoading(false);
+        sendLogs(
+          'info',
+          `Ergebnis einer Suche von ${query}: ${days} Tage, ${data.length} Artikel gefunden in ${duration} Sekunden`
+        );
       }
     } else {
       console.error(
@@ -119,6 +126,8 @@ function Home() {
   };
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
+    const tabName = newValue === 0 ? 'Tabelle' : 'Karte';
+    sendLogs('info', `Tab gewechselt: ${tabName}`);
     setTabIndex(newValue);
   };
 

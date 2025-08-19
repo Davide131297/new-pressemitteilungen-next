@@ -15,12 +15,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { level = 'info', msg = '' } = await request.json();
+    const {
+      level = 'info',
+      msg = '',
+      type,
+      city,
+      state,
+    } = await request.json();
+
+    const streamObj: Record<string, string> = {
+      app: 'pressemitteilungen',
+      level,
+    };
+    if (type !== undefined && city !== undefined && state !== undefined) {
+      streamObj.type = type;
+      streamObj.city = city;
+      streamObj.state = state;
+    }
 
     const body = {
       streams: [
         {
-          stream: { app: 'pressemitteilungen', level },
+          stream: streamObj,
           values: [
             [nowNs(), typeof msg === 'string' ? msg : JSON.stringify(msg)],
           ],
