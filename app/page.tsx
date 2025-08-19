@@ -67,7 +67,8 @@ function Home() {
 
         sendLogs(
           'info',
-          `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate} mit ${device}`
+          `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate} mit ${device}`,
+          'suche'
         );
 
         data = await response.json();

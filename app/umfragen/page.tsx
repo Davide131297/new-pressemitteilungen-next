@@ -27,6 +27,7 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import sendLogs from '@/lib/sendLogs';
 //import CoalitionChart from '@/components/coalitionChart';
 
 ChartJS.register(
@@ -118,10 +119,12 @@ export default function Page() {
   }, []);
 
   const handleParliamentChange = (event: SelectChangeEvent<string>) => {
+    sendLogs('info', `Parlament gewechselt: ${event.target.value}`, 'survey');
     setSelectedParliament(event.target.value);
   };
 
   const handleInstituteChange = (event: SelectChangeEvent<string>) => {
+    sendLogs('info', `Institut gewechselt: ${event.target.value}`, 'survey');
     setSelectedInstitute(event.target.value);
   };
 
@@ -290,7 +293,7 @@ export default function Page() {
               <div className="flex justify-center gap-2 mt-8">
                 <FormControl fullWidth>
                   <InputLabel id="parliament-select-label" size="small">
-                    Parliament
+                    Parlament
                   </InputLabel>
                   <Select
                     labelId="parliament-select-label"
@@ -308,7 +311,7 @@ export default function Page() {
                 </FormControl>
                 <FormControl fullWidth>
                   <InputLabel id="institute-select-label" size="small">
-                    Institute
+                    Institut
                   </InputLabel>
                   <Select
                     labelId="institute-select-label"

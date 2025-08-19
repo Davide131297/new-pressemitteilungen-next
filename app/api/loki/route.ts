@@ -27,11 +27,9 @@ export async function POST(request: NextRequest) {
       app: 'pressemitteilungen',
       level,
     };
-    if (type !== undefined && city !== undefined && state !== undefined) {
-      streamObj.type = type;
-      streamObj.city = city;
-      streamObj.state = state;
-    }
+    if (type !== undefined) streamObj.type = type;
+    if (city !== undefined) streamObj.city = city;
+    if (state !== undefined) streamObj.state = state;
 
     const body = {
       streams: [
