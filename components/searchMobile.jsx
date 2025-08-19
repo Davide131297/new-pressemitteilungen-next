@@ -72,7 +72,7 @@ const SearchMobile = ({
       </Box>
       <Button
         variant="outlined"
-        onClick={handleApiCall}
+        onClick={() => handleApiCall('mobile')}
         disabled={loading}
         sx={{
           borderColor: 'grey.500',

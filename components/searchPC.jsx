@@ -68,7 +68,7 @@ const SearchPC = ({
 
       <Button
         variant="outlined"
-        onClick={handleApiCall}
+        onClick={() => handleApiCall('desktop')}
         disabled={loading}
         sx={{
           marginLeft: '5px',

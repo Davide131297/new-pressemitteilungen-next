@@ -33,7 +33,7 @@ function Home() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const handleApiCall = async () => {
+  const handleApiCall = async (device: string) => {
     if (query && startDate && endDate) {
       setLoading(true);
       const startTime = Date.now();
@@ -65,8 +65,7 @@ function Home() {
 
         sendLogs(
           'info',
-          `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate}`,
-          { Suchbegriff: query }
+          `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate} mit ${device}`
         );
 
         const data = await response.json();

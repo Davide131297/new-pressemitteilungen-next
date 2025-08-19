@@ -12,7 +12,7 @@ export default function MenuBox() {
   const handleNavigation = async (path: string) => {
     console.log(`Navigating to: ${path}`);
     try {
-      await sendLogs('info', `Navigating to ${path}`, { path });
+      await sendLogs('info', `Navigating to ${path}`);
     } catch (err) {
       console.error('Fehler beim Senden an /api/loki:', err);
     }

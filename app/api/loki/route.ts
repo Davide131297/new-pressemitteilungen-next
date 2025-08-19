@@ -15,13 +15,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { level = 'info', msg = '', labels = {} } = await request.json();
-    const { detected_level, service_name, ...filteredLabels } = labels;
+    const { level = 'info', msg = '' } = await request.json();
 
     const body = {
       streams: [
         {
-          stream: { app: 'pressemitteilungen', level, ...filteredLabels },
+          stream: { app: 'pressemitteilungen', level },
           values: [
             [nowNs(), typeof msg === 'string' ? msg : JSON.stringify(msg)],
           ],
