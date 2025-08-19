@@ -63,11 +63,11 @@ function Home() {
           throw new Error(`API returned status ${response.status}`);
         }
 
-        sendLogs('info', `Pressesuche durchgeführt`, {
-          query,
-          startDate: JSON.stringify(startDate),
-          endDate: JSON.stringify(endDate),
-        });
+        sendLogs(
+          'info',
+          `Pressesuche durchgeführt: ${query} Zeitraum: ${formattedStartDate} - ${formattedEndDate}`,
+          { Suchbegriff: query }
+        );
 
         const data = await response.json();
         const city = await getCoordinates(query);
