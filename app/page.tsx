@@ -40,6 +40,12 @@ type Article = {
   date: string;
 };
 
+const dataSources = [
+  { label: 'presseportal.de', value: 'presseportal' },
+  { label: 'berlin.de', value: 'berlin' },
+  { label: 'greenpeace.de', value: 'greenpeace' },
+];
+
 function Home() {
   const [query, setQuery] = useState('');
   const [startDate, setStartDate] = useState(dayjs());
@@ -55,9 +61,14 @@ function Home() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
   const [summary, setSummary] = useState<SummaryItem[] | null>(null);
+  const [selectedSources, setSelectedSources] = useState([
+    'presseportal',
+    'berlin',
+    'greenpeace',
+  ]);
 
   const handleApiCall = async (device: string) => {
-    if (query && startDate && endDate) {
+    if (query && startDate && endDate && selectedSources.length > 0) {
       setLoading(true);
       const startTime = Date.now();
       const formattedStartDate = dayjs(startDate).format('DD.MM.YYYY');
@@ -80,7 +91,8 @@ function Home() {
 
       try {
         const response = await fetch(apiUrl, {
-          method: 'GET',
+          method: 'POST',
+          body: JSON.stringify({ sources: selectedSources }),
           signal: abortControllerRef.current.signal,
         });
 
@@ -145,11 +157,11 @@ function Home() {
       }
     } else {
       console.error(
-        'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
+        'Suchbegriff, Start- und Enddatum sowie die Datenquelle(n) müssen ausgewählt werden.'
       );
       setOpen(true);
       setAlertMessage(
-        'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
+        'Suchbegriff, Start- und Enddatum sowie die Datenquelle(n) müssen ausgewählt werden.'
       );
       return;
     }
@@ -201,6 +213,9 @@ function Home() {
           loading={loading}
           elapsedTime={elapsedTime}
           data={data}
+          dataSources={dataSources}
+          selectedSources={selectedSources}
+          setSelectedSources={setSelectedSources}
         />
       ) : (
         <SearchPC
@@ -215,6 +230,9 @@ function Home() {
           elapsedTime={elapsedTime}
           data={data}
           handleStopSearch={handleStopSearch}
+          dataSources={dataSources}
+          selectedSources={selectedSources}
+          setSelectedSources={setSelectedSources}
         />
       )}
       {data.length !== 0 && (

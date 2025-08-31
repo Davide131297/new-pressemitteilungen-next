@@ -31,15 +31,18 @@ function buildItems(arts: Array<Article>, limit = 10) {
     .filter((i) => i.title);
 }
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get('query');
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
+  const { sources } = await req.json();
 
-  if (!query || !startDate || !endDate) {
+  console.log('Sources:', sources);
+
+  if (!query || !startDate || !endDate || !sources || !Array.isArray(sources)) {
     return NextResponse.json(
-      { message: 'Missing required query parameters' },
+      { message: 'Missing required query parameters or sources' },
       { status: 400 }
     );
   }
@@ -48,20 +51,21 @@ export async function GET(req: NextRequest) {
   const timer = setTimeout(() => ctrl.abort(), 60_000);
 
   try {
-    const [presseportalArticles, berlinArticles, greenpeaceArticles] =
-      await Promise.all([
-        fetchArticlesFromPresseportal(query, startDate, endDate),
-        fetchArticlesFromBerlin(query, startDate, endDate),
-        fetchArticlesFromGreenpeace(query, startDate, endDate),
-      ]);
+    const fetchers = [];
+    if (sources.includes('presseportal')) {
+      fetchers.push(fetchArticlesFromPresseportal(query, startDate, endDate));
+    }
+    if (sources.includes('berlin')) {
+      fetchers.push(fetchArticlesFromBerlin(query, startDate, endDate));
+    }
+    if (sources.includes('greenpeace')) {
+      fetchers.push(fetchArticlesFromGreenpeace(query, startDate, endDate));
+    }
 
+    const results = await Promise.all(fetchers);
     clearTimeout(timer);
 
-    const combined: Article[] = [
-      ...presseportalArticles,
-      ...berlinArticles,
-      ...greenpeaceArticles,
-    ];
+    const combined: Article[] = results.flat();
     const uniqueArticles = combined.filter(
       (article, index, self) =>
         index ===
@@ -100,8 +104,6 @@ export async function GET(req: NextRequest) {
       date: it.date,
     }));
 
-    console.log('itemsWithTeaser:', itemsWithTeaser);
-
     return NextResponse.json(
       {
         summary: itemsWithTeaser,
@@ -117,17 +119,9 @@ export async function GET(req: NextRequest) {
         { status: 503 }
       );
     }
-    console.error('Error fetching/summarizing:', err);
     return NextResponse.json(
       { message: 'Error fetching articles' },
       { status: 500 }
     );
   }
-}
-
-export function OPTIONS() {
-  return NextResponse.json(null, {
-    status: 204,
-    headers: { Allow: 'GET, OPTIONS' },
-  });
 }

@@ -12,6 +12,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import { red } from '@mui/material/colors';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  OutlinedInput,
+} from '@mui/material';
 
 const SearchPC = ({
   query,
@@ -25,6 +34,9 @@ const SearchPC = ({
   elapsedTime,
   data,
   handleStopSearch,
+  dataSources,
+  selectedSources,
+  setSelectedSources,
 }) => {
   return (
     <Box
@@ -65,6 +77,48 @@ const SearchPC = ({
           sx={{ marginLeft: '5px' }}
         />
       </LocalizationProvider>
+
+      <FormControl
+        sx={{
+          minWidth: 100,
+          marginBottom: 2,
+          marginRight: 2,
+          height: '56px',
+          maxWidth: '200px',
+          marginLeft: '5px',
+        }}
+      >
+        <InputLabel id="data-source-label">Datenquelle</InputLabel>
+        <Select
+          labelId="data-source-label"
+          multiple
+          value={selectedSources}
+          onChange={(e) => setSelectedSources(e.target.value)}
+          input={
+            <OutlinedInput
+              label="Datenquelle"
+              sx={{ height: '56px', alignItems: 'center', display: 'flex' }}
+            />
+          }
+          renderValue={(selected) =>
+            selected.length === dataSources.length
+              ? 'Alle'
+              : dataSources
+                  .filter((ds) => selected.includes(ds.value))
+                  .map((ds) => ds.label)
+                  .join(', ')
+          }
+          size="small"
+          sx={{ height: '56px', display: 'flex', alignItems: 'center' }}
+        >
+          {dataSources.map((source) => (
+            <MenuItem key={source.value} value={source.value}>
+              <Checkbox checked={selectedSources.indexOf(source.value) > -1} />
+              <ListItemText primary={source.label} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <Button
         variant="outlined"

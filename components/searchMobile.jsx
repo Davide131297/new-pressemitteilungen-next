@@ -4,6 +4,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
 
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  OutlinedInput,
+} from '@mui/material';
+
 const SearchMobile = ({
   query,
   setQuery,
@@ -15,6 +25,9 @@ const SearchMobile = ({
   loading,
   elapsedTime,
   data,
+  dataSources,
+  selectedSources,
+  setSelectedSources,
 }) => {
   return (
     <Box
@@ -70,6 +83,44 @@ const SearchMobile = ({
           />
         </LocalizationProvider>
       </Box>
+      <FormControl
+        sx={{
+          width: '300px',
+          marginBottom: 2,
+          height: '56px',
+        }}
+      >
+        <InputLabel id="data-source-label">Datenquelle</InputLabel>
+        <Select
+          labelId="data-source-label"
+          multiple
+          value={selectedSources}
+          onChange={(e) => setSelectedSources(e.target.value)}
+          input={
+            <OutlinedInput
+              label="Datenquelle"
+              sx={{ height: '56px', alignItems: 'center', display: 'flex' }}
+            />
+          }
+          renderValue={(selected) =>
+            selected.length === dataSources.length
+              ? 'Alle'
+              : dataSources
+                  .filter((ds) => selected.includes(ds.value))
+                  .map((ds) => ds.label)
+                  .join(', ')
+          }
+          size="small"
+          sx={{ height: '56px', display: 'flex', alignItems: 'center' }}
+        >
+          {dataSources.map((source) => (
+            <MenuItem key={source.value} value={source.value}>
+              <Checkbox checked={selectedSources.indexOf(source.value) > -1} />
+              <ListItemText primary={source.label} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Button
         variant="outlined"
         onClick={() => handleApiCall('mobile')}
