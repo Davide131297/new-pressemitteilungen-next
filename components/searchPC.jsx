@@ -87,7 +87,7 @@ const SearchPC = ({
         {loading ? (
           <>
             <CircularProgress size={24} />
-            <Box ml={1}>Daten werden gesucht...</Box>
+            <Box ml={1}>Suche..</Box>
           </>
         ) : (
           'Fälle Suchen'

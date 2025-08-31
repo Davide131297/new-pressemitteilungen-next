@@ -17,12 +17,34 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { getCoordinates } from '@/components/getCoordinates';
 import sendLogs from '@/lib/sendLogs';
+import TextBox from '@/components/textBox';
+
+export type SummaryItem = {
+  city: string;
+  teaser: string;
+  title: string;
+  url: string;
+  date: string;
+};
+
+type ArticleResponse = {
+  articles: Article[];
+  summary: SummaryItem[] | null;
+};
+
+type Article = {
+  id: string;
+  title: string;
+  content: string;
+  standort: string;
+  date: string;
+};
 
 function Home() {
   const [query, setQuery] = useState('');
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Article[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [loading, setLoading] = useState(false);
@@ -32,6 +54,7 @@ function Home() {
   const [open, setOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
+  const [summary, setSummary] = useState<SummaryItem[] | null>(null);
 
   const handleApiCall = async (device: string) => {
     if (query && startDate && endDate) {
@@ -71,7 +94,7 @@ function Home() {
           'suche'
         );
 
-        data = await response.json();
+        data = (await response.json()) as ArticleResponse;
         const city = await getCoordinates(query);
         console.log(city);
 
@@ -81,20 +104,24 @@ function Home() {
           );
           if (userConfirmed) {
             // Logik, um nur Pressemeldungen für die Stadt anzuzeigen
-            const filteredData = data.filter(
+            const filteredData = data.articles.filter(
               (item: { standort: string }) =>
                 item.standort.toLowerCase() === query.toLowerCase()
             );
             setData(filteredData);
+            console.log('Summary: ', data.summary);
+            setSummary(data.summary);
           } else {
             // Logik, um alle Pressemeldungen anzuzeigen
             console.log('Abgebrochen: Alle Pressemeldungen anzeigen', data);
-            setData(data); // Daten in den Zustand setzen
+            setData(data.articles); // Daten in den Zustand setzen
           }
         } else {
           // Wenn keine Koordinaten gefunden wurden, alle Pressemeldungen anzeigen
           console.log('Keine Koordinaten gefunden:', city);
-          setData(data);
+          setData(data.articles);
+          console.log('Summary: ', data.summary);
+          setSummary(data.summary);
         }
         setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
@@ -111,7 +138,7 @@ function Home() {
         setLoading(false);
         sendLogs(
           'info',
-          `Ergebnis einer Suche von ${query}: ${days} Tage, ${data.length} Artikel gefunden in ${duration} Sekunden`
+          `Ergebnis einer Suche von ${query}: ${days} Tage, ${data?.articles.length} Artikel gefunden in ${duration} Sekunden`
         );
       }
     } else {
@@ -228,6 +255,7 @@ function Home() {
         sx={{ marginTop: '10px', marginBottom: '10px' }}
       />
       <Welcome />
+      {summary && <TextBox summary={summary} />}
     </div>
   );
 }
