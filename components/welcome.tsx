@@ -81,7 +81,9 @@ const Welcome = () => {
             <strong>berlin.de:</strong> Offizielle Informationen und
             Mitteilungen der Stadt Berlin.
           </li>
-
+          <li>
+            <strong>presseportal.greenpeace.de:</strong> Greenpeace Presseportal
+          </li>
           <li>
             <strong>dawum.de:</strong> Eine Schnittstelle, die die neuesten
             Umfragen aus verschiedenen Quellen bereitstellt.

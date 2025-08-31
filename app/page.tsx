@@ -35,8 +35,8 @@ type ArticleResponse = {
 type Article = {
   id: string;
   title: string;
-  content: string;
-  standort: string;
+  content?: string;
+  standort?: string;
   date: string;
 };
 
@@ -95,6 +95,7 @@ function Home() {
         );
 
         data = (await response.json()) as ArticleResponse;
+
         const city = await getCoordinates(query);
         console.log(city);
 
@@ -105,7 +106,8 @@ function Home() {
           if (userConfirmed) {
             // Logik, um nur Pressemeldungen für die Stadt anzuzeigen
             const filteredData = data.articles.filter(
-              (item: { standort: string }) =>
+              (item: Article) =>
+                item.standort &&
                 item.standort.toLowerCase() === query.toLowerCase()
             );
             setData(filteredData);

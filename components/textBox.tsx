@@ -63,6 +63,9 @@ export default function TextBox({ summary }: TextBoxProps) {
               </div>
             ))}
           </div>
+          <div className="bg-white px-4 py-1 text-[9px] text-gray-500 text-center">
+            Beta Version 0.1
+          </div>
         </motion.div>
       )}
       {!open && (

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { fetchArticlesFromPresseportal } from '@/lib/fetchers/presseportal';
 import { fetchArticlesFromBerlin } from '@/lib/fetchers/berlin';
+import { fetchArticlesFromGreenpeace } from '@/lib/fetchers/greenpeace';
+import { decodeHTMLEntities } from '@/helper/decode-html.entities';
+
 import { fetchTeaser } from '@/lib/teaser';
 
 type Article = {
@@ -44,14 +48,20 @@ export async function GET(req: NextRequest) {
   const timer = setTimeout(() => ctrl.abort(), 60_000);
 
   try {
-    const [presseportalArticles, berlinArticles] = await Promise.all([
-      fetchArticlesFromPresseportal(query, startDate, endDate),
-      fetchArticlesFromBerlin(query, startDate, endDate),
-    ]);
+    const [presseportalArticles, berlinArticles, greenpeaceArticles] =
+      await Promise.all([
+        fetchArticlesFromPresseportal(query, startDate, endDate),
+        fetchArticlesFromBerlin(query, startDate, endDate),
+        fetchArticlesFromGreenpeace(query, startDate, endDate),
+      ]);
 
     clearTimeout(timer);
 
-    const combined: Article[] = [...presseportalArticles, ...berlinArticles];
+    const combined: Article[] = [
+      ...presseportalArticles,
+      ...berlinArticles,
+      ...greenpeaceArticles,
+    ];
     const uniqueArticles = combined.filter(
       (article, index, self) =>
         index ===
@@ -79,12 +89,18 @@ export async function GET(req: NextRequest) {
       title: it.title,
       teaser:
         teaserResults[idx].status === 'fulfilled'
-          ? (teaserResults[idx] as PromiseFulfilledResult<string>).value
+          ? decodeHTMLEntities(
+              (teaserResults[idx] as PromiseFulfilledResult<string>).value
+            )
+              .replace(/✚ Mehr lesen$/i, '')
+              .trim()
           : '',
       url: it.url,
       city: it.city,
       date: it.date,
     }));
+
+    console.log('itemsWithTeaser:', itemsWithTeaser);
 
     return NextResponse.json(
       {
