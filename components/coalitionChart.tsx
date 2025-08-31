@@ -100,6 +100,7 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
 
   const validCoalitions = useMemo(
     () => findMinimalCoalitions(),
+    //eslint-disable-next-line
     [seatDistribution, totalSeats]
   );
 

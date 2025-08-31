@@ -5,16 +5,12 @@ export default function Footer() {
     <footer className="bg-blue-500 text-white text-center py-4 mt-8">
       <p className="text-sm">© 2024 PresseFinder. Alle Rechte vorbehalten.</p>
       <div className="flex justify-center gap-4">
-        <p className="text-sm">
-          <Link href="/impressum" legacyBehavior>
-            <a className="text-white underline">Impressum</a>
-          </Link>
+        <p className="text-sm text-white underline">
+          <Link href="/impressum">Impressum</Link>
         </p>
         <p>|</p>
-        <p className="text-sm">
-          <Link href="/datenschutz" legacyBehavior>
-            <a className="text-white underline">Datenschutz</a>
-          </Link>
+        <p className="text-sm text-white underline">
+          <Link href="/datenschutz">Datenschutz</Link>
         </p>
       </div>
     </footer>
