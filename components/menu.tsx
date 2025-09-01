@@ -14,7 +14,7 @@ export default function MenuBox() {
     try {
       await sendLogs('info', `Navigating to ${path}`);
     } catch (err) {
-      console.error('Fehler beim Senden an /api/loki:', err);
+      console.error('Fehler beim Senden an /api/info:', err);
     }
     router.push(path);
   };

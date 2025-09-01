@@ -28,6 +28,11 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import sendLogs from '@/lib/sendLogs';
+import { format, parse, parseISO } from 'date-fns';
+import { de } from 'date-fns/locale';
+import Button from '@mui/material/Button';
+import LaunchIcon from '@mui/icons-material/Launch';
+import Link from 'next/link';
 //import CoalitionChart from '@/components/coalitionChart';
 
 ChartJS.register(
@@ -48,12 +53,35 @@ type ApiResponse = {
   Parties: Record<string, { Shortcut: string; Name: string }>;
 };
 
+type RSSItem = {
+  title: string;
+  link: string;
+  pubDate: string;
+  category: string[];
+};
+
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Monate sind nullbasiert
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  const date = parseISO(dateString);
+  return format(date, 'dd.MM.yyyy', { locale: de });
+};
+
+const formatRSSDate = (dateString: string) => {
+  const date = parse(dateString, 'EEE, dd MMM yyyy HH:mm:ss X', new Date());
+  return format(date, 'dd.MM.yyyy HH:mm', { locale: de });
+};
+
+const parseRSS = (xmlText: string): RSSItem[] => {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+  const items = xmlDoc.querySelectorAll('item');
+  return Array.from(items).map((item) => ({
+    title: item.querySelector('title')?.textContent?.trim() || '',
+    link: item.querySelector('link')?.textContent?.trim() || '',
+    pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
+    category: Array.from(item.querySelectorAll('category')).map(
+      (cat) => cat.textContent || ''
+    ),
+  }));
 };
 
 export default function Page() {
@@ -66,6 +94,7 @@ export default function Page() {
 
   const [selectedParliament, setSelectedParliament] = useState('Bundestag');
   const [selectedInstitute, setSelectedInstitute] = useState('');
+  const [rssItems, setRssItems] = useState<RSSItem[]>([]);
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -115,7 +144,20 @@ export default function Page() {
       }
     };
 
+    const fetchRSS = async () => {
+      try {
+        const rssResponse = await fetch('/api/rss-dawum');
+        const rssText = await rssResponse.text();
+        const parsedRSS = parseRSS(rssText);
+        console.log('Parsed RSS:', parsedRSS);
+        setRssItems(parsedRSS);
+      } catch (rssError) {
+        console.error('RSS fetch error:', rssError);
+      }
+    };
+
     fetchSurveys();
+    fetchRSS();
   }, []);
 
   const handleParliamentChange = (event: SelectChangeEvent<string>) => {
@@ -456,26 +498,83 @@ export default function Page() {
                       />
                     )}
                   </div> */}
+                  <div className="mt-12 mb-8">
+                    <h2 className="text-2xl font-bold mb-6 text-center">
+                      Neueste Wahlumfragen
+                    </h2>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {rssItems.map((item, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                        >
+                          <div className="p-4">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                              {item.title}
+                            </h3>
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {item.category
+                                .slice(0, 3)
+                                .map((cat, catIndex) => (
+                                  <span
+                                    key={catIndex}
+                                    className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                                  >
+                                    {cat}
+                                  </span>
+                                ))}
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500">
+                                {formatRSSDate(item.pubDate)}
+                              </span>
+                              <Link
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                              >
+                                Details →
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {rssItems.length > 0 && (
+                      <div className="text-center mt-6">
+                        <Button
+                          onClick={() =>
+                            window.open('https://dawum.de', '_blank')
+                          }
+                          variant="contained"
+                          endIcon={<LaunchIcon />}
+                        >
+                          Alle Umfragen auf DAWUM
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                   <div className="m-4 text-center bg-gray-400 text-white p-2 rounded">
                     <strong>Hinweis:</strong> Die Umfrageergebnisse basieren auf{' '}
                     Daten von{' '}
-                    <a
+                    <Link
                       href="https://dawum.de"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600"
                     >
                       dawum.de
-                    </a>{' '}
+                    </Link>{' '}
                     (
-                    <a
+                    <Link
                       href="https://opendatacommons.org/licenses/odbl/1-0/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600"
                     >
                       Open Database License (ODbL)
-                    </a>
+                    </Link>
                     )
                   </div>
                 </div>
