@@ -183,7 +183,7 @@ export default function Karte({ data }) {
               >
                 {tabIndex === index && (
                   <>
-                    <Typography variant="h6">{standort.titel}</Typography>
+                    <Typography variant="h6">{standort.title}</Typography>
                     <Typography variant="body2">{standort.standort}</Typography>
                     <Typography variant="body2">{standort.date}</Typography>
                     <Button

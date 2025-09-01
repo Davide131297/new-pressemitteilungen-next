@@ -4,7 +4,6 @@ import { fetchArticlesFromBerlin } from '@/lib/fetchers/berlin';
 import { fetchTeaser } from '@/lib/teaser';
 
 type Article = {
-  titel?: string;
   title?: string;
   fullArticleURL: string;
   date?: string;
@@ -19,7 +18,7 @@ function buildItems(arts: Array<Article>, limit = 10) {
   return arts
     .slice(0, limit)
     .map((a) => ({
-      title: (a.titel ?? a.title ?? '').toString().trim(),
+      title: a.title?.toString().trim(),
       url: a.fullArticleURL,
       city: a.standort ?? '',
       date: a.date ?? '',
@@ -58,7 +57,7 @@ export async function GET(req: NextRequest) {
         self.findIndex(
           (a) =>
             a.fullArticleURL === article.fullArticleURL &&
-            (a.titel ?? a.title) === (article.titel ?? article.title)
+            a.title === article.title
         )
     );
 
