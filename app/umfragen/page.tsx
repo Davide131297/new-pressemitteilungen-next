@@ -121,6 +121,28 @@ export default function Page() {
   const handleParliamentChange = (event: SelectChangeEvent<string>) => {
     sendLogs('info', `Parlament gewechselt: ${event.target.value}`, 'survey');
     setSelectedParliament(event.target.value);
+
+    // Nach dem Wechsel das Institut der aktuellsten Umfrage für das neue Parlament wählen
+    const parliament = parliaments.find(
+      (p) => p.Shortcut === event.target.value
+    );
+    if (parliament) {
+      // Finde die neueste Umfrage für das gewählte Parlament
+      const surveysForParliament = surveys
+        .filter((survey) => Number(survey.Parliament_ID) === parliament.id)
+        .sort(
+          (a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()
+        );
+      if (surveysForParliament.length > 0) {
+        const latestSurvey = surveysForParliament[0];
+        const instituteObj = institutes.find(
+          (i) => i.id === Number(latestSurvey.Institute_ID)
+        );
+        if (instituteObj) {
+          setSelectedInstitute(instituteObj.Name);
+        }
+      }
+    }
   };
 
   const handleInstituteChange = (event: SelectChangeEvent<string>) => {
