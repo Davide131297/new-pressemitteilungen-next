@@ -18,6 +18,11 @@ import Alert from '@mui/material/Alert';
 import { getCoordinates } from '@/components/getCoordinates';
 import sendLogs from '@/lib/sendLogs';
 import TextBox from '@/components/textBox';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 export type SummaryItem = {
   city: string;
@@ -40,6 +45,12 @@ type Article = {
   date: string;
 };
 
+type City = {
+  latitude: number;
+  longitude: number;
+  bundesland: string;
+};
+
 function Home() {
   const [query, setQuery] = useState('');
   const [startDate, setStartDate] = useState(dayjs());
@@ -55,6 +66,9 @@ function Home() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
   const [summary, setSummary] = useState<SummaryItem[] | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingData, setPendingData] = useState<ArticleResponse | null>(null);
+  const [pendingCity, setPendingCity] = useState<City | null>(null);
 
   const handleApiCall = async (device: string) => {
     if (query && startDate && endDate) {
@@ -99,23 +113,12 @@ function Home() {
         console.log(city);
 
         if (city.latitude && city.longitude) {
-          const userConfirmed = confirm(
-            `Möchten Sie nur Pressemeldungen für ${query} sehen?`
-          );
-          if (userConfirmed) {
-            // Logik, um nur Pressemeldungen für die Stadt anzuzeigen
-            const filteredData = data.articles.filter(
-              (item: { standort: string }) =>
-                item.standort.toLowerCase() === query.toLowerCase()
-            );
-            setData(filteredData);
-            console.log('Summary: ', data.summary);
-            setSummary(data.summary);
-          } else {
-            // Logik, um alle Pressemeldungen anzuzeigen
-            console.log('Abgebrochen: Alle Pressemeldungen anzeigen', data);
-            setData(data.articles); // Daten in den Zustand setzen
-          }
+          // Show custom dialog instead of confirm
+          setPendingData(data);
+          setPendingCity(city);
+          setShowConfirmDialog(true);
+          // Return here, continue after dialog response
+          return;
         } else {
           // Wenn keine Koordinaten gefunden wurden, alle Pressemeldungen anzeigen
           console.log('Keine Koordinaten gefunden:', city);
@@ -151,6 +154,29 @@ function Home() {
       );
       return;
     }
+  };
+
+  // Handler for dialog response
+  const handleDialogResponse = (confirmed: boolean) => {
+    if (pendingData && pendingCity) {
+      if (confirmed) {
+        // Ja: filter data for the city
+        const filteredData = pendingData.articles.filter(
+          (item: { standort: string }) =>
+            item.standort.toLowerCase() === query.toLowerCase()
+        );
+        setData(filteredData);
+        setSummary(pendingData.summary);
+      } else {
+        // Nein: show all articles
+        setData(pendingData.articles);
+        setSummary(pendingData.summary);
+      }
+      setPage(0);
+    }
+    setShowConfirmDialog(false);
+    setPendingData(null);
+    setPendingCity(null);
   };
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
@@ -256,6 +282,27 @@ function Home() {
       />
       <Welcome />
       {summary && <TextBox summary={summary} />}
+      <Dialog
+        open={showConfirmDialog}
+        onClose={() => handleDialogResponse(false)}
+      >
+        <DialogTitle>Stadt bestätigen</DialogTitle>
+        <DialogContent>
+          Möchtest du nur Pressemeldungen für <b>{query}</b> sehen?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDialogResponse(false)} color="primary">
+            Nein
+          </Button>
+          <Button
+            onClick={() => handleDialogResponse(true)}
+            color="primary"
+            autoFocus
+          >
+            Ja
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
