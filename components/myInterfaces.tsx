@@ -46,4 +46,5 @@ export interface NewsItem {
   source: string | { id: string; name: string };
   link: string;
   date?: Date;
+  author?: string;
 }

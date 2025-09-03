@@ -1,89 +1,98 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
+import NewsContent from '@/components/newsContent';
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  Snackbar,
+  Alert,
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { NewsItem } from '@/components/myInterfaces';
-import { Pagination, Stack } from '@mui/material';
-import { useRouter, useSearchParams } from 'next/navigation';
-import ArticleCart from '@/components/articleCard';
-
-function NewsContent() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const itemsPerPage = 16;
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentPage = searchParams
-    ? parseInt(searchParams.get('page') || '1', 10)
-    : 1;
-
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        const response = await fetch('/api/news');
-        const newsData: NewsItem[] = await response.json();
-        setNews(newsData);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error('Fehler beim Laden der Nachrichten:', error.message);
-        } else {
-          console.error('Unbekannter Fehler beim Laden der Nachrichten');
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadNews();
-  }, []);
-
-  const handlePageChange = (page: number) => {
-    router.push(`?page=${page}`);
-  };
-
-  const totalPages = Math.ceil(news.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedNews = news.slice(startIndex, startIndex + itemsPerPage);
-
-  return (
-    <div>
-      {loading ? (
-        <div className="text-center h-[90vh] flex items-center justify-center">
-          <p className="text-gray-500">Lade Nachrichten...</p>
-        </div>
-      ) : (
-        <div>
-          <Stack spacing={2} alignItems="center" className="mb-4">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={(_, page) => handlePageChange(page)}
-              color="primary"
-            />
-          </Stack>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
-            <ArticleCart selectedNews={selectedNews} />
-          </div>
-          <Stack spacing={2} alignItems="center" className="mt-8">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={(_, page) => handlePageChange(page)}
-              color="primary"
-            />
-          </Stack>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function News() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    // Basisnachrichten laden beim ersten Render
+    fetch('/api/news')
+      .then((response) => response.json())
+      .then((data) => {
+        setNewsData(data);
+      })
+      .catch((error) => {
+        console.error('Fehler beim Laden der Basisnachrichten:', error);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  function handleOnClick() {
+    if (searchTerm.trim() === '') {
+      setAlertMessage('Bitte geben Sie einen Suchbegriff ein.');
+      setOpen(true);
+      return;
+    }
+    setLoading(true);
+    fetch(`/api/news/search?q=${searchTerm}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setNewsData(data.response.articles);
+      })
+      .catch(() => {
+        setAlertMessage('Fehler beim Suchen der Nachrichten');
+        setOpen(true);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+    setAlertMessage('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="container mx-auto px-4 py-8">
-        <Suspense fallback={<div className="text-center">Lade Inhalte...</div>}>
-          <NewsContent />
-        </Suspense>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '80%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+      <main className="container mx-auto px-4 py-8 flex flex-col gap-5">
+        <FormControl variant="outlined" fullWidth>
+          <InputLabel htmlFor="search-input">Suchen</InputLabel>
+          <OutlinedInput
+            id="search-input"
+            label="Suchen"
+            endAdornment={
+              <InputAdornment position="end">
+                <SearchIcon
+                  onClick={handleOnClick}
+                  className="cursor-pointer"
+                />
+              </InputAdornment>
+            }
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+          />
+        </FormControl>
+        <NewsContent newsData={newsData} loading={loading} />
       </main>
     </div>
   );

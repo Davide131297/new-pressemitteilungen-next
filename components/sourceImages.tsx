@@ -50,6 +50,7 @@ export const sourceImages = {
     height: 50,
   },
   faz: { src: FAZ, alt: 'FAZ Logo', width: 70, height: 70 },
+  'Faz.net': { src: FAZ, alt: 'FAZ Logo', width: 70, height: 70 },
   swr: { src: SWR, alt: 'SWR Logo', width: 35, height: 35 },
   'n-tv': { src: NTV, alt: 'N-tv Logo', width: 20, height: 20 },
   ndr: { src: NDR, alt: 'NDR Logo', width: 20, height: 20 },
@@ -82,6 +83,7 @@ export const sourceImages = {
   },
   'T-online': { src: TOnline, alt: 'T-online Logo', width: 40, height: 40 },
   ZEIT: { src: DieZeit, alt: 'Die Zeit Logo', width: 50, height: 50 },
+  'Die Zeit': { src: DieZeit, alt: 'Die Zeit Logo', width: 50, height: 50 },
   radiokoeln: {
     src: RadioKöln,
     alt: 'Radio Köln Logo',

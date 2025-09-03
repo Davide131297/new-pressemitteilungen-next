@@ -118,8 +118,12 @@ export default function ArticleCart({ selectedNews }: ArticleCartProps) {
                 </span>
                 <span className="text-xs">
                   {(() => {
+                    const sourceKey =
+                      typeof item.source === 'string'
+                        ? item.source
+                        : item.source?.name;
                     const sourceData = getSourceImage(
-                      item.source as keyof typeof sourceImages
+                      sourceKey as keyof typeof sourceImages
                     );
                     return sourceData ? (
                       <Image
