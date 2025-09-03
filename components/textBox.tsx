@@ -1,4 +1,4 @@
-import type { SummaryItem } from '@/app/page';
+import type { Article } from '@/app/page';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatIcon from '@mui/icons-material/Chat';
 import Tooltip from '@mui/material/Tooltip';
@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type TextBoxProps = {
-  summary: SummaryItem[];
+  data: Article[];
 };
 
-export default function TextBox({ summary }: TextBoxProps) {
+export default function TextBox({ data }: TextBoxProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,15 +40,13 @@ export default function TextBox({ summary }: TextBoxProps) {
             </Tooltip>
           </div>
           <div className="flex-1 px-4 py-3 overflow-y-auto bg-[#f5f6fa] min-h-[200px] max-h-[400px]">
-            {summary.map((item, index) => (
+            {data.map((item, index) => (
               <div key={index} className="mb-2.5 flex flex-row justify-start">
                 <div className="bg-[#e4e6eb] rounded-2xl px-3 py-2 max-w-[80%] text-sm flex flex-col relative">
-                  <span>
-                    {item.city}: {item.teaser}
-                  </span>
+                  <span>{item.title}</span>
                   <div className="flex flex-col items-start mt-1">
                     <Link
-                      href={item.url}
+                      href={item.fullArticleURL}
                       className="text-blue-600 text-[11px] underline hover:text-blue-800 transition"
                       target="_blank"
                       rel="noopener noreferrer"

@@ -24,25 +24,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 
-export type SummaryItem = {
-  city: string;
-  teaser: string;
-  title: string;
-  url: string;
-  date: string;
-};
-
 type ArticleResponse = {
   articles: Article[];
-  summary: SummaryItem[] | null;
 };
 
-type Article = {
+export type Article = {
   id: string;
   title: string;
-  content: string;
   standort: string;
   date: string;
+  fullArticleURL: string;
+  bundesland: string;
 };
 
 type City = {
@@ -65,7 +57,6 @@ function Home() {
   const [open, setOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
-  const [summary, setSummary] = useState<SummaryItem[] | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingData, setPendingData] = useState<ArticleResponse | null>(null);
   const [pendingCity, setPendingCity] = useState<City | null>(null);
@@ -123,8 +114,6 @@ function Home() {
           // Wenn keine Koordinaten gefunden wurden, alle Pressemeldungen anzeigen
           console.log('Keine Koordinaten gefunden:', city);
           setData(data.articles);
-          console.log('Summary: ', data.summary);
-          setSummary(data.summary);
         }
         setPage(0); // Optional: Tabelle auf erste Seite zurücksetzen
       } catch (error) {
@@ -166,11 +155,9 @@ function Home() {
             item.standort.toLowerCase() === query.toLowerCase()
         );
         setData(filteredData);
-        setSummary(pendingData.summary);
       } else {
         // Nein: show all articles
         setData(pendingData.articles);
-        setSummary(pendingData.summary);
       }
       setPage(0);
     }
@@ -281,7 +268,7 @@ function Home() {
         sx={{ marginTop: '10px', marginBottom: '10px' }}
       />
       <Welcome />
-      {summary && <TextBox summary={summary} />}
+      {data && data.length > 0 && <TextBox data={data} />}
       <Dialog
         open={showConfirmDialog}
         onClose={() => handleDialogResponse(false)}

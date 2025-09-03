@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchArticlesFromPresseportal } from '@/lib/fetchers/presseportal';
 import { fetchArticlesFromBerlin } from '@/lib/fetchers/berlin';
-import { fetchTeaser } from '@/lib/teaser';
 
 type Article = {
   title?: string;
@@ -13,18 +12,6 @@ type Article = {
   source?: string;
   bundesland?: string;
 };
-
-function buildItems(arts: Array<Article>, limit = 10) {
-  return arts
-    .slice(0, limit)
-    .map((a) => ({
-      title: a.title?.toString().trim(),
-      url: a.fullArticleURL,
-      city: a.standort ?? '',
-      date: a.date ?? '',
-    }))
-    .filter((i) => i.title);
-}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -68,26 +55,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const items = buildItems(uniqueArticles, 10);
-
-    const teaserResults = await Promise.allSettled(
-      items.map((i) => fetchTeaser(i.url, ctrl.signal).then((t) => t ?? ''))
-    );
-
-    const itemsWithTeaser = items.map((it, idx) => ({
-      title: it.title,
-      teaser:
-        teaserResults[idx].status === 'fulfilled'
-          ? (teaserResults[idx] as PromiseFulfilledResult<string>).value
-          : '',
-      url: it.url,
-      city: it.city,
-      date: it.date,
-    }));
-
     return NextResponse.json(
       {
-        summary: itemsWithTeaser,
         articles: uniqueArticles,
       },
       { status: 200 }
