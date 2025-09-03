@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import NewsContent from '@/components/newsContent';
 import {
   FormControl,
@@ -92,7 +92,9 @@ export default function News() {
             value={searchTerm}
           />
         </FormControl>
-        <NewsContent newsData={newsData} loading={loading} />
+<Suspense fallback={<div className="p-8">Lade…</div>}>
+  <NewsContent newsData={newsData} loading={loading} />
+</Suspense>
       </main>
     </div>
   );
