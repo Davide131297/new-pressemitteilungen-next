@@ -64,9 +64,25 @@ export default function ArticleCart({ selectedNews }: ArticleCartProps) {
     return sourceImages[source] || null;
   }
 
+  function getPublishedDate(item: NewsItem): Date | null {
+    return item.publishedAt
+      ? new Date(item.publishedAt)
+      : item.published_at
+      ? new Date(item.published_at)
+      : item.pubDate
+      ? new Date(item.pubDate)
+      : null;
+  }
+
+  const sortedNews = [...selectedNews].sort((a, b) => {
+    const dateA = getPublishedDate(a)?.getTime() || 0;
+    const dateB = getPublishedDate(b)?.getTime() || 0;
+    return dateB - dateA;
+  });
+
   return (
     <>
-      {selectedNews.map((item) => (
+      {sortedNews.map((item) => (
         <Link
           key={item.url || item.link}
           href={item.url || item.link}
