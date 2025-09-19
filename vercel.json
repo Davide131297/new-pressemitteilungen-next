@@ -18,5 +18,9 @@
     "app/api/savetodb/route.ts": {
       "maxDuration": 60
     }
-  }
+  },
+  "crons": [
+    { "path": "/api/cron/new-news", "schedule": "5 0 * * *" },
+    { "path": "/api/cron/delete-news", "schedule": "0 23 * * *" }
+  ]
 }
