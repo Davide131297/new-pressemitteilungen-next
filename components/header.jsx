@@ -3,9 +3,11 @@ import Logo from './logo';
 
 export default function Header() {
   return (
-    <>
-      <MenuBox />
-      <Logo />
-    </>
+    <div className="sticky top-0 z-50 bg-white pb-5">
+      <div className="pt-5">
+        <MenuBox />
+        <Logo />
+      </div>
+    </div>
   );
 }

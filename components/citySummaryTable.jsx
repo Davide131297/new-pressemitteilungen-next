@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const CitySummaryTable = ({ data }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page2, setPage2] = useState(0);
   const [rowsPerPage2, setRowsPerPage2] = useState(10);
-  const matches = useMediaQuery('(max-width:600px)');
 
   const locationCount = data.reduce((acc, row) => {
     acc[row.standort] = (acc[row.standort] || 0) + 1;
@@ -18,16 +31,7 @@ const CitySummaryTable = ({ data }) => {
 
   const summaryData = Object.entries(locationCount)
     .map(([standort, count]) => ({ standort, count }))
-    .sort((a, b) => b.count - a.count); // Sortieren nach der Anzahl der Artikel
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    .sort((a, b) => b.count - a.count);
 
   const locationCount2 = data.reduce((acc, row) => {
     if (row.bundesland) {
@@ -36,214 +40,182 @@ const CitySummaryTable = ({ data }) => {
     return acc;
   }, {});
 
-  const totalBundesland = Object.values(locationCount2).reduce((sum, count) => sum + count, 0);
+  const totalBundesland = Object.values(locationCount2).reduce(
+    (sum, count) => sum + count,
+    0
+  );
 
   const summaryData2 = Object.entries(locationCount2)
-    .map(([bundesland, count]) => ({ bundesland, count, percentage: ((count / totalBundesland) * 100).toFixed(2) }))
-    .sort((a, b) => b.count - a.count); // Sortieren nach der Anzahl der Artikel
+    .map(([bundesland, count]) => ({
+      bundesland,
+      count,
+      percentage: ((count / totalBundesland) * 100).toFixed(2),
+    }))
+    .sort((a, b) => b.count - a.count);
 
-  const handleChangePage2 = (event, newPage) => {
-    setPage2(newPage);
-  };
+  const CustomPagination = ({
+    page,
+    rowsPerPage,
+    totalRows,
+    onPageChange,
+    onRowsPerPageChange,
+    label = 'Zeilen pro Seite',
+  }) => {
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    const startRow = page * rowsPerPage + 1;
+    const endRow = Math.min((page + 1) * rowsPerPage, totalRows);
 
-  const handleChangeRowsPerPage2 = (event) => {
-    setRowsPerPage2(parseInt(event.target.value, 10));
-    setPage2(0);
+    return (
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-50">
+        <div className="flex items-center space-x-2 text-sm">
+          <span>{label}:</span>
+          <Select
+            value={rowsPerPage.toString()}
+            onValueChange={(value) => onRowsPerPageChange(parseInt(value))}
+          >
+            <SelectTrigger className="w-20 h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center space-x-2 text-sm">
+          <span>
+            {startRow}-{endRow} von {totalRows}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 0}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(page + 1)}
+            disabled={page >= totalPages - 1}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2} columns={{ xs: 4, sm: 12, md: 12 }}>
-          <Grid size={6}>
-            <Paper sx={{ width: matches ? '95%' : '80%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
-              <TableContainer sx={{ backgroundColor: 'transparent', height: '400px' }}>
-                <Table stickyHeader aria-label="sticky table" sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
-                  <TableHead sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          '@media (max-width: 600px)': {
-                            fontSize: '0.75rem',
-                            padding: '8px',
-                          },
-                        }}
-                      >
-                        Standort
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          '@media (max-width: 600px)': {
-                            fontSize: '0.75rem',
-                            padding: '8px',
-                          },
-                        }}
-                      >
-                        Anzahl der Artikel
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {summaryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell
-                          sx={{
-                            '@media (max-width: 600px)': {
-                              fontSize: '0.75rem',
-                              padding: '8px',
-                            },
-                          }}
-                        >
+    <div className="w-[95%] mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
+        <Card className="bg-gray-50">
+          <CardHeader>
+            <CardTitle className="text-lg">Standorte</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="h-96 overflow-auto p-4">
+              <Table>
+                <TableHeader className="sticky top-0 bg-gray-50">
+                  <TableRow>
+                    <TableHead className="text-sm sm:text-base">
+                      Standort
+                    </TableHead>
+                    <TableHead className="text-sm sm:text-base">
+                      Anzahl der Artikel
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {summaryData
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
+                      <TableRow key={index} className="hover:bg-gray-100">
+                        <TableCell className="text-sm sm:text-base">
                           {row.standort}
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            '@media (max-width: 600px)': {
-                              fontSize: '0.75rem',
-                              padding: '8px',
-                            },
-                          }}
-                        >
+                        <TableCell className="text-sm sm:text-base">
                           {row.count}
                         </TableCell>
                       </TableRow>
                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={summaryData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage="Zeilen pro Seite"
-                sx={{
-                  backgroundColor: 'rgb(240, 240, 240)',
-                  '@media (max-width: 600px)': {
-                    '.MuiTablePagination-toolbar': {
-                      paddingLeft: '10px',
-                      paddingRight: '10px',
-                    },
-                    '.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': {
-                      fontSize: '0.75rem',
-                    },
-                    '.MuiTablePagination-select': {
-                      fontSize: '0.75rem',
-                    },
-                  },
-                }}
-              />
-            </Paper>
-          </Grid>
-          <Grid size={6}>
-            <Paper sx={{ width: matches ? '95%' : '80%', overflow: 'hidden', margin: '0 auto', backgroundColor: 'rgb(240, 240, 240)', marginTop: '20px' }}>
-              <TableContainer sx={{ backgroundColor: 'transparent', height: '400px' }}>
-                <Table stickyHeader aria-label="sticky table" sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
-                  <TableHead sx={{ backgroundColor: 'rgb(240, 240, 240)' }}>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          '@media (max-width: 600px)': {
-                            fontSize: '0.75rem',
-                            padding: '8px',
-                          },
-                        }}
-                      >
-                        Bundesland
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          '@media (max-width: 600px)': {
-                            fontSize: '0.75rem',
-                            padding: '8px',
-                          },
-                        }}
-                      >
-                        Anzahl der Artikel
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          '@media (max-width: 600px)': {
-                            fontSize: '0.75rem',
-                            padding: '8px',
-                          },
-                        }}
-                      >
-                        Prozent
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {summaryData2.slice(page2 * rowsPerPage2, page2 * rowsPerPage2 + rowsPerPage2).map((row, index) => (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell
-                          sx={{
-                            '@media (max-width: 600px)': {
-                              fontSize: '0.75rem',
-                              padding: '8px',
-                            },
-                          }}
-                        >
+                </TableBody>
+              </Table>
+            </div>
+            <CustomPagination
+              page={page}
+              rowsPerPage={rowsPerPage}
+              totalRows={summaryData.length}
+              onPageChange={setPage}
+              onRowsPerPageChange={(newRowsPerPage) => {
+                setRowsPerPage(newRowsPerPage);
+                setPage(0);
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-50">
+          <CardHeader>
+            <CardTitle className="text-lg">Bundesländer</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="h-96 overflow-auto p-4">
+              <Table>
+                <TableHeader className="sticky top-0 bg-gray-50">
+                  <TableRow>
+                    <TableHead className="text-sm sm:text-base">
+                      Bundesland
+                    </TableHead>
+                    <TableHead className="text-sm sm:text-base">
+                      Anzahl der Artikel
+                    </TableHead>
+                    <TableHead className="text-sm sm:text-base">
+                      Prozent
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {summaryData2
+                    .slice(
+                      page2 * rowsPerPage2,
+                      page2 * rowsPerPage2 + rowsPerPage2
+                    )
+                    .map((row, index) => (
+                      <TableRow key={index} className="hover:bg-gray-100">
+                        <TableCell className="text-sm sm:text-base">
                           {row.bundesland}
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            '@media (max-width: 600px)': {
-                              fontSize: '0.75rem',
-                              padding: '8px',
-                            },
-                          }}
-                        >
+                        <TableCell className="text-sm sm:text-base">
                           {row.count}
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            '@media (max-width: 600px)': {
-                              fontSize: '0.75rem',
-                              padding: '8px',
-                            },
-                          }}
-                        >
+                        <TableCell className="text-sm sm:text-base">
                           {row.percentage}%
                         </TableCell>
                       </TableRow>
                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={summaryData2.length}
-                rowsPerPage={rowsPerPage2}
-                page={page2}
-                onPageChange={handleChangePage2}
-                onRowsPerPageChange={handleChangeRowsPerPage2}
-                labelRowsPerPage="Zeilen pro Seite"
-                sx={{
-                  backgroundColor: 'rgb(240, 240, 240)',
-                  '@media (max-width: 600px)': {
-                    '.MuiTablePagination-toolbar': {
-                      paddingLeft: '10px',
-                      paddingRight: '10px',
-                    },
-                    '.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': {
-                      fontSize: '0.75rem',
-                    },
-                    '.MuiTablePagination-select': {
-                      fontSize: '0.75rem',
-                    },
-                  },
-                }}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-    </>
+                </TableBody>
+              </Table>
+            </div>
+            <CustomPagination
+              page={page2}
+              rowsPerPage={rowsPerPage2}
+              totalRows={summaryData2.length}
+              onPageChange={setPage2}
+              onRowsPerPageChange={(newRowsPerPage) => {
+                setRowsPerPage2(newRowsPerPage);
+                setPage2(0);
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

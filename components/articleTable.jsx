@@ -1,154 +1,189 @@
-import { DataGrid } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
-import Paper from '@mui/material/Paper';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ChevronLeft, ChevronRight, ExternalLink, Search } from 'lucide-react';
 
 const ArticleTable = ({ data, page, setPage, rowsPerPage, setRowsPerPage }) => {
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const [searchTerm, setSearchTerm] = useState('');
+
   const sortedData = data
     .map((item, index) => ({ ...item, id: index }))
     .sort(
       (a, b) =>
         dayjs(b.date, 'DD.MM.YYYY').unix() - dayjs(a.date, 'DD.MM.YYYY').unix()
+    )
+    .filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.standort.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-  const columns = isMobile
-    ? [
-        { field: 'date', headerName: 'Datum', flex: 1 },
-        {
-          field: 'title',
-          headerName: 'title',
-          flex: 2,
-          renderCell: (params) => (
-            <a
-              href={params.row.fullArticleURL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {params.value}
-            </a>
-          ),
-        },
-        { field: 'standort', headerName: 'Ort', flex: 1 },
-      ]
-    : [
-        { field: 'date', headerName: 'Datum', flex: 1 },
-        { field: 'title', headerName: 'title', flex: 2 },
-        { field: 'standort', headerName: 'Ort', flex: 1 },
-        {
-          field: 'fullArticleURL',
-          headerName: 'Quelle',
-          flex: 1,
-          renderCell: (params) => (
-            <a href={params.value} target="_blank" rel="noopener noreferrer">
-              Zum Artikel
-            </a>
-          ),
-        },
-      ];
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentData = sortedData.slice(startIndex, endIndex);
 
-  const handlePageChange = (params) => {
-    setPage(params.page);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
+    }
   };
 
-  const handlePageSizeChange = (params) => {
-    setRowsPerPage(params.pageSize);
+  const handlePageSizeChange = (newSize) => {
+    setRowsPerPage(parseInt(newSize));
     setPage(0);
   };
 
-  const localeText = {
-    // Übersetzungen für die DataGrid-Komponenten
-    noRowsLabel: 'Keine Zeilen',
-    noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-    errorOverlayDefaultLabel: 'Ein Fehler ist aufgetreten.',
-    toolbarDensity: 'Dichte',
-    toolbarDensityLabel: 'Dichte',
-    toolbarDensityCompact: 'Kompakt',
-    toolbarDensityStandard: 'Standard',
-    toolbarDensityComfortable: 'Bequem',
-    toolbarColumns: 'Spalten',
-    toolbarColumnsLabel: 'Spalten auswählen',
-    toolbarFilters: 'Filter',
-    toolbarFiltersLabel: 'Filter anzeigen',
-    toolbarExport: 'Export',
-    toolbarExportLabel: 'Exportieren',
-    columnsPanelTextFieldLabel: 'Spalte finden',
-    columnsPanelTextFieldPlaceholder: 'Spaltentitel',
-    columnsPanelDragIconLabel: 'Spalte neu anordnen',
-    columnsPanelShowAllButton: 'Alle anzeigen',
-    columnsPanelHideAllButton: 'Alle ausblenden',
-    filterPanelAddFilter: 'Filter hinzufügen',
-    filterPanelDeleteIconLabel: 'Löschen',
-    filterPanelOperators: 'Operatoren',
-    filterPanelOperatorAnd: 'Und',
-    filterPanelOperatorOr: 'Oder',
-    filterPanelColumns: 'Spalten',
-    filterPanelInputLabel: 'Wert',
-    filterPanelInputPlaceholder: 'Filterwert',
-    filterOperatorContains: 'enthält',
-    filterOperatorEquals: 'gleich',
-    filterOperatorStartsWith: 'beginnt mit',
-    filterOperatorEndsWith: 'endet mit',
-    filterOperatorIs: 'ist',
-    filterOperatorNot: 'ist nicht',
-    filterOperatorAfter: 'nach',
-    filterOperatorOnOrAfter: 'am oder nach',
-    filterOperatorBefore: 'vor',
-    filterOperatorOnOrBefore: 'am oder vor',
-    filterOperatorIsEmpty: 'ist leer',
-    filterOperatorIsNotEmpty: 'ist nicht leer',
-    filterOperatorIsAnyOf: 'ist einer von',
-    columnMenuLabel: 'Menü',
-    columnMenuShowColumns: 'Spalten anzeigen',
-    columnMenuFilter: 'Filter',
-    columnMenuHideColumn: 'Ausblenden',
-    columnMenuUnsort: 'Sortierung aufheben',
-    columnMenuSortAsc: 'Aufsteigend sortieren',
-    columnMenuSortDesc: 'Absteigend sortieren',
-    columnHeaderFiltersTooltipActive: (count) => `${count} aktive Filter`,
-    columnHeaderFiltersLabel: 'Filter anzeigen',
-    columnHeaderSortIconLabel: 'Sortieren',
-    footerRowSelected: (count) =>
-      `${count.toLocaleString()} Zeile(n) ausgewählt`,
-    footerTotalRows: 'Gesamtanzahl Zeilen:',
-    footerTotalVisibleRows: (visibleCount, totalCount) =>
-      `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
-    checkboxSelectionHeaderName: 'Checkbox-Auswahl',
-    booleanCellTrueLabel: 'ja',
-    booleanCellFalseLabel: 'nein',
-    actionsCellMore: 'mehr',
-    MuiTablePagination: {
-      labelRowsPerPage: 'Zeilen pro Seite:',
-      labelDisplayedRows: ({ from, to, count }) =>
-        `${from}–${to} von ${count !== -1 ? count : `mehr als ${to}`}`,
-    },
-  };
-
   return (
-    <Paper
-      sx={{
-        width: '95%',
-        height: 'calc(100vh - 300px)',
-        overflow: 'hidden',
-        margin: '0 auto',
-      }}
-    >
-      <DataGrid
-        rows={sortedData}
-        columns={columns}
-        pageSize={rowsPerPage}
-        rowsPerPageOptions={[10, 25, 50]}
-        pagination
-        page={page}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
-        localeText={localeText}
-        sx={{
-          backgroundColor: 'rgb(240, 240, 240)',
-          fontSize: isMobile ? '9px' : '12px', // Schriftgröße anpassen
-        }}
-      />
-    </Paper>
+    <div className="w-[95%] mx-auto space-y-4">
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Pressemitteilungen</CardTitle>
+          <div className="flex items-center space-x-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Nach Titel oder Ort suchen..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="max-w-sm"
+            />
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="max-h-[60vh] overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="text-xs md:text-sm font-semibold">
+                    Datum
+                  </TableHead>
+                  <TableHead className="text-xs md:text-sm font-semibold">
+                    Titel
+                  </TableHead>
+                  <TableHead className="text-xs md:text-sm font-semibold hidden md:table-cell">
+                    Ort
+                  </TableHead>
+                  <TableHead className="text-xs md:text-sm font-semibold hidden md:table-cell">
+                    Quelle
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentData.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    className="text-xs md:text-sm hover:bg-muted/50"
+                  >
+                    <TableCell className="font-medium">
+                      <Badge variant="outline" className="text-xs">
+                        {item.date}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <a
+                        href={item.fullArticleURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary/80 underline flex items-center gap-1 md:hidden"
+                      >
+                        {item.title}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <span className="hidden md:inline line-clamp-2">
+                        {item.title}
+                      </span>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Badge variant="secondary" className="text-xs">
+                        {item.standort}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Button variant="outline" size="sm" asChild>
+                        <a
+                          href={item.fullArticleURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1"
+                        >
+                          Artikel
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t bg-muted/20 gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Zeilen pro Seite:
+              </span>
+              <Select
+                value={rowsPerPage.toString()}
+                onValueChange={handlePageSizeChange}
+              >
+                <SelectTrigger className="w-20 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                {startIndex + 1}–{Math.min(endIndex, sortedData.length)} von{' '}
+                {sortedData.length}
+              </span>
+
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(page - 1)}
+                  disabled={page === 0}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(page + 1)}
+                  disabled={page >= totalPages - 1}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

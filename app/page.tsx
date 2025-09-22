@@ -1,28 +1,30 @@
 'use client';
 
-import React, { useState, SyntheticEvent, useRef } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
 import 'dayjs/locale/de';
 import dayjs from 'dayjs';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Divider from '@mui/material/Divider';
 
-import SearchPC from '../components/searchPC';
-import SearchMobile from '../components/searchMobile';
+import Search from '../components/search';
 import ArticleTable from '../components/articleTable';
 import CitySummaryTable from '../components/citySummaryTable';
 import Karte from '../components/karte';
 import Welcome from '@/components/welcome';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import { getCoordinates } from '@/components/getCoordinates';
 import sendLogs from '@/lib/sendLogs';
 import TextBox from '@/components/textBox';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { MapPin } from 'lucide-react';
 
 type ArticleResponse = {
   articles: Article[];
@@ -53,15 +55,12 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [tabIndex, setTabIndex] = useState(0);
-  const matches = useMediaQuery('(max-width:600px)');
-  const [open, setOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const [alertMessage, setAlertMessage] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingData, setPendingData] = useState<ArticleResponse | null>(null);
   const [pendingCity, setPendingCity] = useState<City | null>(null);
 
-  const handleApiCall = async (device: string) => {
+  const handleApiCall = async () => {
     if (query && startDate && endDate) {
       setLoading(true);
       const startTime = Date.now();
@@ -72,8 +71,7 @@ function Home() {
 
       if (dayjs(endDate).isBefore(dayjs(startDate))) {
         setLoading(false);
-        setOpen(true);
-        setAlertMessage('Startdatum muss vor Enddatum liegen!');
+        toast.error('Startdatum muss vor Enddatum liegen!');
         return;
       }
 
@@ -92,6 +90,15 @@ function Home() {
         if (!response.ok) {
           throw new Error(`API returned status ${response.status}`);
         }
+
+        const device =
+          typeof navigator === 'undefined'
+            ? 'unknown'
+            : /ipad|tablet/i.test(navigator.userAgent)
+            ? 'tablet'
+            : /mobi|android/i.test(navigator.userAgent)
+            ? 'mobile'
+            : 'desktop';
 
         sendLogs(
           'info',
@@ -137,10 +144,7 @@ function Home() {
       console.error(
         'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
       );
-      setOpen(true);
-      setAlertMessage(
-        'Suchbegriff, Start- und Enddatum müssen ausgewählt werden.'
-      );
+      toast.error('Suchbegriff, Start- und Enddatum müssen ausgewählt werden.');
       return;
     }
   };
@@ -166,15 +170,10 @@ function Home() {
     setPendingCity(null);
   };
 
-  const handleTabChange = (event: SyntheticEvent, newValue: number) => {
-    const tabName = newValue === 0 ? 'Tabelle' : 'Karte';
+  const handleTabChange = (value: string) => {
+    const tabName = value === 'table' ? 'Tabelle' : 'Karte';
     sendLogs('info', `Tab gewechselt: ${tabName}`);
-    setTabIndex(newValue);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setAlertMessage('');
+    setTabIndex(value === 'table' ? 0 : 1);
   };
 
   function handleStopSearch() {
@@ -184,37 +183,9 @@ function Home() {
   }
 
   return (
-    <div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="error"
-          variant="filled"
-          sx={{ width: '80%' }}
-        >
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-      {matches ? (
-        <SearchMobile
-          query={query}
-          setQuery={setQuery}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          handleApiCall={handleApiCall}
-          loading={loading}
-          elapsedTime={elapsedTime}
-          data={data}
-        />
-      ) : (
-        <SearchPC
+    <div className="w-11/12 mx-auto mb-5">
+      <Card className="bg-gradient-to-br from-slate-50 via-white to-blue-50 border-0 shadow-xl p-5">
+        <Search
           query={query}
           setQuery={setQuery}
           startDate={startDate}
@@ -227,69 +198,75 @@ function Home() {
           data={data}
           handleStopSearch={handleStopSearch}
         />
-      )}
-      {data.length !== 0 && (
-        <Box sx={{ marginTop: '30px' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Tabs value={tabIndex} onChange={handleTabChange}>
-              <Tab label="Tabelle" />
-              <Tab label="Karte" />
-            </Tabs>
-          </Box>
-          {tabIndex === 0 && (
-            <Box sx={{ marginTop: '10px' }}>
-              <ArticleTable
-                data={data}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                setRowsPerPage={setRowsPerPage}
-              />
-            </Box>
-          )}
-          {tabIndex === 1 && (
-            <Box sx={{ marginTop: '10px' }}>
-              <Karte data={data} />
-            </Box>
-          )}
-          <Box sx={{ marginTop: '10px' }}>
-            <CitySummaryTable data={data} />
-          </Box>
-        </Box>
-      )}
-      <Divider
-        variant="middle"
-        sx={{ marginTop: '10px', marginBottom: '10px' }}
-      />
-      <Welcome />
-      {data && data.length > 0 && <TextBox data={data} />}
-      <Dialog
-        open={showConfirmDialog}
-        onClose={() => handleDialogResponse(false)}
-      >
-        <DialogTitle>Stadt bestätigen</DialogTitle>
-        <DialogContent>
-          Möchtest du nur Pressemeldungen für <b>{query}</b> sehen?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleDialogResponse(false)} color="primary">
-            Nein
-          </Button>
-          <Button
-            onClick={() => handleDialogResponse(true)}
-            color="primary"
-            autoFocus
-          >
-            Ja
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {data.length !== 0 && (
+          <div className="mt-2">
+            <div className="flex justify-center">
+              <Tabs
+                defaultValue="table"
+                value={tabIndex === 0 ? 'table' : 'map'}
+                onValueChange={handleTabChange}
+                className="w-full"
+              >
+                <div className="flex justify-center mb-3">
+                  <TabsList className="grid w-[400px] grid-cols-2">
+                    <TabsTrigger value="table">Tabelle</TabsTrigger>
+                    <TabsTrigger value="map">Karte</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="table" className="mt-0">
+                  <ArticleTable
+                    data={data}
+                    page={page}
+                    setPage={setPage}
+                    rowsPerPage={rowsPerPage}
+                    setRowsPerPage={setRowsPerPage}
+                  />
+                </TabsContent>
+                <TabsContent value="map" className="mt-0">
+                  <Karte data={data} />
+                </TabsContent>
+              </Tabs>
+            </div>
+            <div className="mt-3">
+              <CitySummaryTable data={data} />
+            </div>
+          </div>
+        )}
+        <Welcome />
+        {data && data.length > 0 && <TextBox data={data} />}
+        <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <DialogContent className="w-[90vw] max-w-md">
+            <DialogHeader className="text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                <MapPin className="h-6 w-6 text-blue-600" />
+              </div>
+              <DialogTitle className="text-xl font-semibold">
+                Stadt bestätigen
+              </DialogTitle>
+              <DialogDescription className="text-base mt-2">
+                Möchtest du nur Pressemeldungen für{' '}
+                <span className="font-semibold text-blue-600">{query}</span>{' '}
+                anzeigen oder alle gefundenen Artikel sehen?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-center sm:gap-2 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => handleDialogResponse(false)}
+                className="w-full sm:w-auto order-2 sm:order-1"
+              >
+                Alle Artikel anzeigen
+              </Button>
+              <Button
+                onClick={() => handleDialogResponse(true)}
+                className="w-full sm:w-auto order-1 sm:order-2"
+              >
+                Nur {query} anzeigen
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Card>
     </div>
   );
 }
