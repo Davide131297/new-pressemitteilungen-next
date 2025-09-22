@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
   // async redirects() {
   //   return [
   //     {
