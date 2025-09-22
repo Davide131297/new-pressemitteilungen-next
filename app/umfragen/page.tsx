@@ -7,13 +7,6 @@ import {
   Party,
   Survey,
 } from '@/components/myInterfaces';
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  SelectChangeEvent,
-} from '@mui/material';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -30,10 +23,19 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import sendLogs from '@/lib/sendLogs';
 import { format, parse, parseISO } from 'date-fns';
 import { de } from 'date-fns/locale';
-import Button from '@mui/material/Button';
-import LaunchIcon from '@mui/icons-material/Launch';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-//import CoalitionChart from '@/components/coalitionChart';
+import CoalitionChart from '@/components/coalitionChart';
 
 ChartJS.register(
   CategoryScale,
@@ -160,14 +162,12 @@ export default function Page() {
     fetchRSS();
   }, []);
 
-  const handleParliamentChange = (event: SelectChangeEvent<string>) => {
-    sendLogs('info', `Parlament gewechselt: ${event.target.value}`, 'survey');
-    setSelectedParliament(event.target.value);
+  const handleParliamentChange = (value: string) => {
+    sendLogs('info', `Parlament gewechselt: ${value}`, 'survey');
+    setSelectedParliament(value);
 
     // Nach dem Wechsel das Institut der aktuellsten Umfrage für das neue Parlament wählen
-    const parliament = parliaments.find(
-      (p) => p.Shortcut === event.target.value
-    );
+    const parliament = parliaments.find((p) => p.Shortcut === value);
     if (parliament) {
       // Finde die neueste Umfrage für das gewählte Parlament
       const surveysForParliament = surveys
@@ -187,9 +187,9 @@ export default function Page() {
     }
   };
 
-  const handleInstituteChange = (event: SelectChangeEvent<string>) => {
-    sendLogs('info', `Institut gewechselt: ${event.target.value}`, 'survey');
-    setSelectedInstitute(event.target.value);
+  const handleInstituteChange = (value: string) => {
+    sendLogs('info', `Institut gewechselt: ${value}`, 'survey');
+    setSelectedInstitute(value);
   };
 
   const filteredSurveys = useMemo(() => {
@@ -351,164 +351,182 @@ export default function Page() {
       <div className="px-4 md:px-8">
         <div>
           {loading ? (
-            <div>Loading...</div>
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg">Loading...</div>
+            </div>
           ) : (
             <>
-              <div className="flex justify-center gap-2 mt-8">
-                <FormControl fullWidth>
-                  <InputLabel id="parliament-select-label" size="small">
-                    Parlament
-                  </InputLabel>
-                  <Select
-                    labelId="parliament-select-label"
-                    value={selectedParliament}
-                    onChange={handleParliamentChange}
-                    label="Parliament"
-                    size="small"
-                  >
-                    {parliaments.map((parliament) => (
-                      <MenuItem key={parliament.id} value={parliament.Shortcut}>
-                        {parliament.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel id="institute-select-label" size="small">
-                    Institut
-                  </InputLabel>
-                  <Select
-                    labelId="institute-select-label"
-                    value={selectedInstitute}
-                    onChange={handleInstituteChange}
-                    label="Institute"
-                    size="small"
-                  >
-                    {institutes.map((institute) => (
-                      <MenuItem key={institute.id} value={institute.Name}>
-                        {institute.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
+              <Card className="mt-8 max-w-2xl mx-auto">
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="parliament-select">Parlament</Label>
+                      <Select
+                        value={selectedParliament}
+                        onValueChange={handleParliamentChange}
+                      >
+                        <SelectTrigger id="parliament-select">
+                          <SelectValue placeholder="Parlament auswählen" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {parliaments.map((parliament) => (
+                            <SelectItem
+                              key={parliament.id}
+                              value={parliament.Shortcut}
+                            >
+                              {parliament.Name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="institute-select">Institut</Label>
+                      <Select
+                        value={selectedInstitute}
+                        onValueChange={handleInstituteChange}
+                      >
+                        <SelectTrigger id="institute-select">
+                          <SelectValue placeholder="Institut auswählen" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {institutes.map((institute) => (
+                            <SelectItem
+                              key={institute.id}
+                              value={institute.Name}
+                            >
+                              {institute.Name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {latestSurveyResults && chartData ? (
                 <div className="mt-8 mx-auto container">
                   <div className="md:flex md:flex-wrap md:justify-between md:space-x-4">
                     <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
-                      <h2 className="text-lg font-semibold mb-2">{`Umfrage vom ${formatDate(
-                        latestSurveyResults.date
-                      )}`}</h2>
-                      <div className="h-[400px]">
-                        {' '}
-                        {/* Feste Höhe für das Chart */}
-                        <Bar
-                          data={chartData}
-                          options={{
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                              legend: {
-                                position: 'top',
-                              },
-                              title: {
-                                display: false,
-                              },
-                              datalabels: {
-                                display: true,
-                                align: 'end',
-                                anchor: 'end',
-                                formatter: (value) => `${value}%`,
-                              },
-                              annotation:
-                                latestSurveyResults.parliamentId !== '17'
-                                  ? {
-                                      annotations: {
-                                        line1: {
-                                          type: 'line',
-                                          yMin: 5,
-                                          yMax: 5,
-                                          borderColor: 'red',
-                                          borderWidth: 2,
-                                          label: {
-                                            content: 'Threshold',
-                                            display: false,
-                                            position: 'center',
+                      <Card>
+                        <CardContent className="p-6">
+                          <h2 className="text-lg font-semibold mb-4">{`Umfrage vom ${formatDate(
+                            latestSurveyResults.date
+                          )}`}</h2>
+                          <div className="h-[400px]">
+                            <Bar
+                              data={chartData}
+                              options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                  legend: {
+                                    position: 'top',
+                                  },
+                                  title: {
+                                    display: false,
+                                  },
+                                  datalabels: {
+                                    display: true,
+                                    align: 'end',
+                                    anchor: 'end',
+                                    formatter: (value) => `${value}%`,
+                                  },
+                                  annotation:
+                                    latestSurveyResults.parliamentId !== '17'
+                                      ? {
+                                          annotations: {
+                                            line1: {
+                                              type: 'line',
+                                              yMin: 5,
+                                              yMax: 5,
+                                              borderColor: 'red',
+                                              borderWidth: 2,
+                                              label: {
+                                                content: 'Threshold',
+                                                display: false,
+                                                position: 'center',
+                                              },
+                                            },
                                           },
-                                        },
-                                      },
-                                    }
-                                  : {},
-                            },
-                          }}
-                          plugins={[ChartDataLabels]}
-                        />
-                      </div>
+                                        }
+                                      : {},
+                                },
+                              }}
+                              plugins={[ChartDataLabels]}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
                     <div className="w-full md:w-[calc(50%-0.5rem)] mb-8">
-                      <h2 className="text-lg font-semibold mb-2">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
-                        latestSurveyResults.date
-                      )} mit ${totalSeats} Sitzen`}</h2>
-                      <div className="h-[400px]">
-                        {' '}
-                        {/* Feste Höhe für das Chart */}
-                        <Doughnut
-                          data={
-                            doughnutChartData || {
-                              labels: [],
-                              datasets: [],
-                            }
-                          }
-                          options={{
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                              datalabels: {
-                                display: true,
-                                color: 'white',
-                                font: {
-                                  weight: 'bold',
-                                },
-                                padding: 5,
-                              },
-                              legend: {
-                                position: 'top',
-                              },
-                              tooltip: {
-                                callbacks: {
-                                  label: (tooltipItem) => {
-                                    const value = tooltipItem.raw;
-                                    return `${value}`;
+                      <Card>
+                        <CardContent className="p-6">
+                          <h2 className="text-lg font-semibold mb-4">{`Sitzverteilung basierend auf Umfrage vom ${formatDate(
+                            latestSurveyResults.date
+                          )} mit ${totalSeats} Sitzen`}</h2>
+                          <div className="h-[400px]">
+                            <Doughnut
+                              data={
+                                doughnutChartData || {
+                                  labels: [],
+                                  datasets: [],
+                                }
+                              }
+                              options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                  datalabels: {
+                                    display: true,
+                                    color: 'white',
+                                    font: {
+                                      weight: 'bold',
+                                    },
+                                    padding: 5,
+                                  },
+                                  legend: {
+                                    position: 'top',
+                                  },
+                                  tooltip: {
+                                    callbacks: {
+                                      label: (tooltipItem) => {
+                                        const value = tooltipItem.raw;
+                                        return `${value}`;
+                                      },
+                                    },
                                   },
                                 },
-                              },
-                            },
-                          }}
-                          plugins={[ChartDataLabels]}
-                        />
-                      </div>
+                              }}
+                              plugins={[ChartDataLabels]}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
                     </div>
                   </div>
-                  {/* Noch fehlerhaft, wird nicht angezeigt */}
-                  {/* <div>
+
+                  <div>
                     {seatDistribution && (
                       <CoalitionChart
                         seatDistribution={seatDistribution}
                         totalSeats={totalSeats}
                       />
                     )}
-                  </div> */}
+                  </div>
+
                   <div className="mt-12 mb-8">
                     <h2 className="text-2xl font-bold mb-6 text-center">
                       Neueste Wahlumfragen
                     </h2>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                       {rssItems.map((item, index) => (
-                        <div
+                        <Card
                           key={index}
-                          className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                          className="hover:shadow-lg transition-shadow duration-300"
                         >
-                          <div className="p-4">
+                          <CardContent className="p-4">
                             <h3 className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
                               {item.title}
                             </h3>
@@ -532,13 +550,14 @@ export default function Page() {
                                 href={item.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                                className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
                               >
-                                Details →
+                                Details
+                                <ExternalLink className="h-3 w-3" />
                               </Link>
                             </div>
-                          </div>
-                        </div>
+                          </CardContent>
+                        </Card>
                       ))}
                     </div>
                     {rssItems.length > 0 && (
@@ -547,39 +566,48 @@ export default function Page() {
                           onClick={() =>
                             window.open('https://dawum.de', '_blank')
                           }
-                          variant="contained"
-                          endIcon={<LaunchIcon />}
+                          className="gap-2"
                         >
                           Alle Umfragen auf DAWUM
+                          <ExternalLink className="h-4 w-4" />
                         </Button>
                       </div>
                     )}
                   </div>
-                  <div className="m-4 text-center bg-gray-400 text-white p-2 rounded">
-                    <strong>Hinweis:</strong> Die Umfrageergebnisse basieren auf{' '}
-                    Daten von{' '}
-                    <Link
-                      href="https://dawum.de"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600"
-                    >
-                      dawum.de
-                    </Link>{' '}
-                    (
-                    <Link
-                      href="https://opendatacommons.org/licenses/odbl/1-0/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600"
-                    >
-                      Open Database License (ODbL)
-                    </Link>
-                    )
-                  </div>
+
+                  <Card className="m-4 bg-gray-50">
+                    <CardContent className="p-4 text-center text-sm">
+                      <strong>Hinweis:</strong> Die Umfrageergebnisse basieren
+                      auf Daten von{' '}
+                      <Link
+                        href="https://dawum.de"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        dawum.de
+                      </Link>{' '}
+                      (
+                      <Link
+                        href="https://opendatacommons.org/licenses/odbl/1-0/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Open Database License (ODbL)
+                      </Link>
+                      )
+                    </CardContent>
+                  </Card>
                 </div>
               ) : (
-                <div className="mt-8">Keine Umfrage gefunden.</div>
+                <div className="mt-8 text-center">
+                  <Card>
+                    <CardContent className="p-8">
+                      <p className="text-gray-600">Keine Umfrage gefunden.</p>
+                    </CardContent>
+                  </Card>
+                </div>
               )}
             </>
           )}
