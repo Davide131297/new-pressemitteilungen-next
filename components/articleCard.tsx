@@ -68,18 +68,13 @@ export default function ArticleCart({ selectedNews }: ArticleCartProps) {
     }
   };
 
-  const handleArticleClick = async (
-    item: NewsItem,
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
+  const handleArticleClick = async (item: NewsItem) => {
     try {
       await sendLogs(
         'info',
         `Artikel geklickt: ${item.title} (${item.url || item.link})`,
         'article'
       );
-      window.open(item.url || item.link, '_blank');
     } catch (err) {
       console.error('Fehler beim Senden der Logs:', err);
     }
@@ -224,7 +219,9 @@ export default function ArticleCart({ selectedNews }: ArticleCartProps) {
 
               <Link
                 href={item.url || item.link}
-                onClick={(event) => handleArticleClick(item, event)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleArticleClick(item)}
               >
                 <Button size="sm" className="gap-2" variant="outline">
                   <ExternalLink className="h-4 w-4" />
