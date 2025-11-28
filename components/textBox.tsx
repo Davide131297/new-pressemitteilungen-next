@@ -1,4 +1,4 @@
-import type { Article } from '@/app/page';
+import type { Article } from '@/types/article';
 import { X, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
