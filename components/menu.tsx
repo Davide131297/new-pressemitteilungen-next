@@ -9,13 +9,11 @@ export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
 
-  const handleNavigation = async (path: string) => {
+  const handleNavigation = (path: string) => {
     console.log(`Navigating to: ${path}`);
-    try {
-      await sendLogs('info', `Navigating to ${path}`);
-    } catch (err) {
+    sendLogs('info', `Navigating to ${path}`).catch((err) => {
       console.error('Fehler beim Senden an /api/info:', err);
-    }
+    });
     router.push(path);
   };
 

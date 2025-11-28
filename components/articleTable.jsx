@@ -79,9 +79,6 @@ const ArticleTable = ({ data, page, setPage, rowsPerPage, setRowsPerPage }) => {
                     Titel
                   </TableHead>
                   <TableHead className="text-xs md:text-sm font-semibold hidden md:table-cell">
-                    Ort
-                  </TableHead>
-                  <TableHead className="text-xs md:text-sm font-semibold hidden md:table-cell">
                     Quelle
                   </TableHead>
                 </TableRow>
@@ -110,11 +107,6 @@ const ArticleTable = ({ data, page, setPage, rowsPerPage, setRowsPerPage }) => {
                       <span className="hidden md:inline line-clamp-2">
                         {item.title}
                       </span>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <Badge variant="secondary" className="text-xs">
-                        {item.standort}
-                      </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       <Button variant="outline" size="sm" asChild>

@@ -1,17 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchArticlesFromPresseportal } from '@/lib/fetchers/presseportal';
 import { fetchArticlesFromBerlin } from '@/lib/fetchers/berlin';
+import { format } from 'date-fns';
 
 type Article = {
   title?: string;
   fullArticleURL: string;
   date?: string;
-  standort?: string;
-  latitude?: number;
-  longitude?: number;
   source?: string;
-  bundesland?: string;
 };
+
+const ALLOWED_SOURCES = new Set([
+  'pnn',
+  'der tagesspiegel',
+  'stern',
+  'merkur-online',
+  'die welt',
+  'hna',
+  'tagesschau',
+  'faz',
+  'swr',
+  'n-tv',
+  'ndr',
+  'radioduisburg',
+  'neue zuercher zeitung',
+  'focus',
+  'hr-online',
+  'mdr',
+  'heute',
+  'sueddeutsche',
+  't-online',
+  'zeit',
+  'radiokoeln',
+  'az-web',
+  'kicker.de',
+  'der spiegel',
+]);
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -37,7 +61,29 @@ export async function GET(req: NextRequest) {
 
     clearTimeout(timer);
 
-    const combined: Article[] = [...presseportalArticles, ...berlinArticles];
+    const mediaStackResponse = await fetch(
+      `https://api.mediastack.com/v1/news?access_key=${process.env.NEWS_MEDIASTACK_KEY}&keywords=${query}`
+    );
+    const mediaStackData = await mediaStackResponse.json();
+
+    console.log('MediaStack Artikel: ', mediaStackData);
+
+    const mappedMediaStackArticles: Article[] = (mediaStackData.data || [])
+      .filter((article: any) =>
+        ALLOWED_SOURCES.has(article.source?.toLowerCase())
+      )
+      .map((article: any) => ({
+        title: article.title,
+        fullArticleURL: article.url,
+        date: format(article.published_at, 'dd.MM.yyyy'),
+        source: article.source,
+      }));
+
+    const combined: Article[] = [
+      ...presseportalArticles,
+      ...berlinArticles,
+      ...mappedMediaStackArticles,
+    ];
     const uniqueArticles = combined.filter(
       (article, index, self) =>
         index ===
