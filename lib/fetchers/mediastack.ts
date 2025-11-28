@@ -43,8 +43,6 @@ export async function fetchArticlesFromMediaStack(
     );
     const mediaStackData = await mediaStackResponse.json();
 
-    console.log('MediaStack Artikel: ', mediaStackData);
-
     return (
       (mediaStackData.data || [])
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
