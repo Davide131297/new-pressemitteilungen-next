@@ -1,40 +1,35 @@
-## Link to Website
+# PresseFinder
 
-[Pressemitteilungen Seite](https://pressemitteilungen1.vercel.app)
+## Über das Projekt
 
-## Getting Started
+PresseFinder ist ein umfassendes Tool zur Recherche von aktuellen Pressemitteilungen, Nachrichten und politischen Umfrageergebnissen. Die Plattform dient als zentrale Anlaufstelle, um Informationen aus verschiedenen vertrauenswürdigen Quellen effizient zu durchsuchen und gebündelt darzustellen.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Das Ziel des Projekts ist es, Nutzern einen schnellen und strukturierten Überblick über aktuelle Themen zu verschaffen, ohne dass diese mehrere verschiedene Nachrichtenportale einzeln besuchen müssen.
 
-First, run the development server:
+## Hauptfunktionen
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Zentrale Suche**: Eine leistungsstarke Suchfunktion ermöglicht das gezielte Finden von Artikeln und Pressemitteilungen basierend auf Stichworten und Zeiträumen.
+- **Echtzeit-Aggregation**: Die Anwendung ruft Daten in Echtzeit von verschiedenen Schnittstellen ab, um stets die aktuellsten Informationen zu liefern.
+- **Intelligente Filterung**: Bereinigung der Suchergebnisse um Duplikate, sodass eine übersichtliche Ergebnisliste entsteht.
+- **Umfrageergebnisse**: Neben Nachrichten bietet das Tool auch Zugriff auf aktuelle politische Umfragen und Wahltrends.
+- **Benutzerfreundliche Oberfläche**: Ein modernes und intuitives Design erleichtert die Navigation und das Erfassen von Informationen.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Datenquellen
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+PresseFinder greift auf eine Vielzahl von Datenquellen zurück, um ein breites Informationsspektrum abzudecken. Zu den integrierten Quellen gehören unter anderem:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Presseportal**: Für offizielle Pressemitteilungen von Unternehmen und Behörden.
+- **Berlin.de**: Für spezifische Nachrichten und Mitteilungen aus der Hauptstadt.
+- **MediaStack**: Für eine breite Abdeckung internationaler und nationaler Nachrichten.
+- **Dawum**: Für aktuelle Wahlumfragen und politische Stimmungsbilder.
 
-## Learn More
+## Funktionsweise
 
-To learn more about Next.js, take a look at the following resources:
+1. **Suchanfrage**: Der Nutzer gibt einen Suchbegriff und einen gewünschten Zeitraum ein.
+2. **Datenabruf**: Das System fragt parallel mehrere Nachrichten-APIs ab.
+3. **Verarbeitung**: Die empfangenen Daten werden harmonisiert und Dubletten entfernt.
+4. **Darstellung**: Die Ergebnisse werden in einer übersichtlichen Tabelle präsentiert.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_Hinweis: Dieses Projekt dient der Informationsbeschaffung und Aggregation von öffentlich zugänglichen Nachrichtenquellen._
