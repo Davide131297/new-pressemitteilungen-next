@@ -1,17 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Newspaper,
-  BarChart3,
-  Clock,
-  Target,
-  Layers,
-  Globe,
-  Building,
-  TrendingUp,
-  Rss,
-} from 'lucide-react';
+import { Target, Layers, Globe } from 'lucide-react';
 import { TextAnimate } from '@/components/ui/text-animate';
+import { features, steps, benefits, dataSources } from './welcome-data';
 
 const Welcome = () => {
   return (
@@ -37,43 +28,31 @@ const Welcome = () => {
 
       {/* Features Section */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <Card className="border border-slate-200 hover:shadow-lg transition-shadow duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Newspaper className="w-6 h-6 text-blue-600" />
+        {features.map((feature, index) => (
+          <Card
+            key={index}
+            className="border border-slate-200 hover:shadow-lg transition-shadow duration-300"
+          >
+            <CardContent className="p-6">
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-lg ${feature.bgColorClass}`}>
+                  <feature.icon
+                    className={`w-6 h-6 ${feature.iconColorClass}`}
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">
+                    {feature.title}
+                  </h3>
+                  <p
+                    className="text-slate-600"
+                    dangerouslySetInnerHTML={{ __html: feature.description }}
+                  />
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-2">News-Seite</h3>
-                <p className="text-slate-600">
-                  Auf der <strong>News-Seite</strong> findest du eine Übersicht
-                  der aktuellsten und wichtigsten Neuigkeiten aus verschiedenen
-                  Quellen. Bleibe immer auf dem Laufenden mit relevanten
-                  Nachrichten.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-slate-200 hover:shadow-lg transition-shadow duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <BarChart3 className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg mb-2">Umfrage-Seite</h3>
-                <p className="text-slate-600">
-                  Interessierst du dich für aktuelle politische Entwicklungen?
-                  Unsere <strong>Umfrage-Seite</strong> zeigt dir die neuesten
-                  Wahlumfragen und Trends. Perfekt, um politische Stimmungen und
-                  Veränderungen nachzuvollziehen.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="border-t border-slate-200 my-8"></div>
@@ -88,12 +67,7 @@ const Welcome = () => {
             </h3>
           </div>
           <ol className="space-y-3">
-            {[
-              'Gib einen Suchbegriff in das Suchfeld ein, um Pressemitteilungen zu durchsuchen.',
-              'Besuche die News-Seite, um aktuelle Neuigkeiten aus verschiedenen Kategorien anzuzeigen.',
-              'Gehe zur Umfrage-Seite, um die neuesten Wahlumfragen zu analysieren und zu vergleichen.',
-              'Nutze Filteroptionen, um die Ergebnisse nach Zeitraum, Quelle oder Relevanz einzugrenzen.',
-            ].map((step, index) => (
+            {steps.map((step, index) => (
               <li key={index} className="flex items-start gap-3">
                 <Badge
                   variant="outline"
@@ -104,7 +78,7 @@ const Welcome = () => {
                 <span
                   className="text-slate-700"
                   dangerouslySetInnerHTML={{
-                    __html: step.replace(
+                    __html: step.text.replace(
                       /\*\*(.*?)\*\*/g,
                       '<strong>$1</strong>'
                     ),
@@ -128,23 +102,7 @@ const Welcome = () => {
             </h3>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
-            {[
-              {
-                icon: Clock,
-                title: 'Zeit sparen',
-                desc: 'Alle wichtigen Informationen an einem Ort, ohne zwischen verschiedenen Webseiten wechseln zu müssen.',
-              },
-              {
-                icon: Target,
-                title: 'Relevante Ergebnisse',
-                desc: 'Ob Pressemitteilungen, Neuigkeiten oder Umfragen – du findest genau, was du suchst.',
-              },
-              {
-                icon: Layers,
-                title: 'Vielfältige Informationen',
-                desc: 'Diese Plattform kombiniert Nachrichten, Pressemitteilungen und Umfrageergebnisse in einer benutzerfreundlichen Oberfläche.',
-              },
-            ].map((benefit, index) => (
+            {benefits.map((benefit, index) => (
               <div key={index} className="text-center p-4">
                 <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
                   <benefit.icon className="w-6 h-6 text-green-600" />
@@ -169,28 +127,7 @@ const Welcome = () => {
             </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-            {[
-              {
-                icon: Rss,
-                name: 'presseportal.de',
-                desc: 'Aktuelle Pressemitteilungen aus ganz Deutschland.',
-              },
-              {
-                icon: Building,
-                name: 'berlin.de',
-                desc: 'Offizielle Informationen und Mitteilungen der Stadt Berlin.',
-              },
-              {
-                icon: TrendingUp,
-                name: 'dawum.de',
-                desc: 'Eine Schnittstelle, die die neuesten Umfragen aus verschiedenen Quellen bereitstellt.',
-              },
-              {
-                icon: Globe,
-                name: 'mediastack.com',
-                desc: 'Eine API für aktuelle Nachrichten aus verschiedenen Quellen.',
-              },
-            ].map((source, index) => (
+            {dataSources.map((source, index) => (
               <div
                 key={index}
                 className="flex items-start gap-3 p-3 bg-white/50 rounded-lg"
