@@ -1,0 +1,53 @@
+name: Trigger News API
+
+on:
+  schedule:
+    - cron: '0 10,11,16,17 * * *'
+  workflow_dispatch:
+
+jobs:
+  call-newsapi:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_URL: ${{ vars.PROJECT_URL || secrets.PROJECT_URL }}
+
+    steps:
+      - name: Decide whether to run now
+        id: schedule_guard
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          berlin_hour="$(TZ=Europe/Berlin date +%H)"
+
+          if [ "$berlin_hour" = "12" ] || [ "$berlin_hour" = "18" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "should_run=false" >> "$GITHUB_OUTPUT"
+
+      - name: Skip outside target time
+        if: ${{ steps.schedule_guard.outputs.should_run != 'true' }}
+        run: echo "Skipping because the current Europe/Berlin hour is not 12 or 18."
+
+      - name: Ensure project URL is configured
+        if: ${{ steps.schedule_guard.outputs.should_run == 'true' }}
+        run: |
+          if [ -z "$PROJECT_URL" ]; then
+            echo "Set vars.PROJECT_URL or secrets.PROJECT_URL in GitHub."
+            exit 1
+          fi
+
+      - name: Call /api/newsapi
+        if: ${{ steps.schedule_guard.outputs.should_run == 'true' }}
+        run: |
+          curl --fail --show-error --silent \
+            --retry 3 \
+            --retry-delay 5 \
+            --max-time 180 \
+            "${PROJECT_URL%/}/api/newsapi"
