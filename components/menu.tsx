@@ -1,16 +1,21 @@
 'use client';
 
 import React from 'react';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 import { useRouter, usePathname } from 'next/navigation';
 import sendLogs from '@/lib/sendLogs';
+
+const NAV_ITEMS = [
+  { label: 'Home', path: '/' },
+  { label: 'News', path: '/news' },
+  { label: 'Umfragen', path: '/umfragen' },
+];
 
 export default function MenuBox() {
   const router = useRouter();
   const currentPath = usePathname();
 
   const handleNavigation = (path: string) => {
-    console.log(`Navigating to: ${path}`);
     sendLogs('info', `Navigating to ${path}`).catch((err) => {
       console.error('Fehler beim Senden an /api/info:', err);
     });
@@ -18,48 +23,24 @@ export default function MenuBox() {
   };
 
   return (
-    <div className="mt-5 mb-5 w-4/5 md:w-1/2 mx-auto rounded-3xl bg-gray-100 shadow-md p-2">
-      <div className="flex gap-4">
-        <div className="flex-1">
+    <div className="grid w-full grid-cols-3 gap-1 rounded-full bg-muted p-1">
+      {NAV_ITEMS.map((item) => {
+        const isActive = currentPath === item.path;
+        return (
           <button
-            className={clsx(
-              'w-full py-2 px-4 rounded-3xl text-center',
-              currentPath === '/'
-                ? 'bg-blue-500 text-white'
-                : 'bg-white text-gray-700'
+            key={item.path}
+            onClick={() => handleNavigation(item.path)}
+            className={cn(
+              'rounded-full px-2 py-2 text-center text-xs font-medium transition-colors sm:text-sm',
+              isActive
+                ? 'bg-primary text-primary-foreground shadow-sm'
+                : 'text-muted-foreground hover:bg-background/60 hover:text-foreground'
             )}
-            onClick={() => handleNavigation('/')}
           >
-            Home
+            {item.label}
           </button>
-        </div>
-        <div className="flex-1">
-          <button
-            className={clsx(
-              'w-full py-2 px-4 rounded-3xl text-center',
-              currentPath === '/news'
-                ? 'bg-blue-500 text-white'
-                : 'bg-white text-gray-700'
-            )}
-            onClick={() => handleNavigation('/news')}
-          >
-            News
-          </button>
-        </div>
-        <div className="flex-1">
-          <button
-            className={clsx(
-              'w-full py-2 px-4 rounded-3xl text-center',
-              currentPath === '/umfragen'
-                ? 'bg-blue-500 text-white'
-                : 'bg-white text-gray-700'
-            )}
-            onClick={() => handleNavigation('/umfragen')}
-          >
-            Umfragen
-          </button>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }

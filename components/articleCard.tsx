@@ -95,9 +95,9 @@ const ArticleCardItem = ({ item }: { item: NewsItem }) => {
   const publishedDate = getPublishedDate(item);
 
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 hover:border-blue-300">
+    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-primary/40">
       <CardHeader className="p-0 relative">
-        <div className="relative h-48 overflow-hidden bg-gray-100">
+        <div className="relative h-48 overflow-hidden bg-muted">
           {!hasImageError && imageUrl ? (
             <Image
               src={imageUrl}
@@ -107,8 +107,8 @@ const ArticleCardItem = ({ item }: { item: NewsItem }) => {
               onError={() => setHasImageError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-              <ImageOff className="h-12 w-12 text-gray-400" />
+            <div className="w-full h-full flex items-center justify-center bg-muted">
+              <ImageOff className="h-12 w-12 text-muted-foreground" />
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -148,14 +148,14 @@ const ArticleCardItem = ({ item }: { item: NewsItem }) => {
       </CardHeader>
 
       <CardContent className="p-4 flex-1">
-        <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="font-semibold text-lg text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors">
           {item.title}
         </h3>
-        <p className="text-sm text-gray-600 line-clamp-3 mb-3">
+        <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
           {item.description || 'Keine Beschreibung verfügbar'}
         </p>
 
-        <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
           <Calendar className="h-4 w-4" />
           <span>
             {publishedDate
@@ -175,7 +175,7 @@ const ArticleCardItem = ({ item }: { item: NewsItem }) => {
             );
             return sourceData ? (
               <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-gray-400" />
+                <Building2 className="h-4 w-4 text-muted-foreground" />
                 <Image
                   src={sourceData.src}
                   alt={sourceData.alt}

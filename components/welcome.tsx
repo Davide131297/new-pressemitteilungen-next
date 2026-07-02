@@ -12,11 +12,11 @@ const Welcome = () => {
         <TextAnimate
           animation="blurIn"
           as="h1"
-          className="text-4xl font-bold text-blue-900"
+          className="text-3xl font-bold text-primary sm:text-4xl"
         >
           Willkommen auf der Seite PresseFinder
         </TextAnimate>
-        <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
           PresseFinder ist dein One-Stop-Tool, um aktuelle Pressemitteilungen,
           die neuesten Nachrichten und Umfrageergebnisse zu finden. Diese
           Plattform bietet dir eine einfache Möglichkeit, schnell und gezielt
@@ -24,14 +24,14 @@ const Welcome = () => {
         </p>
       </div>
 
-      <div className="border-t border-slate-200 my-8"></div>
+      <div className="border-t border-border my-8"></div>
 
       {/* Features Section */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {features.map((feature, index) => (
           <Card
             key={index}
-            className="border border-slate-200 hover:shadow-lg transition-shadow duration-300"
+            className="hover:shadow-lg transition-shadow duration-300"
           >
             <CardContent className="p-6">
               <div className="flex items-start gap-3">
@@ -45,7 +45,7 @@ const Welcome = () => {
                     {feature.title}
                   </h3>
                   <p
-                    className="text-slate-600"
+                    className="text-muted-foreground"
                     dangerouslySetInnerHTML={{ __html: feature.description }}
                   />
                 </div>
@@ -55,14 +55,14 @@ const Welcome = () => {
         ))}
       </div>
 
-      <div className="border-t border-slate-200 my-8"></div>
+      <div className="border-t border-border my-8"></div>
 
       {/* How it works */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+      <Card>
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-blue-600" />
-            <h3 className="text-xl font-semibold text-slate-900">
+            <Target className="w-5 h-5 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">
               So funktioniert es
             </h3>
           </div>
@@ -71,12 +71,12 @@ const Welcome = () => {
               <li key={index} className="flex items-start gap-3">
                 <Badge
                   variant="outline"
-                  className="min-w-[24px] h-6 rounded-full flex items-center justify-center text-xs font-semibold bg-blue-100 text-blue-700 border-blue-300"
+                  className="min-w-[24px] h-6 rounded-full flex items-center justify-center text-xs font-semibold bg-primary/10 text-primary border-primary/20"
                 >
                   {index + 1}
                 </Badge>
                 <span
-                  className="text-slate-700"
+                  className="text-foreground/80"
                   dangerouslySetInnerHTML={{
                     __html: step.text.replace(
                       /\*\*(.*?)\*\*/g,
@@ -90,39 +90,39 @@ const Welcome = () => {
         </CardContent>
       </Card>
 
-      <div className="border-t border-slate-200 my-8"></div>
+      <div className="border-t border-border my-8"></div>
 
       {/* Benefits */}
-      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200">
+      <Card>
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Layers className="w-5 h-5 text-green-600" />
-            <h3 className="text-xl font-semibold text-slate-900">
+            <Layers className="w-5 h-5 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">
               Warum PresseFinder nutzen?
             </h3>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center p-4">
-                <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
-                  <benefit.icon className="w-6 h-6 text-green-600" />
+                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                  <benefit.icon className="w-6 h-6 text-primary" />
                 </div>
                 <h4 className="font-semibold mb-2">{benefit.title}</h4>
-                <p className="text-sm text-slate-600">{benefit.desc}</p>
+                <p className="text-sm text-muted-foreground">{benefit.desc}</p>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      <div className="border-t border-slate-200 my-8"></div>
+      <div className="border-t border-border my-8"></div>
 
       {/* Data Sources */}
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200">
+      <Card>
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-purple-600" />
-            <h3 className="text-xl font-semibold text-slate-900">
+            <Globe className="w-5 h-5 text-primary" />
+            <h3 className="text-xl font-semibold text-foreground">
               Datenquellen
             </h3>
           </div>
@@ -130,16 +130,16 @@ const Welcome = () => {
             {dataSources.map((source, index) => (
               <div
                 key={index}
-                className="flex items-start gap-3 p-3 bg-white/50 rounded-lg"
+                className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg"
               >
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <source.icon className="w-4 h-4 text-purple-600" />
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <source.icon className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-900">
+                  <h4 className="font-semibold text-foreground">
                     {source.name}
                   </h4>
-                  <p className="text-sm text-slate-600">{source.desc}</p>
+                  <p className="text-sm text-muted-foreground">{source.desc}</p>
                 </div>
               </div>
             ))}
@@ -147,12 +147,12 @@ const Welcome = () => {
         </CardContent>
       </Card>
 
-      <div className="border-t border-slate-200 my-8"></div>
+      <div className="border-t border-border my-8"></div>
 
       {/* Additional Information */}
-      <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+      <Card>
         <CardContent className="p-6">
-          <h3 className="text-xl font-semibold text-slate-900 mb-4">
+          <h3 className="text-xl font-semibold text-foreground mb-4">
             Weitere Informationen
           </h3>
           <div className="space-y-3">
@@ -164,11 +164,11 @@ const Welcome = () => {
               <div key={index} className="flex items-start gap-3">
                 <Badge
                   variant="outline"
-                  className="min-w-[24px] h-6 rounded-full flex items-center justify-center text-xs font-semibold bg-amber-100 text-amber-700 border-amber-300"
+                  className="min-w-[24px] h-6 rounded-full flex items-center justify-center text-xs font-semibold bg-primary/10 text-primary border-primary/20"
                 >
                   {index + 1}
                 </Badge>
-                <p className="text-slate-700">{info}</p>
+                <p className="text-foreground/80">{info}</p>
               </div>
             ))}
           </div>

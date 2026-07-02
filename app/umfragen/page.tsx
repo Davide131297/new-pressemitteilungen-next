@@ -33,7 +33,9 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { PageContainer } from '@/components/page-container';
+import { ExternalLink, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import CoalitionChart from '@/components/coalitionChart';
 
@@ -347,16 +349,26 @@ export default function Page() {
   }, [seatDistribution]);
 
   return (
-    <>
-      <div className="px-4 md:px-8">
-        <div>
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-lg">Loading...</div>
-            </div>
-          ) : (
-            <>
-              <Card className="mt-8 max-w-2xl mx-auto">
+    <PageContainer>
+      <div className="text-center mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
+          Wahlumfragen
+        </h1>
+        <p className="text-muted-foreground">
+          Aktuelle Umfragewerte, Sitzverteilung und mögliche Koalitionen
+        </p>
+      </div>
+      <div>
+        {loading ? (
+          <Card className="p-8 text-center">
+            <CardContent className="flex flex-col items-center gap-4 p-0">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-muted-foreground">Lade Umfragedaten...</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <Card className="max-w-2xl mx-auto">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -527,30 +539,31 @@ export default function Page() {
                           className="hover:shadow-lg transition-shadow duration-300"
                         >
                           <CardContent className="p-4">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                            <h3 className="text-sm font-semibold text-foreground mb-2 leading-tight">
                               {item.title}
                             </h3>
                             <div className="flex flex-wrap gap-1 mb-3">
                               {item.category
                                 .slice(0, 3)
                                 .map((cat, catIndex) => (
-                                  <span
+                                  <Badge
                                     key={catIndex}
-                                    className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                                    variant="secondary"
+                                    className="rounded-full font-normal"
                                   >
                                     {cat}
-                                  </span>
+                                  </Badge>
                                 ))}
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted-foreground">
                                 {formatRSSDate(item.pubDate)}
                               </span>
                               <Link
                                 href={item.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                               >
                                 Details
                                 <ExternalLink className="h-3 w-3" />
@@ -575,15 +588,15 @@ export default function Page() {
                     )}
                   </div>
 
-                  <Card className="m-4 bg-gray-50">
-                    <CardContent className="p-4 text-center text-sm">
-                      <strong>Hinweis:</strong> Die Umfrageergebnisse basieren
-                      auf Daten von{' '}
+                  <Card className="m-4 bg-muted/30">
+                    <CardContent className="p-4 text-center text-sm text-muted-foreground">
+                      <strong className="text-foreground">Hinweis:</strong> Die
+                      Umfrageergebnisse basieren auf Daten von{' '}
                       <Link
                         href="https://dawum.de"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-primary hover:underline"
                       >
                         dawum.de
                       </Link>{' '}
@@ -592,7 +605,7 @@ export default function Page() {
                         href="https://opendatacommons.org/licenses/odbl/1-0/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-primary hover:underline"
                       >
                         Open Database License (ODbL)
                       </Link>
@@ -604,15 +617,14 @@ export default function Page() {
                 <div className="mt-8 text-center">
                   <Card>
                     <CardContent className="p-8">
-                      <p className="text-gray-600">Keine Umfrage gefunden.</p>
+                      <p className="text-muted-foreground">Keine Umfrage gefunden.</p>
                     </CardContent>
                   </Card>
                 </div>
               )}
-            </>
-          )}
-        </div>
+          </>
+        )}
       </div>
-    </>
+    </PageContainer>
   );
 }

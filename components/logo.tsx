@@ -1,11 +1,17 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import FinderLogo from '../assets/FinderIcon.png';
 
 export default function Logo() {
   return (
-    <div className="flex justify-center align-middle bg-transparent text-black w-full mt-5">
-      <Image src={FinderLogo} alt="Finder Logo" className="w-15 mr-5" />
-      <h1>PresseFinder</h1>
-    </div>
+    <Link
+      href="/"
+      className="flex items-center gap-2 text-foreground transition-opacity hover:opacity-80"
+    >
+      <Image src={FinderLogo} alt="" className="h-8 w-8 sm:h-9 sm:w-9" />
+      <span className="text-lg font-semibold tracking-tight sm:text-xl">
+        PresseFinder
+      </span>
+    </Link>
   );
 }

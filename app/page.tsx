@@ -7,6 +7,7 @@ import ArticleTable from '../components/articleTable';
 import Welcome from '@/components/welcome';
 import TextBox from '@/components/textBox';
 import { Card } from '@/components/ui/card';
+import { PageContainer } from '@/components/page-container';
 import { useSearch } from '@/hooks/useSearch';
 
 function Home() {
@@ -29,8 +30,8 @@ function Home() {
   } = useSearch();
 
   return (
-    <div className="w-11/12 mx-auto mb-5">
-      <Card className="bg-gradient-to-br from-slate-50 via-white to-blue-50 border-0 shadow-xl p-5">
+    <PageContainer>
+      <Card className="border-0 bg-gradient-to-br from-primary/5 via-background to-primary/10 p-4 shadow-xl sm:p-6">
         <Search
           query={query}
           setQuery={setQuery}
@@ -60,7 +61,7 @@ function Home() {
         {!data.length && <Welcome />}
         {data && data.length > 0 && <TextBox data={data} />}
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 

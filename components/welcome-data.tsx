@@ -39,16 +39,16 @@ export type DataSource = {
 export const features: Feature[] = [
   {
     icon: Newspaper,
-    iconColorClass: 'text-blue-600',
-    bgColorClass: 'bg-blue-100',
+    iconColorClass: 'text-primary',
+    bgColorClass: 'bg-primary/10',
     title: 'News-Seite',
     description:
       'Auf der <strong>News-Seite</strong> findest du eine Übersicht der aktuellsten und wichtigsten Neuigkeiten aus verschiedenen Quellen. Bleibe immer auf dem Laufenden mit relevanten Nachrichten.',
   },
   {
     icon: BarChart3,
-    iconColorClass: 'text-green-600',
-    bgColorClass: 'bg-green-100',
+    iconColorClass: 'text-primary',
+    bgColorClass: 'bg-primary/10',
     title: 'Umfrage-Seite',
     description:
       'Interessierst du dich für aktuelle politische Entwicklungen? Unsere <strong>Umfrage-Seite</strong> zeigt dir die neuesten Wahlumfragen und Trends. Perfekt, um politische Stimmungen und Veränderungen nachzuvollziehen.',

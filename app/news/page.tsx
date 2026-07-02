@@ -5,6 +5,7 @@ import NewsContent from '@/components/newsContent';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { PageContainer } from '@/components/page-container';
 import { Search, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { NewsItem } from '@/components/myInterfaces';
@@ -20,7 +21,12 @@ export default function News() {
     fetch('/api/news')
       .then((response) => response.json())
       .then((data) => {
-        setNewsData(data);
+        if (Array.isArray(data)) {
+          setNewsData(data);
+        } else {
+          console.error('Unerwartete Antwort von /api/news:', data);
+          toast.error('Fehler beim Laden der Nachrichten');
+        }
       })
       .catch((error) => {
         console.error('Fehler beim Laden der Basisnachrichten:', error);
@@ -38,8 +44,14 @@ export default function News() {
     fetch(`/api/news/search?q=${searchTerm}`)
       .then((response) => response.json())
       .then((data) => {
-        setNewsData(data.response.articles);
-        toast.success(`${data.response.articles.length} Artikel gefunden`);
+        const articles = data?.response?.articles;
+        if (Array.isArray(articles)) {
+          setNewsData(articles);
+          toast.success(`${articles.length} Artikel gefunden`);
+        } else {
+          console.error('Unerwartete Antwort von /api/news/search:', data);
+          toast.error('Fehler beim Suchen der Nachrichten');
+        }
       })
       .catch(() => {
         toast.error('Fehler beim Suchen der Nachrichten');
@@ -54,61 +66,59 @@ export default function News() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <main className="container mx-auto px-4 py-8">
-        <Card className="mb-8 p-6">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Nachrichten Suche
-            </h1>
-            <p className="text-gray-600">
-              Durchsuchen Sie aktuelle Nachrichten und Artikel
-            </p>
-          </div>
+    <PageContainer>
+      <Card className="mb-8 p-4 sm:p-6">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-2">
+            Nachrichten Suche
+          </h1>
+          <p className="text-muted-foreground">
+            Durchsuchen Sie aktuelle Nachrichten und Artikel
+          </p>
+        </div>
 
-          <div className="flex gap-3 max-w-2xl mx-auto">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Suchbegriff eingeben..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className="pl-10 pr-4 py-3 text-base border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-                disabled={searchLoading}
-              />
-            </div>
-            <Button
-              onClick={handleOnClick}
+        <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Suchbegriff eingeben..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyPress}
+              className="pl-10 pr-4 py-3 text-base"
               disabled={searchLoading}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium"
-            >
-              {searchLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Suchen...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-4 w-4" />
-                  Suchen
-                </>
-              )}
-            </Button>
+            />
           </div>
-        </Card>
+          <Button
+            onClick={handleOnClick}
+            disabled={searchLoading}
+            className="px-6 py-3 font-medium"
+          >
+            {searchLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Suchen...
+              </>
+            ) : (
+              <>
+                <Search className="mr-2 h-4 w-4" />
+                Suchen
+              </>
+            )}
+          </Button>
+        </div>
+      </Card>
 
-        <Suspense
-          fallback={
-            <Card className="p-8 text-center">
-              <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-600 mb-4" />
-              <p className="text-gray-600">Lade Nachrichten...</p>
-            </Card>
-          }
-        >
-          <NewsContent newsData={newsData} loading={loading} />
-        </Suspense>
-      </main>
-    </div>
+      <Suspense
+        fallback={
+          <Card className="p-8 text-center">
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary mb-4" />
+            <p className="text-muted-foreground">Lade Nachrichten...</p>
+          </Card>
+        }
+      >
+        <NewsContent newsData={newsData} loading={loading} />
+      </Suspense>
+    </PageContainer>
   );
 }

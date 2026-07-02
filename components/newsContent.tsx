@@ -124,8 +124,8 @@ export default function NewsContent({
       {loading ? (
         <Card className="p-8 text-center h-[60vh] flex items-center justify-center">
           <div className="space-y-4">
-            <Loader2 className="mx-auto h-8 w-8 animate-spin text-blue-600" />
-            <p className="text-gray-600">Lade Nachrichten...</p>
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Lade Nachrichten...</p>
           </div>
         </Card>
       ) : (

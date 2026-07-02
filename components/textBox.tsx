@@ -34,16 +34,16 @@ export default function TextBox({ data }: TextBoxProps) {
               stiffness: 300,
               damping: 30,
             }}
-            className="fixed bottom-10 right-6 w-80 bg-white rounded-lg shadow-lg flex flex-col overflow-hidden font-sans z-[1000] border"
+            className="fixed bottom-10 right-6 w-80 bg-card rounded-lg shadow-lg flex flex-col overflow-hidden font-sans z-[1000] border"
           >
-            <div className="bg-blue-500 text-white px-4 py-3 font-bold flex justify-between items-center">
+            <div className="bg-primary text-primary-foreground px-4 py-3 font-bold flex justify-between items-center">
               <span>Zusammenfassung</span>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 text-white hover:bg-blue-600"
+                    className="h-6 w-6 p-0 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
                     onClick={() => setOpen(false)}
                   >
                     <X className="h-4 w-4" />
@@ -54,21 +54,21 @@ export default function TextBox({ data }: TextBoxProps) {
                 </TooltipContent>
               </Tooltip>
             </div>
-            <div className="flex-1 px-4 py-3 overflow-y-auto bg-[#f5f6fa] min-h-[200px] max-h-[400px]">
+            <div className="flex-1 px-4 py-3 overflow-y-auto bg-muted/30 min-h-[200px] max-h-[400px]">
               {data.map((item, index) => (
                 <div key={index} className="mb-2.5 flex flex-row justify-start">
-                  <div className="bg-[#e4e6eb] rounded-2xl px-3 py-2 max-w-[80%] text-sm flex flex-col relative">
+                  <div className="bg-muted rounded-2xl px-3 py-2 max-w-[80%] text-sm flex flex-col relative">
                     <span>{item.title}</span>
                     <div className="flex flex-col items-start mt-1">
                       <Link
                         href={item.fullArticleURL}
-                        className="text-blue-600 text-[11px] underline hover:text-blue-800 transition"
+                        className="text-primary text-[11px] underline hover:text-primary/80 transition"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         Ansehen
                       </Link>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap mt-1">
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap mt-1">
                         Pressemitteilung vom: {item.date}
                       </span>
                     </div>
@@ -95,11 +95,11 @@ export default function TextBox({ data }: TextBoxProps) {
                   }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="fixed bottom-10 right-6 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center shadow-lg z-[1000] hover:bg-blue-600 transition"
+                  className="fixed bottom-10 right-6 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-[1000] hover:bg-primary/90 transition"
                   onClick={() => setOpen(true)}
                   aria-label="Zusammenfassung öffnen"
                 >
-                  <MessageCircle className="text-white h-6 w-6" />
+                  <MessageCircle className="text-primary-foreground h-6 w-6" />
                 </motion.button>
               </TooltipTrigger>
               <TooltipContent>

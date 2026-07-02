@@ -213,11 +213,11 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
   };
 
   return (
-    <div className="bg-slate-100 p-4 rounded-lg">
-      <h2 className="text-lg font-bold mb-3 text-center">
+    <div className="bg-muted/50 p-4 rounded-lg">
+      <h2 className="text-lg font-bold mb-3 text-center text-foreground">
         Regierungskoalitionen
       </h2>
-      <p className="text-center text-xs text-gray-600 mb-4">
+      <p className="text-center text-xs text-muted-foreground mb-4">
         Benötigte Mehrheit: {majority} von {totalSeats} Sitzen (
         {Math.round((majority / totalSeats) * 10000) / 100}%)
       </p>
@@ -244,11 +244,11 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
               .map((party) => party.partyShortcut);
 
             return (
-              <div key={index} className="bg-white p-3 rounded-lg shadow-md">
-                <h3 className="text-xs font-semibold mb-1 text-center">
+              <div key={index} className="bg-card border rounded-lg shadow-sm p-3">
+                <h3 className="text-xs font-semibold mb-1 text-center text-foreground">
                   {sortedPartiesForTitle.join(' + ')}
                 </h3>
-                <p className="text-xs text-center text-gray-600 mb-2">
+                <p className="text-xs text-center text-muted-foreground mb-2">
                   {coalition.seats} Sitze ({coalitionPercentage}%)
                 </p>
                 <div className="h-24">
@@ -264,15 +264,15 @@ function CoalitionChart({ seatDistribution, totalSeats }: CoalitionChartProps) {
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-600">Keine Koalition möglich.</p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-muted-foreground">Keine Koalition möglich.</p>
+          <p className="text-sm text-muted-foreground mt-2">
             Keine Kombination von Parteien erreicht die benötigte Mehrheit von{' '}
             {majority} Sitzen.
           </p>
         </div>
       )}
 
-      <div className="mt-4 text-xs text-gray-500">
+      <div className="mt-4 text-xs text-muted-foreground">
         <p className="text-center">
           Insgesamt {validCoalitions.length} Regierungskoalitionen möglich
         </p>
